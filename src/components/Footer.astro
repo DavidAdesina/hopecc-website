@@ -1,0 +1,202 @@
+---
+// src/components/Footer.astro — Hope Community Church
+---
+
+<footer class="footer">
+  <div class="footer-inner">
+
+    <!-- Col 1: About -->
+    <div class="footer-about">
+      <p class="footer-logo-main">Hope Community Church</p>
+      <p class="footer-logo-tagline">Christ centred · People focused</p>
+      <p class="footer-desc">
+        A warm, welcoming church family in the heart of Hinckley.
+        Everyone is genuinely welcome — come as you are.
+      </p>
+    </div>
+
+    <!-- Col 2: Visit -->
+    <div>
+      <h4>Visit us</h4>
+      <ul class="footer-info-list">
+        <li>
+          <span class="info-label">Address</span>
+          <span>Deveron Way<br>Hinckley<br>LE10 0XD</span>
+        </li>
+        <li>
+          <span class="info-label">Parking</span>
+          <span>Free on-site car park &amp; on-street parking nearby</span>
+        </li>
+        <li>
+          <span class="info-label">Sunday service</span>
+          <span>10:30 am</span>
+        </li>
+        <li>
+          <span class="info-label">Sunday prayer</span>
+          <span>6:00 pm</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Col 3: Navigate -->
+    <div>
+      <h4>Navigate</h4>
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/whats-on">What's On</a></li>
+        <li><a href="/watch">Watch &amp; Listen</a></li>
+        <li><a href="/mission">Mission</a></li>
+        <li><a href="/room-hire">Room Hire</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Col 4: More -->
+    <div>
+      <h4>More</h4>
+      <ul class="footer-links">
+        <li><a href="/safeguarding">Safeguarding</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+        <li><a href="https://facebook.com" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://youtube.com" target="_blank" rel="noopener">YouTube</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span>© {new Date().getFullYear()} Hope Community Church · Registered Charity No. 1108872</span>
+    <span>hopecc.org.uk</span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #0d1f3c;
+    color: rgba(255, 255, 255, 0.65);
+    padding: 56px 28px 24px;
+    font-family: 'Nunito', 'Century Gothic', sans-serif;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1.6fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 22px;
+  }
+
+  .footer-logo-main {
+    font-weight: 800;
+    font-size: 15px;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .footer-logo-tagline {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 14px;
+  }
+
+  .footer-desc {
+    font-size: 13px;
+    line-height: 1.75;
+    max-width: 240px;
+  }
+
+  .footer h4 {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a8cce8;
+    margin-bottom: 16px;
+  }
+
+  /* Info list (address, times) */
+  .footer-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer-info-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .info-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c9a84c;
+  }
+
+  /* Nav links */
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: color 0.15s;
+  }
+
+  .footer-links a:hover {
+    color: #ffffff;
+  }
+
+  /* Bottom bar */
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 860px) {
+    .footer-inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .footer-about {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

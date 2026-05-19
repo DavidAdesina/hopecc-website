@@ -1,16 +1,113 @@
 ---
-import '../styles/global.css'
+// src/layouts/Layout.astro — Hope Community Church
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 
-const { title } = Astro.props
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Hope Community Church — a warm, welcoming church family in Hinckley, Leicestershire. Christ centred, People focused.',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary meta -->
     <title>{title} | Hope Community Church</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph (social sharing) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={`${title} | Hope Community Church`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og-image.jpg" />
+
+    <!-- Twitter card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | Hope Community Church`} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Favicon (add your own to /public/) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts: Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
   </head>
+
   <body>
-    <slot />
+    <Navbar />
+    <main>
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>
+
+<style is:global>
+  /* Reset & base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --navy:       #0d1f3c;
+    --navy-mid:   #162d52;
+    --blue:       #4a90c4;
+    --blue-light: #a8cce8;
+    --blue-pale:  #e8f2f9;
+    --gold:       #c9a84c;
+    --gold-light: #f0dfa0;
+    --cream:      #f7f9fc;
+    --white:      #ffffff;
+    --text-dark:  #0d1f3c;
+    --text-mid:   #3a4a5c;
+    --text-muted: #6b7c93;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Nunito', 'Century Gothic', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img, video {
+    max-width: 100%;
+    display: block;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* Tailwind @tailwind directives — keep these if you have Tailwind installed */
+  /* @tailwind base; */
+  /* @tailwind components; */
+  /* @tailwind utilities; */
+</style>

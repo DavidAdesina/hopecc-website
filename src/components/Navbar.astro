@@ -1,0 +1,199 @@
+---
+// src/components/Navbar.astro — Hope Community Church
+---
+
+<header class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-logo">
+      <span class="navbar-logo-main">Hope Community Church</span>
+      <span class="navbar-logo-sub">Christ centred · People focused</span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="navbar-links" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/whats-on">What's On</a>
+      <a href="/watch">Watch &amp; Listen</a>
+      <a href="/mission">Mission</a>
+      <a href="/room-hire">Room Hire</a>
+      <a href="/contact" class="navbar-cta">Contact Us</a>
+    </nav>
+
+    <!-- Mobile hamburger -->
+    <button class="navbar-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
+    <a href="/">Home</a>
+    <a href="/whats-on">What's On</a>
+    <a href="/watch">Watch &amp; Listen</a>
+    <a href="/mission">Mission</a>
+    <a href="/room-hire">Room Hire</a>
+    <a href="/contact">Contact Us</a>
+  </nav>
+</header>
+
+<style>
+  .navbar {
+    background: #0d1f3c;
+    border-bottom: 2px solid #c9a84c;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    font-family: 'Nunito', 'Century Gothic', sans-serif;
+  }
+
+  .navbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 28px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar-logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    text-decoration: none;
+  }
+
+  .navbar-logo-main {
+    font-weight: 800;
+    font-size: 17px;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .navbar-logo-sub {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c9a84c;
+  }
+
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .navbar-links a {
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+    text-decoration: none;
+    padding: 8px 13px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .navbar-links a:hover,
+  .navbar-links a[aria-current="page"] {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .navbar-links a.navbar-cta {
+    background: #c9a84c;
+    color: #0d1f3c;
+    font-weight: 800;
+    padding: 8px 16px;
+    margin-left: 6px;
+  }
+
+  .navbar-links a.navbar-cta:hover {
+    background: #b8943d;
+    color: #ffffff;
+  }
+
+  /* Hamburger button */
+  .navbar-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .navbar-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .navbar-toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .navbar-toggle[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+  .navbar-toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile dropdown */
+  .mobile-menu {
+    background: #162d52;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu a {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.82);
+    text-decoration: none;
+    padding: 13px 28px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .mobile-menu a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  @media (max-width: 860px) {
+    .navbar-links {
+      display: none;
+    }
+    .navbar-toggle {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.navbar-toggle') as HTMLButtonElement;
+  const menu = document.getElementById('mobile-menu') as HTMLElement;
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    menu.hidden = isOpen;
+  });
+</script>
