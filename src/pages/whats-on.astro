@@ -1,0 +1,104 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const regularServices = [
+  {
+    title: 'Sunday morning service',
+    time: '10:30 am · every Sunday',
+    description:
+      'Sung worship, Bible teaching, and a warm welcome for all. Children\'s groups run during the service.',
+    colour: '#4a90c4',
+  },
+  {
+    title: 'Sunday evening prayer',
+    time: '6:00 pm · every Sunday',
+    description:
+      'A quieter gathering for prayer and reflection together as a church family.',
+    colour: '#c9a84c',
+  },
+];
+---
+
+<Layout
+  title="What's On | Hope Community Church"
+  description="Regular services, special events, and everything happening at Hope Community Church in Hinckley."
+>
+  <!-- Page hero -->
+  <section class="bg-navy text-cream py-16 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="font-extrabold text-4xl md:text-5xl uppercase tracking-wide mb-3">
+        What's on at Hope
+      </h1>
+      <p class="text-baby-blue text-lg max-w-xl">
+        Regular services, special events, and everything in between —
+        you're always welcome.
+      </p>
+    </div>
+  </section>
+
+  <!-- Regular services -->
+  <section class="bg-pale-blue py-14 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-extrabold text-2xl uppercase text-navy mb-8">
+        Regular services
+      </h2>
+      <div class="grid gap-6 md:grid-cols-2">
+        {regularServices.map((s) => (
+          <div class="bg-white rounded-2xl p-6 shadow-sm border border-pale-blue">
+            <div class="flex items-center gap-3 mb-2">
+              <span
+                class="w-3 h-3 rounded-full shrink-0"
+                style={`background:${s.colour}`}
+              />
+              <h3 class="font-extrabold text-navy text-lg uppercase">
+                {s.title}
+              </h3>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">{s.time}</p>
+            <p class="text-navy/80 leading-relaxed">{s.description}</p>
+          </div>
+        ))}
+      </div>
+
+      
+
+  <!-- Google Calendar embed -->
+  <section class="bg-cream py-14 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-extrabold text-2xl uppercase text-navy mb-6">
+        Full events calendar
+      </h2>
+
+      {/* REPLACE the iframe src below once Ian shares the Google Calendar public URL */}
+      {/* Instructions: Calendar → Settings → share publicly → copy embed code → paste src here */}
+      <div class="rounded-2xl overflow-hidden border border-pale-blue shadow-sm">
+        <iframe
+          src="https://calendar.google.com/calendar/embed?src=diary%40hopecc.org.uk&ctz=Europe%2FLondon&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA"
+          style="border:0"
+          width="100%"
+          height="500"
+          frameborder="0"
+          scrolling="no"
+          title="Hope Community Church events calendar"
+        />
+      </div>
+
+      <p class="text-sm text-gray-400 mt-4 text-center">
+        Calendar not showing? <a href="https://calendar.google.com/calendar/embed?src=diary%40hopecc.org.uk&ctz=Europe%2FLondon" class="text-baby-blue underline" target="_blank" rel="noopener">Open in Google Calendar ↗</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA strip -->
+  <section class="bg-baby-blue py-10 px-6 text-center">
+    <p class="text-white text-lg mb-4">
+      Can't find what you're looking for? We'd love to hear from you.
+    </p>
+    
+      href="/contact"
+      class="inline-block bg-gold text-navy font-extrabold uppercase px-8 py-3 rounded-full tracking-wide hover:opacity-90 transition"
+    >
+      Contact us
+    </a>
+  </section>
+</Layout>
