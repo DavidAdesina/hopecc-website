@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" role="img" aria-label="Hope Community Church">
+  <title>Hope Community Church</title>
+  <!-- Flame -->
+  <path d="M14 56 C6 44 3 31 8 20 C10 31 16 29 16 20 C16 11 22 4 22 0 C28 10 31 22 26 33 C30 27 32 18 29 10 C37 20 40 34 35 45 C32 52 23 58 14 56Z" fill="#c9a84c"/>
+  <ellipse cx="22" cy="40" rx="5" ry="7" fill="#f5d78e" opacity="0.65"/>
+  <!-- HOPE -->
+  <text x="50" y="34" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="28" fill="white" letter-spacing="4">HOPE</text>
+  <!-- Rule -->
+  <line x1="50" y1="41" x2="215" y2="41" stroke="#c9a84c" stroke-width="0.6" opacity="0.8"/>
+  <!-- Community Church -->
+  <text x="50" y="54" font-family="Georgia, 'Times New Roman', serif" font-weight="400" font-size="11" fill="#c9a84c" letter-spacing="2.5">COMMUNITY CHURCH</text>
+</svg>
