@@ -1,0 +1,578 @@
+---
+// contact.astro — Hope Community Church
+// Drop this in src/pages/contact.astro
+// Place church-building.jpeg in public/images/church-building.jpeg
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Hope Community Church</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0d1f3c;
+      --blue:   #4a90c4;
+      --pale:   #e8f2f9;
+      --gold:   #c9a84c;
+      --cream:  #f7f9fc;
+      --white:  #ffffff;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* ── Hero background ── */
+    .page-wrapper {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bg-image {
+      position: fixed;
+      inset: 0;
+      background: url('/images/church-building.jpeg') center center / cover no-repeat;
+      z-index: 0;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(13,31,60,0.82) 0%,
+        rgba(13,31,60,0.70) 40%,
+        rgba(74,144,196,0.55) 100%
+      );
+      z-index: 1;
+    }
+
+    /* ── Nav strip (minimal) ── */
+    .topbar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .topbar-logo {
+      color: var(--white);
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topbar-logo span.accent { color: var(--gold); }
+
+    .topbar-nav { display: flex; gap: 2rem; }
+    .topbar-nav a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .topbar-nav a:hover,
+    .topbar-nav a.active { color: var(--gold); }
+
+    /* ── Page heading ── */
+    .page-heading {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 3.5rem 1rem 2rem;
+    }
+
+    .page-heading h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+
+    .page-heading h1 span { color: var(--gold); }
+
+    .page-heading p {
+      margin-top: 0.75rem;
+      color: rgba(255,255,255,0.75);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .gold-rule {
+      width: 64px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 1rem auto 0;
+    }
+
+    /* ── Main grid ── */
+    .contact-grid {
+      position: relative;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.75rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      width: 100%;
+    }
+
+    /* ── Glass card base ── */
+    .glass {
+      background: rgba(13,31,60,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    /* ── Contact details card ── */
+    .details-card {
+      padding: 2.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .details-card h2 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      padding: 1rem 1.1rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.09);
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+
+    .detail-item:hover {
+      background: rgba(74,144,196,0.22);
+      transform: translateX(4px);
+    }
+
+    .detail-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.5rem;
+    }
+
+    .icon-phone  { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+    .icon-email  { background: linear-gradient(135deg, #4a90c4, #2980b9); }
+    .icon-map    { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .icon-fb     { background: linear-gradient(135deg, #1877f2, #0c5dc7); }
+    .icon-yt     { background: linear-gradient(135deg, #ff0000, #cc0000); }
+    .icon-sg     { background: linear-gradient(135deg, #c9a84c, #a07830); }
+
+    .detail-text { flex: 1; min-width: 0; }
+    .detail-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+    .detail-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .detail-arrow {
+      color: rgba(255,255,255,0.3);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Form card ── */
+    .form-card {
+      padding: 2.25rem 2rem;
+    }
+
+    .form-card h2 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+    }
+
+    .form-row { margin-bottom: 1.1rem; }
+
+    .form-row label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-row input,
+    .form-row textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      color: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .form-row input::placeholder,
+    .form-row textarea::placeholder { color: rgba(255,255,255,0.35); }
+
+    .form-row input:focus,
+    .form-row textarea:focus {
+      border-color: var(--blue);
+      background: rgba(74,144,196,0.12);
+    }
+
+    .form-row textarea { resize: vertical; min-height: 120px; }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--gold), #a07830);
+      border: none;
+      border-radius: 12px;
+      color: var(--navy);
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 18px rgba(201,168,76,0.35);
+    }
+
+    .submit-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201,168,76,0.45);
+    }
+
+    /* ── Success / error toast ── */
+    .toast {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.9rem 1.1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .toast.success { background: rgba(39,174,96,0.22); border: 1px solid rgba(39,174,96,0.5); color: #7effa3; }
+    .toast.error   { background: rgba(231,76,60,0.22);  border: 1px solid rgba(231,76,60,0.5);  color: #ffaaaa; }
+
+    /* ── Map strip ── */
+    .map-card {
+      grid-column: 1 / -1;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .map-card iframe {
+      width: 100%;
+      height: 280px;
+      border: 0;
+      display: block;
+      filter: saturate(0.7) contrast(1.1);
+    }
+
+    /* ── Footer strip ── */
+    .page-footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+      .topbar { padding: 1rem 1.5rem; }
+      .topbar-nav { display: none; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .map-card { grid-column: 1; }
+      .page-heading { padding: 2.5rem 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Nav strip -->
+    <nav class="topbar">
+      <a href="/" class="topbar-logo">
+        <img src="/images/logo-white.svg" alt="Hope Community Church" class="h-16 w-auto" style="height:4rem;width:auto;" />
+      </a>
+      <div class="topbar-nav">
+        <a href="/">Home</a>
+        <a href="/whats-on">What's On</a>
+        <a href="/mission">Mission</a>
+        <a href="/room-hire">Room Hire</a>
+        <a href="/contact" class="active">Contact</a>
+      </div>
+    </nav>
+
+    <!-- Heading -->
+    <header class="page-heading">
+      <h1>Get in <span>Touch</span></h1>
+      <p>We'd love to hear from you — everyone is welcome</p>
+      <div class="gold-rule"></div>
+    </header>
+
+    <!-- Main grid -->
+    <main class="contact-grid">
+
+      <!-- Left: Contact details -->
+      <div class="glass details-card">
+        <h2>Contact Details</h2>
+
+        <a href="tel:01455233798" class="detail-item">
+          <div class="detail-icon icon-phone">📞</div>
+          <div class="detail-text">
+            <div class="detail-label">Telephone</div>
+            <div class="detail-value">01455 233798</div>
+          </div>
+          <div class="detail-arrow">›</div>
+        </a>
+
+        <a href="mailto:info@hopecc.org.uk" class="detail-item">
+          <div class="detail-icon icon-email">✉️</div>
+          <div class="detail-text">
+            <div class="detail-label">Email Us</div>
+            <div class="detail-value">info@hopecc.org.uk</div>
+          </div>
+          <div class="detail-arrow">›</div>
+        </a>
+
+        <a href="https://www.google.co.uk/maps/dir//Hope+Community+Church,+Deveron+Way,+Hinckley+LE10+0XD/@52.5440641,-1.3877352,17z/data=!4m9!4m8!1m0!1m5!1m1!1s0x4877500b54eaece5:0x3aa0e27e6b840aec!2m2!1d-1.3877306!2d52.5440545!3e0?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
+           class="detail-item" target="_blank" rel="noopener">
+          <div class="detail-icon icon-map">📍</div>
+          <div class="detail-text">
+            <div class="detail-label">Find Us</div>
+            <div class="detail-value">Deveron Way, Hinckley LE10 0XD</div>
+          </div>
+          <div class="detail-arrow">›</div>
+        </a>
+
+        <a href="https://www.facebook.com/hopechurchhinc" class="detail-item" target="_blank" rel="noopener">
+          <div class="detail-icon icon-fb">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </div>
+          <div class="detail-text">
+            <div class="detail-label">Facebook</div>
+            <div class="detail-value">Hope Church Hinckley</div>
+          </div>
+          <div class="detail-arrow">›</div>
+        </a>
+
+        <a href="https://www.youtube.com/@hopecommunitychurch328/featured" class="detail-item" target="_blank" rel="noopener">
+          <div class="detail-icon icon-yt">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#cc0000"/></svg>
+          </div>
+          <div class="detail-text">
+            <div class="detail-label">YouTube</div>
+            <div class="detail-value">Hope Community Church</div>
+          </div>
+          <div class="detail-arrow">›</div>
+        </a>
+
+        <a href="mailto:safeguarding@hopecc.org" class="detail-item">
+          <div class="detail-icon icon-sg">🛡️</div>
+          <div class="detail-text">
+            <div class="detail-label">Safeguarding</div>
+            <div class="detail-value">safeguarding@hopecc.org</div>
+          </div>
+          <div class="detail-arrow">›</div>
+        </a>
+      </div>
+
+      <!-- Right: Contact form -->
+      <div class="glass form-card">
+        <h2>Send Us a Message</h2>
+
+        <form id="contactForm" novalidate>
+          <div class="form-grid-2">
+            <div class="form-row">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" name="fname" placeholder="Jane" required />
+            </div>
+            <div class="form-row">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" name="lname" placeholder="Smith" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="jane@example.com" required />
+          </div>
+
+          <div class="form-row">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" name="phone" placeholder="07700 900000" />
+          </div>
+
+          <div class="form-row">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="How can we help?" />
+          </div>
+
+          <div class="form-row">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Write your message here…" required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+
+          <div class="toast" id="toast"></div>
+        </form>
+      </div>
+
+      <!-- Map -->
+      <div class="glass map-card">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2434.5!2d-1.3877306!3d52.5440545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4877500b54eaece5%3A0x3aa0e27e6b840aec!2sHope%20Community%20Church%2C%20Deveron%20Way%2C%20Hinckley%20LE10%200XD!5e0!3m2!1sen!2suk!4v1234567890"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Hope Community Church location">
+        </iframe>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      © 2025 Hope Community Church · Charity No. 1108872 · Deveron Way, Hinckley LE10 0XD
+    </footer>
+  </div>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const btn  = document.getElementById('submitBtn');
+    const toast = document.getElementById('toast');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const data = {
+        fname:   form.fname.value.trim(),
+        lname:   form.lname.value.trim(),
+        email:   form.email.value.trim(),
+        phone:   form.phone.value.trim(),
+        subject: form.subject.value.trim(),
+        message: form.message.value.trim(),
+      };
+
+      if (!data.fname || !data.email || !data.message) {
+        showToast('Please fill in your name, email and message.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        // ── Phase 3: replace this URL with your API Gateway endpoint ──
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          showToast('✓ Message sent! We\'ll be in touch soon.', 'success');
+          form.reset();
+        } else {
+          throw new Error('Server error');
+        }
+      } catch {
+        // Fallback: open email client
+        const subject = encodeURIComponent(data.subject || 'Website enquiry');
+        const body = encodeURIComponent(
+          `Name: ${data.fname} ${data.lname}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n${data.message}`
+        );
+        window.location.href = `mailto:info@hopecc.org.uk?subject=${subject}&body=${body}`;
+        showToast('Opening your email app — API not yet connected (Phase 3).', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }
+    });
+
+    function showToast(msg, type) {
+      toast.textContent = msg;
+      toast.className = `toast ${type}`;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 6000);
+    }
+  </script>
+
+</body>
+</html>
