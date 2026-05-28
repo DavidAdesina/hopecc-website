@@ -1,18 +1,43 @@
 ---
 // src/components/Navbar.astro — Hope Community Church
+// ─────────────────────────────────────────────────────
+// To add a new dropdown to any nav link, wrap it in a
+// <div class="nav-dropdown-wrapper"> and add a
+// <div class="nav-dropdown"> with your <a> links inside.
+// Everything else is handled automatically by the CSS/JS.
 ---
 
 <header class="navbar">
   <div class="navbar-inner">
     <a href="/" class="navbar-logo">
-     <img src="/images/logo-white.svg" alt="Hope Community Church" class="h-16 w-auto" />
+      <img src="/images/logo-white.svg" alt="Hope Community Church" class="h-16 w-auto" />
     </a>
 
     <!-- Desktop nav -->
     <nav class="navbar-links" aria-label="Main navigation">
       <a href="/">Home</a>
       <a href="/whats-on">What's On</a>
-      <a href="/mission">Mission</a>
+
+      <!-- ── Mission link with hover dropdown ── -->
+      <div class="nav-dropdown-wrapper">
+        <a href="/mission" class="nav-dropdown-trigger">
+          Mission
+          <!-- small chevron so users know there's a sub-menu -->
+          <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <div class="nav-dropdown" role="menu">
+          <a href="/mission/india" role="menuitem">
+            <span class="dropdown-flag">🇮🇳</span>India
+          </a>
+          <a href="/mission/romania" role="menuitem">
+            <span class="dropdown-flag">🇷🇴</span>Romania
+          </a>
+        </div>
+      </div>
+      <!-- ── end Mission dropdown ── -->
+
       <a href="/room-hire">Room Hire</a>
       <a href="/contact" class="navbar-cta">Contact Us</a>
     </nav>
@@ -29,14 +54,17 @@
   <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
     <a href="/">Home</a>
     <a href="/whats-on">What's On</a>
-    <a href="/watch">Watch &amp; Listen</a>
     <a href="/mission">Mission</a>
+    <!-- Mobile sub-links indented slightly so the hierarchy is clear -->
+    <a href="/mission/india" class="mobile-sub-link">↳ India</a>
+    <a href="/mission/romania" class="mobile-sub-link">↳ Romania</a>
     <a href="/room-hire">Room Hire</a>
     <a href="/contact">Contact Us</a>
   </nav>
 </header>
 
 <style>
+  /* ─── Base navbar ─────────────────────────────────── */
   .navbar {
     background: #0d1f3c;
     border-bottom: 2px solid #c9a84c;
@@ -63,29 +91,15 @@
     text-decoration: none;
   }
 
-  .navbar-logo-main {
-    font-weight: 800;
-    font-size: 17px;
-    color: #ffffff;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .navbar-logo-sub {
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #c9a84c;
-  }
-
+  /* ─── Desktop links ───────────────────────────────── */
   .navbar-links {
     display: flex;
     align-items: center;
     gap: 2px;
   }
 
-  .navbar-links a {
+  .navbar-links > a,
+  .nav-dropdown-trigger {
     font-weight: 700;
     font-size: 12.5px;
     letter-spacing: 0.06em;
@@ -95,10 +109,15 @@
     padding: 8px 13px;
     border-radius: 4px;
     transition: color 0.15s, background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
   }
 
-  .navbar-links a:hover,
-  .navbar-links a[aria-current="page"] {
+  .navbar-links > a:hover,
+  .navbar-links > a[aria-current="page"],
+  .nav-dropdown-wrapper:hover .nav-dropdown-trigger,
+  .nav-dropdown-wrapper:focus-within .nav-dropdown-trigger {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.08);
   }
@@ -116,7 +135,75 @@
     color: #ffffff;
   }
 
-  /* Hamburger button */
+  /* ─── Dropdown wrapper ────────────────────────────── */
+  .nav-dropdown-wrapper {
+    position: relative;
+  }
+
+  /* The chevron rotates when the dropdown is open */
+  .chevron {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .nav-dropdown-wrapper:hover .chevron,
+  .nav-dropdown-wrapper:focus-within .chevron {
+    transform: rotate(180deg);
+  }
+
+  /* The dropdown panel — hidden by default */
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);  /* small gap below the trigger */
+    left: 0;
+    min-width: 170px;
+    background: #0d1f3c;
+    border: 1px solid rgba(201, 168, 76, 0.35);
+    border-top: 2px solid #c9a84c;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    padding: 6px 0;
+
+    /* Hidden state */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  }
+
+  /* Show on hover OR keyboard focus-within */
+  .nav-dropdown-wrapper:hover .nav-dropdown,
+  .nav-dropdown-wrapper:focus-within .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 18px;
+    font-weight: 700;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.82);
+    text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .nav-dropdown a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .dropdown-flag {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  /* ─── Hamburger button ────────────────────────────── */
   .navbar-toggle {
     display: none;
     flex-direction: column;
@@ -146,7 +233,7 @@
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* Mobile dropdown */
+  /* ─── Mobile dropdown ─────────────────────────────── */
   .mobile-menu {
     background: #162d52;
     display: flex;
@@ -175,6 +262,18 @@
     background: rgba(255, 255, 255, 0.06);
   }
 
+  /* Mission sub-links (India / Romania) are indented */
+  .mobile-menu .mobile-sub-link {
+    padding-left: 44px;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .mobile-menu .mobile-sub-link:hover {
+    color: #c9a84c;
+  }
+
+  /* ─── Responsive breakpoint ───────────────────────── */
   @media (max-width: 860px) {
     .navbar-links {
       display: none;
@@ -186,8 +285,9 @@
 </style>
 
 <script>
+  // ── Mobile hamburger toggle ──────────────────────────
   const toggle = document.querySelector('.navbar-toggle') as HTMLButtonElement;
-  const menu = document.getElementById('mobile-menu') as HTMLElement;
+  const menu   = document.getElementById('mobile-menu') as HTMLElement;
 
   toggle?.addEventListener('click', () => {
     const isOpen = toggle.getAttribute('aria-expanded') === 'true';
