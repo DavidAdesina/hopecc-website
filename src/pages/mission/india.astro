@@ -1,0 +1,1058 @@
+---
+// src/pages/mission/india.astro — Hope Community Church
+// ──────────────────────────────────────────────────────────────────────────
+// CONTENT GUIDE FOR IAN:
+//   • To update any text, find the section below and edit the words inside
+//     the HTML tags. Comments like "<!-- EDIT: ... -->" mark every editable spot.
+//   • To update stats (numbers), search for "mission-stat" and change the number.
+//   • To swap a photo, change the src="/images/..." path to your new image name.
+//     All images should be placed in the public/images/ folder.
+//   • Contact details for Prabha and Mary are near the bottom — search "EDIT: contact".
+//   • PayPal and support address details are also near the bottom — search "EDIT: support".
+// ──────────────────────────────────────────────────────────────────────────
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="India Mission — Prabha & Mary | Hope Community Church">
+
+  <!-- ════════════════════════════════════════════════
+       HERO — full-width landscape photo of Lonavala hills
+  ════════════════════════════════════════════════ -->
+  <section class="india-hero">
+    <!-- EDIT: hero background image — swap Lonavalamh.jpg for any landscape photo -->
+    <div
+      class="hero-bg"
+      style="background-image: url('/images/Lonavalamh.jpg');"
+      aria-hidden="true"
+    ></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <!-- Back link to the main Mission page -->
+      <a href="/mission" class="back-link">← Back to Mission</a>
+
+      <span class="hero-eyebrow">🇮🇳 India · Lonavala, Maharashtra</span>
+
+      <!-- EDIT: main hero headline -->
+      <h1 class="hero-title">Prabha &amp; Mary</h1>
+
+      <!-- EDIT: hero strapline — one or two sentences -->
+      <p class="hero-subtitle">
+        Serving with YWAM in the hills of Lonavala — planting churches,
+        equipping women, and caring for mission workers across India.
+      </p>
+
+      <!-- Map link — opens Google Maps to YWAM Lonavala -->
+      <a
+        href="https://www.google.com/maps/place/YWAM+Lonavala/@18.7545859,73.3963885,17z"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="map-link"
+      >
+        📍 View Lonavala on the map
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════
+       QUICK STATS STRIP — four headline numbers
+  ════════════════════════════════════════════════ -->
+  <section class="stats-band">
+    <div class="container">
+      <div class="stats-row">
+
+        <!-- EDIT: change each number as updates come in -->
+        <div class="stat-item">
+          <span class="stat-number">200+</span>
+          <span class="stat-label">Easter gathering</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <div class="stat-item">
+          <span class="stat-number">95</span>
+          <!-- 67 graduated + 95 new students -->
+          <span class="stat-label">Tailoring students</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <div class="stat-item">
+          <span class="stat-number">12</span>
+          <!-- 11 tribal + 1 YWAMer baptised -->
+          <span class="stat-label">New baptisms</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <div class="stat-item">
+          <span class="stat-number">7</span>
+          <span class="stat-label">Children in the family</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════
+       MAIN CONTENT — story + photos in alternating layout
+  ════════════════════════════════════════════════ -->
+  <main class="page-content">
+    <div class="container">
+
+
+      <!-- ── SECTION 1: Greetings & ordination ── -->
+      <article class="content-block layout-text-right">
+
+        <!-- Left: photo of the family -->
+        <figure class="block-photo">
+          <!-- EDIT: swap Family.jpg for an updated family photo -->
+          <img
+            src="/images/Family.jpg"
+            alt="Prabha, Mary and their seven children in Lonavala"
+            loading="lazy"
+          />
+          <!-- EDIT: update caption if needed -->
+          <figcaption>Prabha, Mary and their seven children</figcaption>
+        </figure>
+
+        <!-- Right: story text -->
+        <div class="block-text">
+          <span class="section-eyebrow">Greetings from Lonavala</span>
+
+          <!-- EDIT: update this text as new newsletters arrive -->
+          <h2>A Season of Harvest</h2>
+          <p>
+            It has been a privilege to see God work in so many ways through
+            our various ministries here in Lonavala. One of the highlights
+            from recent months was Prabha's ordination — a milestone after
+            years of faithful service — followed by an Easter celebration
+            that brought together many of our house fellowships from across
+            the region.
+          </p>
+          <p>
+            More than <strong>200 people</strong> gathered for that Easter
+            gathering — and we were so encouraged to see that many of those
+            who first came to faith in the early days of this ministry are
+            still walking with the Lord. That gathering has now become a
+            monthly event, which is a wonderful thing to see.
+          </p>
+          <p>
+            After nearly two years of Covid restrictions, we are seeing a
+            fresh harvest. A few weeks back we baptised <strong>11 tribal
+            believers</strong> from the house fellowships, plus one YWAMer
+            who had never received baptism. We look forward to baptising
+            another 8 people very soon.
+          </p>
+        </div>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 2: Easter gathering photo + caption ── -->
+      <article class="content-block layout-text-left">
+
+        <!-- Left: story text -->
+        <div class="block-text">
+          <span class="section-eyebrow">Easter & House Fellowships</span>
+
+          <!-- EDIT: update this text as new newsletters arrive -->
+          <h2>Coming Together</h2>
+          <p>
+            Our house fellowship network has grown steadily over the years,
+            quietly gathering in homes across Lonavala and the surrounding
+            villages. Seeing those scattered groups come together — filling
+            a hall with balloons, colour, and worship — was a powerful
+            reminder of just how much God has been doing.
+          </p>
+          <p>
+            The monthly gatherings that have grown out of that Easter
+            celebration are already bearing fruit, strengthening bonds
+            between believers who might otherwise only see each other rarely.
+          </p>
+
+          <!-- Highlights tick-list -->
+          <div class="highlight-box">
+            <h3>Recent Highlights</h3>
+            <ul>
+              <li>Prabha ordained after years of faithful service</li>
+              <li>Easter gathering attended by 200+ people from house fellowships</li>
+              <li>Monthly combined gatherings now established</li>
+              <li>11 tribal believers and 1 YWAMer baptised</li>
+              <li>8 more believers preparing for baptism</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right: gathering photo -->
+        <figure class="block-photo">
+          <!-- EDIT: swap Gathering.jpg for an updated gathering photo -->
+          <img
+            src="/images/Gathering.jpg"
+            alt="Over 200 people gathered for the Easter house church celebration"
+            loading="lazy"
+          />
+          <!-- EDIT: update caption if needed -->
+          <figcaption>Easter gathering of house churches — 200+ people</figcaption>
+        </figure>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 3: Mary's tailoring + member care seminar ── -->
+      <article class="content-block layout-text-right">
+
+        <!-- Left: seminar photo -->
+        <figure class="block-photo">
+          <!-- EDIT: swap Seminar.jpg for an updated seminar photo -->
+          <img
+            src="/images/Seminar.jpg"
+            alt="Member Care Foundations Course seminar with 24 students and 9 staff"
+            loading="lazy"
+          />
+          <!-- EDIT: update caption if needed -->
+          <figcaption>Member Care Seminar — 24 students, 9 staff</figcaption>
+        </figure>
+
+        <!-- Right: story text -->
+        <div class="block-text">
+          <span class="section-eyebrow">Equipping Women &amp; Workers</span>
+
+          <!-- EDIT: update this text as new newsletters arrive -->
+          <h2>Mary's Work</h2>
+          <p>
+            Mary's tailoring classes continue to flourish. <strong>67
+            students</strong> from last year's three classes have now
+            graduated and received their certificates — a tangible sign of
+            new skills, new confidence, and new economic independence.
+            Three new classes have since started with <strong>95 students</strong>
+            across three new locations.
+          </p>
+          <p>
+            Alongside the tailoring ministry, Mary also led a Member Care
+            Foundations Course during May — a seminar that equips long-term
+            mission staff to provide pastoral care for workers across India.
+            <strong>24 students and 9 staff</strong> attended, and Mary also
+            enjoyed some precious time with her sister's and brother's
+            families immediately afterwards.
+          </p>
+        </div>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 4: Campus / baptism photo ── -->
+      <article class="content-block layout-photo-wide">
+
+        <figure class="block-photo-wide">
+          <!-- EDIT: swap Campus.jpg for an updated campus photo -->
+          <img
+            src="/images/Campus.jpg"
+            alt="Post-baptism celebration on the YWAM Lonavala campus"
+            loading="lazy"
+          />
+          <!-- EDIT: update caption if needed -->
+          <figcaption>Post-baptism celebration on campus — 12 believers</figcaption>
+        </figure>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 5: Prayer box ── -->
+      <section class="prayer-section" aria-labelledby="prayer-heading">
+        <div class="prayer-inner">
+          <span class="section-eyebrow light">How to Pray</span>
+          <h2 id="prayer-heading">Please Pray for Prabha &amp; Mary</h2>
+
+          <!-- EDIT: update prayer points as Prabha and Mary share new requests -->
+          <ul class="prayer-list">
+            <li>For Prabha and Mary as they trust God to raise the additional monthly support they need</li>
+            <li>For the monthly combined gatherings of house fellowships to grow in depth and number</li>
+            <li>For protection and continued fruit as the harvest season continues</li>
+            <li>For the 8 believers preparing for baptism</li>
+            <li>For Mary's tailoring students — that their new skills open doors for them</li>
+            <li>For wisdom and strength as they raise their seven children alongside full-time ministry</li>
+          </ul>
+        </div>
+      </section>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 6: Support & contact ── -->
+      <section class="support-section" aria-labelledby="support-heading">
+
+        <div class="support-header">
+          <span class="section-eyebrow">Partner With the Work</span>
+          <!-- EDIT: heading and intro text -->
+          <h2 id="support-heading">Give &amp; Get in Touch</h2>
+          <p>
+            As YWAM staff, Prabha and Mary receive no salary — they rely
+            entirely on the generosity of friends and churches who believe
+            in this work. They currently have <strong>61% of their budget
+            raised</strong> and need to grow their regular monthly support
+            by at least <strong>$900 per month</strong>. Would you
+            prayerfully consider partnering with them at
+            $25, $50, or $100 per month?
+          </p>
+        </div>
+
+        <div class="support-cards">
+
+          <!-- Contact card -->
+          <div class="support-card">
+            <div class="support-card-icon" aria-hidden="true">📞</div>
+            <h3>Contact Prabha &amp; Mary</h3>
+
+            <!-- EDIT: contact details -->
+            <ul class="contact-list">
+              <li>
+                <strong>Prabha:</strong>
+                <a href="tel:+919890329037">+91 98903 29037</a>
+              </li>
+              <li>
+                <strong>Mary:</strong>
+                <a href="tel:+919860286434">+91 98602 86434</a>
+              </li>
+              <li>
+                <strong>Email:</strong>
+                <a href="mailto:Prabhanandham@hotmail.com">Prabhanandham@hotmail.com</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- PayPal card -->
+          <div class="support-card">
+            <div class="support-card-icon" aria-hidden="true">💛</div>
+            <h3>Give via PayPal</h3>
+            <p>You can send support directly to Prabha and Mary online.</p>
+
+            <!-- EDIT: PayPal link — update if the PayPal address changes -->
+            <a
+              href="https://www.paypal.com/paypalme/Prabhanandham"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-gold"
+            >
+              Give via PayPal →
+            </a>
+
+            <!-- EDIT: PayPal ID shown for reference -->
+            <p class="small-note">PayPal ID: Prabhanandham@hotmail.com</p>
+          </div>
+
+          <!-- Cheque / US donors card -->
+          <div class="support-card">
+            <div class="support-card-icon" aria-hidden="true">✉️</div>
+            <h3>US Donors — Give by Cheque</h3>
+
+            <!-- EDIT: mailing address for YWAM Honolulu -->
+            <p>
+              Make cheques payable to <strong>"YWAM"</strong> and include
+              a separate note saying the gift is for
+              <em>Prabha and Mary in Lonavala, India</em>.
+              You will receive an annual tax receipt.
+            </p>
+            <address class="postal-address">
+              YWAM Oahu<br>
+              P.O. Box 6170<br>
+              Honolulu, HI 96839<br>
+              United States
+            </address>
+          </div>
+
+        </div><!-- end .support-cards -->
+      </section>
+
+
+    </div><!-- end .container -->
+  </main>
+
+
+
+</Layout>
+
+
+<!-- ══════════════════════════════════════════════════
+     STYLES
+     All colours use the site brand tokens defined in :root
+══════════════════════════════════════════════════ -->
+<style>
+  /* ── Brand tokens (must match the rest of the site) ── */
+  :root {
+    --navy:       #0d1f3c;
+    --blue:       #4a90c4;
+    --pale-blue:  #e8f2f9;
+    --gold:       #c9a84c;
+    --gold-dark:  #b8943d;
+    --cream:      #f7f9fc;
+    --text:       #1a2a3a;
+    --text-muted: #4a5568;
+    --font:       'Nunito', 'Century Gothic', sans-serif;
+    --radius:     10px;
+    --max-w:      1160px;
+  }
+
+  /* ── Shared utilities ─────────────────────────────── */
+  * { box-sizing: border-box; }
+
+  .container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .india-hero {
+    position: relative;
+    min-height: 520px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 40%;
+    transform: scale(1.04);
+    transition: transform 8s ease;
+  }
+
+  /* Subtle ken-burns on load */
+  .india-hero:hover .hero-bg { transform: scale(1); }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    /* gradient from bottom so text is always readable */
+    background: linear-gradient(
+      to top,
+      rgba(13, 31, 60, 0.92) 0%,
+      rgba(13, 31, 60, 0.55) 50%,
+      rgba(13, 31, 60, 0.20) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 80px 28px 64px;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--gold); }
+
+  .hero-eyebrow {
+    display: block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: var(--font);
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 16px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font);
+    font-size: clamp(15px, 2vw, 18px);
+    color: rgba(255,255,255,0.82);
+    margin: 0 0 28px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.72);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.28);
+    padding: 9px 18px;
+    border-radius: 50px;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .map-link:hover {
+    color: #fff;
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.15);
+  }
+
+  /* ── STATS BAND ───────────────────────────────────── */
+  .stats-band {
+    background: var(--navy);
+    border-bottom: 3px solid var(--gold);
+  }
+
+  .stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 20px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: var(--font);
+    font-size: clamp(30px, 4vw, 42px);
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.60);
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 48px;
+    background: rgba(255,255,255,0.12);
+    flex-shrink: 0;
+  }
+
+  /* ── PAGE CONTENT wrapper ─────────────────────────── */
+  .page-content {
+    background: var(--cream);
+    padding: 72px 0;
+  }
+
+  /* Divider between sections */
+  .section-divider {
+    height: 1px;
+    background: rgba(13,31,60,0.08);
+    margin: 64px 0;
+  }
+
+  /* ── CONTENT BLOCKS ───────────────────────────────── */
+
+  /* Two-column: photo left, text right */
+  .content-block {
+    display: grid;
+    gap: 56px;
+    align-items: center;
+  }
+
+  .layout-text-right  { grid-template-columns: 1fr 1fr; }
+  .layout-text-left   { grid-template-columns: 1fr 1fr; }
+
+  /* Photo */
+  .block-photo {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(13,31,60,0.14);
+    position: relative;
+  }
+
+  .block-photo img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .block-photo:hover img { transform: scale(1.03); }
+
+  .block-photo figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(13,31,60,0.78));
+    color: rgba(255,255,255,0.88);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 20px 16px 14px;
+  }
+
+  /* Wide single photo */
+  .layout-photo-wide { display: block; }
+
+  .block-photo-wide {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(13,31,60,0.14);
+    position: relative;
+  }
+
+  .block-photo-wide img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .block-photo-wide:hover img { transform: scale(1.02); }
+
+  .block-photo-wide figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(13,31,60,0.78));
+    color: rgba(255,255,255,0.88);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 20px 16px 14px;
+  }
+
+  /* Text column */
+  .block-text { }
+
+  .section-eyebrow {
+    display: block;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+
+  .section-eyebrow.light { color: rgba(255,255,255,0.65); }
+
+  .block-text h2 {
+    font-family: var(--font);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 20px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .block-text p {
+    font-family: var(--font);
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0 0 16px;
+  }
+
+  .block-text p:last-child { margin-bottom: 0; }
+
+  /* Highlights tick-list inside a block */
+  .highlight-box {
+    background: #ffffff;
+    border: 1px solid rgba(13,31,60,0.09);
+    border-left: 4px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-top: 24px;
+  }
+
+  .highlight-box h3 {
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin: 0 0 14px;
+  }
+
+  .highlight-box ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .highlight-box li {
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    padding: 5px 0 5px 22px;
+    position: relative;
+    border-bottom: 1px solid rgba(13,31,60,0.05);
+  }
+
+  .highlight-box li:last-child { border-bottom: none; }
+
+  .highlight-box li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  /* ── PRAYER SECTION ───────────────────────────────── */
+  .prayer-section {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a3a60 100%);
+    border-radius: 14px;
+    padding: 56px 64px;
+    text-align: center;
+  }
+
+  .prayer-section h2 {
+    font-family: var(--font);
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .prayer-list {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 680px;
+    text-align: left;
+    display: grid;
+    gap: 0;
+  }
+
+  .prayer-list li {
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.85);
+    padding: 14px 0 14px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+  }
+
+  .prayer-list li:last-child { border-bottom: none; }
+
+  .prayer-list li::before {
+    content: '🙏';
+    position: absolute;
+    left: 0;
+    font-size: 14px;
+    top: 15px;
+  }
+
+  /* ── SUPPORT SECTION ──────────────────────────────── */
+  .support-section {
+    /* plain cream background from parent */
+  }
+
+  .support-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 48px;
+  }
+
+  .support-header h2 {
+    font-family: var(--font);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .support-header p {
+    font-family: var(--font);
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .support-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .support-card {
+    background: #ffffff;
+    border: 1px solid rgba(13,31,60,0.09);
+    border-radius: 12px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 2px 12px rgba(13,31,60,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .support-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(13,31,60,0.12);
+  }
+
+  .support-card-icon {
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+
+  .support-card h3 {
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0;
+  }
+
+  .support-card p {
+    font-family: var(--font);
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contact-list li {
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .contact-list a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .contact-list a:hover { text-decoration: underline; }
+
+  .btn-gold {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 12px 22px;
+    border-radius: 6px;
+    transition: background 0.18s, color 0.18s;
+    width: fit-content;
+  }
+  .btn-gold:hover { background: var(--gold-dark); color: #ffffff; }
+
+  .small-note {
+    font-family: var(--font);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .postal-address {
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    font-style: normal;
+    background: var(--pale-blue);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 4px;
+  }
+
+  /* ── BOTTOM CTA ───────────────────────────────────── */
+  .bottom-cta {
+    background: var(--navy);
+    border-top: 3px solid var(--gold);
+    padding: 72px 0;
+  }
+
+  .cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .cta-text h2 {
+    font-family: var(--font);
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .cta-text p {
+    font-family: var(--font);
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.72);
+    margin: 0;
+    max-width: 520px;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .btn-cta-gold {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 14px 28px;
+    border-radius: 6px;
+    transition: background 0.18s;
+    white-space: nowrap;
+  }
+  .btn-cta-gold:hover { background: var(--gold-dark); color: #ffffff; }
+
+  .btn-cta-outline {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #ffffff;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.35);
+    padding: 14px 28px;
+    border-radius: 6px;
+    transition: border-color 0.18s, background 0.18s;
+    white-space: nowrap;
+  }
+  .btn-cta-outline:hover {
+    border-color: #ffffff;
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* ── RESPONSIVE ───────────────────────────────────── */
+
+  /* Tablet */
+  @media (max-width: 960px) {
+    .support-cards {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+
+    .india-hero { min-height: 400px; }
+    .hero-content { padding: 60px 20px 48px; }
+
+    /* Stack two-column content blocks */
+    .layout-text-right,
+    .layout-text-left {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    /* On mobile, photo always comes first */
+    .layout-text-left .block-photo { order: -1; }
+
+    .block-photo img,
+    .block-photo-wide img { height: 260px; }
+
+    .prayer-section { padding: 40px 24px; }
+
+    .support-cards { grid-template-columns: 1fr; }
+
+    .cta-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+    .cta-text p { max-width: 100%; }
+    .cta-buttons { flex-direction: column; width: 100%; }
+    .btn-cta-gold,
+    .btn-cta-outline { text-align: center; }
+
+    /* Stat band wraps on small screens */
+    .stat-divider { display: none; }
+    .stat-item { flex: 0 0 50%; border-bottom: 1px solid rgba(255,255,255,0.08); }
+
+    .section-divider { margin: 40px 0; }
+  }
+</style>
