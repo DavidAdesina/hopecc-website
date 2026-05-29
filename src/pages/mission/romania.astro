@@ -1,0 +1,1252 @@
+---
+// src/pages/mission/romania.astro — Hope Community Church
+// ──────────────────────────────────────────────────────────────────────────
+// CONTENT GUIDE FOR IAN:
+//   • To update any text, find the section below and edit the words inside
+//     the HTML tags. Comments like "<!-- EDIT: ... -->" mark every editable spot.
+//   • To update stats (numbers), look for the .stat-number spans.
+//   • To swap a photo, change the src="/images/..." path to your new image name.
+//     All images should be placed in the public/images/ folder.
+//   • Mick & Lorraine's contact details are near the bottom — search "EDIT: contact".
+//   • Prayer points are in the navy prayer section — search "EDIT: prayer".
+// ──────────────────────────────────────────────────────────────────────────
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Romania Mission — Mick & Lorraine Smith | Hope Community Church">
+
+  <!-- ════════════════════════════════════════════════
+       HERO — village rooftop landscape with overlay
+  ════════════════════════════════════════════════ -->
+  <section class="ro-hero">
+    <!-- EDIT: swap Village_1.png for any landscape hero photo -->
+    <div
+      class="hero-bg"
+      style="background-image: url('/images/Village_1.png');"
+      aria-hidden="true"
+    ></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <a href="/mission" class="back-link">← Back to Mission</a>
+
+      <span class="hero-eyebrow">🇷🇴 Romania · Satu-Nou</span>
+
+      <!-- EDIT: main hero headline -->
+      <h1 class="hero-title">Mick &amp; Lorraine Smith</h1>
+
+      <!-- EDIT: hero strapline -->
+      <p class="hero-subtitle">
+        Over thirty years of friendship, faithfulness, and gospel work in the
+        villages of north-east Romania — walking alongside Pastor Simon &amp;
+        Oana Andronic in Satu-Nou.
+      </p>
+
+      <!-- Map link — opens Google Maps to Satu-Nou -->
+      <a
+        href="https://www.google.com/maps/place/Satu+Nou,+Romania"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="map-link"
+      >
+        📍 View Satu-Nou on the map
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════
+       QUICK STATS STRIP
+  ════════════════════════════════════════════════ -->
+  <section class="stats-band">
+    <div class="container">
+      <div class="stats-row">
+
+        <!-- EDIT: change each number as updates come in -->
+        <div class="stat-item">
+          <span class="stat-number">30+</span>
+          <span class="stat-label">Years of partnership</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <div class="stat-item">
+          <span class="stat-number">23</span>
+          <span class="stat-label">Children sponsored in school</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <div class="stat-item">
+          <span class="stat-number">7</span>
+          <span class="stat-label">Andronic children (the founding family)</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+
+        <div class="stat-item">
+          <span class="stat-number">1</span>
+          <span class="stat-label">New children's home — Casa Andrei</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════
+       MAP + ORIGIN STORY
+  ════════════════════════════════════════════════ -->
+  <main class="page-content">
+    <div class="container">
+
+
+      <!-- ── SECTION 1: Where is Romania + how it began ── -->
+      <article class="content-block layout-text-right">
+
+        <!-- Left: Europe map highlighting Romania -->
+        <figure class="block-photo">
+          <!-- EDIT: Romania.jpg is the Europe map image -->
+          <img
+            src="/images/Romania.jpg"
+            alt="Map of Europe with Romania highlighted in the east"
+            loading="lazy"
+          />
+          <figcaption>Romania sits in the heart of Eastern Europe</figcaption>
+        </figure>
+
+        <!-- Right: story text -->
+        <div class="block-text">
+          <span class="section-eyebrow">How It All Began</span>
+
+          <!-- EDIT: update this text as needed -->
+          <h2>Thirty Years of Friendship</h2>
+          <p>
+            Our connection with Romania stretches back over thirty years, when
+            we were first introduced to the Andronic family — Mircea &amp;
+            Felicia Andronic, who lived in the north-eastern city of Bacau with
+            their seven children: Daniel, Daniela, Cornel, Cornelia, Simon,
+            Simona and Marcel. They were faithful members of the local Baptist
+            church, and we visited them regularly — often two or three times a year.
+          </p>
+          <p>
+            Mircea was both a pastor and a missionary. Joining him on visits to
+            the churches he had planted across the surrounding area gave us a
+            window into a world of quiet, resilient faith. One of those church
+            plants began in a farmer's house in a village called Calin — and
+            that small gathering eventually grew into the Baptist church of
+            <strong>Satu-Nou</strong>.
+          </p>
+          <p>
+            Mircea and Felicia have since passed on to glory, and their children
+            are now spread across the world. But <strong>Simon Andronic</strong> —
+            one of those seven children — became the pastor of the very church
+            his father planted. He now leads it alongside his wife Oana, and the
+            work continues to grow.
+          </p>
+        </div>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 2: Village life — carousel + text ── -->
+      <article class="content-block layout-text-left">
+
+        <!-- Left: text about village life -->
+        <div class="block-text">
+          <span class="section-eyebrow">Life in Satu-Nou</span>
+
+          <!-- EDIT: update village description text -->
+          <h2>A Village in Need</h2>
+          <p>
+            Satu-Nou is a very poor village. Most homes are heated by wood-burning
+            stoves that double as the family cooker. Many are still built the
+            old-fashioned way — walls of clay and cow-dung bricks, strengthened
+            with branches woven through them. For many families, fresh water
+            means a walk of more than a quarter of a mile to the nearest well.
+          </p>
+          <p>
+            Many parents travel away for work, leaving children to look after
+            themselves — a situation that brings real risks of abuse and neglect.
+            When some of the men do find labouring work locally, they are
+            sometimes paid in alcohol rather than money. Simon recounted the
+            story of a young boy who turned up at church drunk — a sobering
+            reminder of the pressures the community faces.
+          </p>
+          <p>
+            Despite all of this, the church in Satu-Nou is a genuine beacon of
+            hope — offering community, dignity and the love of Christ to a
+            village that badly needs it.
+          </p>
+        </div>
+
+        <!-- Right: sliding village photo carousel -->
+        <div class="village-carousel" aria-label="Photos of Satu-Nou village">
+          <div class="carousel-track" id="villageTrack">
+            <!-- EDIT: Village_1.png, Village_2.png, Village_3.png — swap for updated photos -->
+            <div class="carousel-slide">
+              <img src="/images/Village_1.png" alt="Houses in Satu-Nou village" loading="lazy" />
+            </div>
+            <div class="carousel-slide">
+              <img src="/images/Village_2.png" alt="Village homes with wooden fencing" loading="lazy" />
+            </div>
+            <div class="carousel-slide">
+              <img src="/images/Village_3.png" alt="A home in Satu-Nou" loading="lazy" />
+            </div>
+          </div>
+          <!-- Dot indicators -->
+          <div class="carousel-dots" id="villageDots" aria-hidden="true">
+            <button class="dot active" data-index="0"></button>
+            <button class="dot" data-index="1"></button>
+            <button class="dot" data-index="2"></button>
+          </div>
+        </div>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 3: The well + dental mission ── -->
+      <article class="content-block layout-text-right">
+
+        <!-- Left: the well photo -->
+        <figure class="block-photo">
+          <!-- EDIT: Well.png — the photo of the village well -->
+          <img
+            src="/images/Well.png"
+            alt="Village water well in Satu-Nou — some are over a quarter-mile from homes"
+            loading="lazy"
+          />
+          <figcaption>The village well — a lifeline more than a quarter-mile from some homes</figcaption>
+        </figure>
+
+        <!-- Right: dental mission text -->
+        <div class="block-text">
+          <span class="section-eyebrow">August 2022</span>
+
+          <!-- EDIT: update this text -->
+          <h2>The Dental Mission &amp; Our Team</h2>
+          <p>
+            During our August 2022 visit — with Mick, Lorraine, Brooke Smith and
+            Micah Powell — a dentistry mission team arrived for a week and ran a
+            free clinic in the village school. This team, led by Simon's brother-in-law
+            Daniel and Simon's sister Cornelia (who live in America), has served
+            the community for the last three years running. The clinic is open to
+            all surrounding villages, not just Satu-Nou, and is full almost every day.
+          </p>
+          <p>
+            <strong>Brooke and Micah</strong> helped at the clinic, taking blood
+            pressure readings as adults signed in. Lorraine got stuck in too —
+            helping nurses prepare free hygiene bags (toothpaste, toothbrushes,
+            floss) for patients on their way out, and spending most days cleaning
+            and sterilising the drills and equipment used for fillings and extractions.
+          </p>
+          <p>
+            Once the week in Satu-Nou was complete, the team moved on to a further
+            week of dental mission in Moldova — a remarkable commitment.
+          </p>
+        </div>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 4: Children + school sponsorship — Brooke photo ── -->
+      <article class="content-block layout-text-left">
+
+        <!-- Left: text about children and sponsorship -->
+        <div class="block-text">
+          <span class="section-eyebrow">Investing in Young Lives</span>
+
+          <!-- EDIT: update this text -->
+          <h2>Children, School &amp; Casa Andrei</h2>
+          <p>
+            Brooke and Micah also spent time with girls from the village during
+            the visit — playing games, doing their hair, and simply being present.
+            The girls came back most days, especially when they knew food was around.
+            It was a simple but powerful expression of care in a community where
+            many children go unnoticed.
+          </p>
+          <p>
+            Because of the village's remote location, getting to secondary school
+            is a genuine challenge. The nearest option is in Bacau — roughly an
+            hour away. Simon runs a <strong>sponsorship programme</strong> where
+            supporters fund a child's weekly accommodation in Bacau so they can
+            attend school Monday to Friday. He also arranges extra tuition on
+            Monday evenings, because the standard of primary education in these
+            villages leaves a lot to be desired.
+            <strong>23 children</strong> from surrounding villages are currently
+            on this programme. Simon takes them in on Sunday evenings and collects
+            them again on Friday.
+          </p>
+          <p>
+            Opposite the church in Satu-Nou, a house is nearing completion that
+            will serve as a home for vulnerable children from the village. It has
+            been named <strong>Casa Andrei</strong> — after the first boy who
+            will live there. Hope Community Church aims to help support and run
+            this house alongside Simon and Oana as this becomes possible.
+          </p>
+
+          <!-- Highlights box -->
+          <div class="highlight-box">
+            <h3>Ministries in Satu-Nou</h3>
+            <ul>
+              <li>Baptist church led by Simon &amp; Oana Andronic</li>
+              <li>Annual dental mission clinic (open to all surrounding villages)</li>
+              <li>School sponsorship for 23 children from remote villages</li>
+              <li>Casa Andrei — a new home for vulnerable children</li>
+              <li>After-school tutoring and pastoral care for sponsored students</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right: Brooke photo with children -->
+        <figure class="block-photo">
+          <!-- EDIT: Brooke.jpg — the photo of Brooke and Micah with village children -->
+          <img
+            src="/images/Brooke.jpg"
+            alt="Brooke and Micah spending time with girls from the village in Satu-Nou"
+            loading="lazy"
+          />
+          <figcaption>Brooke and Micah with girls from the village in Satu-Nou</figcaption>
+        </figure>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 5: Program photo — school sponsorship cohort ── -->
+      <article class="content-block layout-photo-wide">
+        <figure class="block-photo-wide">
+          <!-- EDIT: Program.jpg — the group photo of sponsored students -->
+          <img
+            src="/images/Program.jpg"
+            alt="Students on Simon's school sponsorship programme — 'O șansă pentru noi' (A chance for us)"
+            loading="lazy"
+          />
+          <!-- EDIT: update caption if needed -->
+          <figcaption>
+            Students on the "O șansă pentru noi" (A Chance For Us) sponsorship programme, 2021–2022
+          </figcaption>
+        </figure>
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 6: Mick & Lorraine — closing personal note ── -->
+      <article class="content-block layout-text-right">
+
+        <!-- Left: photo of Mick & Lorraine -->
+        <figure class="block-photo block-photo--portrait">
+          <!-- EDIT: Mick.jpg — the photo of Mick & Lorraine Smith -->
+          <img
+            src="/images/Mick.jpg"
+            alt="Mick and Lorraine Smith, who have visited Satu-Nou for many years"
+            loading="lazy"
+          />
+          <figcaption>Mick &amp; Lorraine Smith</figcaption>
+        </figure>
+
+        <!-- Right: personal note -->
+        <div class="block-text">
+          <span class="section-eyebrow">In Their Own Words</span>
+
+          <!-- EDIT: update this personal note from Mick & Lorraine -->
+          <h2>A Long Road, Still Walking</h2>
+          <p>
+            We have been visiting this village for many years, and long may it
+            continue. Romania holds a deep place in our hearts — a place where
+            we have seen resilience, warmth, and the grace of God at work in
+            the most unexpected circumstances.
+          </p>
+          <p>
+            We pray that we can be a genuine help in some way, as God continues
+            to work out his purposes through Simon &amp; Oana in Satu-Nou. The
+            needs are real and the challenges are many — but so is the hope.
+          </p>
+          <p class="signature">— Mick &amp; Lorraine Smith</p>
+        </div>
+
+      </article>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 7: Prayer panel ── -->
+      <section class="prayer-section" aria-labelledby="prayer-heading">
+        <div class="prayer-inner">
+          <span class="section-eyebrow light">How to Pray</span>
+          <h2 id="prayer-heading">Please Pray for Romania</h2>
+
+          <!-- EDIT: update prayer points as Mick & Lorraine share new requests -->
+          <ul class="prayer-list">
+            <li>For Simon &amp; Oana as they lead the church and serve the whole village community</li>
+            <li>For the 23 sponsored children — that education opens doors and changes their futures</li>
+            <li>For the completion of Casa Andrei and for wisdom in running a home for vulnerable children</li>
+            <li>For protection for children left at home while parents work away</li>
+            <li>For the annual dental mission team — for health, provision and continued impact</li>
+            <li>For Mick, Lorraine and the team as they plan future visits and support from the UK</li>
+            <li>For the church in Satu-Nou to be a place of safety and hope for the whole village</li>
+          </ul>
+        </div>
+      </section>
+
+
+      <!-- ── DIVIDER ── -->
+      <div class="section-divider" aria-hidden="true"></div>
+
+
+      <!-- ── SECTION 8: Support & contact ── -->
+      <section class="support-section" aria-labelledby="support-heading">
+
+        <div class="support-header">
+          <span class="section-eyebrow">Get Involved</span>
+          <!-- EDIT: heading and intro text -->
+          <h2 id="support-heading">Partner With the Work in Romania</h2>
+          <p>
+            Whether through prayer, sponsoring a child's schooling, or supporting
+            the Casa Andrei children's home, there are meaningful ways to stand
+            with Simon &amp; Oana in Satu-Nou. Get in touch with Mick or
+            the church office to find out more.
+          </p>
+        </div>
+
+        <div class="support-cards">
+
+          <!-- Contact: Mick & Lorraine -->
+          <div class="support-card">
+            <div class="support-card-icon" aria-hidden="true">📞</div>
+            <h3>Contact Mick &amp; Lorraine</h3>
+
+            <!-- EDIT: contact details for Mick & Lorraine -->
+            <ul class="contact-list">
+              <li>
+                <strong>Phone:</strong>
+                <a href="tel:01455233798">01455 233798</a>
+              </li>
+              <li>
+                <strong>Email:</strong>
+                <a href="mailto:info@hopecc.org.uk">info@hopecc.org.uk</a>
+              </li>
+            </ul>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:8px;">
+              Contact the church office and ask about the Romania mission — we'll
+              put you in touch with Mick &amp; Lorraine directly.
+            </p>
+          </div>
+
+          <!-- Child sponsorship -->
+          <div class="support-card">
+            <div class="support-card-icon" aria-hidden="true">🎓</div>
+            <h3>Sponsor a Child's Schooling</h3>
+            <p>
+              Simon's programme funds weekly boarding in Bacau so children from
+              remote villages can attend secondary school. Your support gives a
+              young person a future they would not otherwise have.
+            </p>
+            <!-- EDIT: add a link or contact method for sponsorship when available -->
+            <a href="mailto:info@hopecc.org.uk?subject=Romania%20Child%20Sponsorship" class="btn-gold">
+              Find Out More →
+            </a>
+          </div>
+
+          <!-- Casa Andrei -->
+          <div class="support-card">
+            <div class="support-card-icon" aria-hidden="true">🏠</div>
+            <h3>Support Casa Andrei</h3>
+            <p>
+              Casa Andrei — named after the first boy who will live there — is a
+              home for vulnerable children from the village, nearing completion
+              opposite the church. Hope Community Church is committed to helping
+              support this work alongside Simon &amp; Oana.
+            </p>
+            <!-- EDIT: add a giving link when available -->
+            <a href="mailto:info@hopecc.org.uk?subject=Casa%20Andrei%20Support" class="btn-gold">
+              Get Involved →
+            </a>
+          </div>
+
+        </div><!-- end .support-cards -->
+      </section>
+
+
+    </div><!-- end .container -->
+  </main>
+
+
+
+</Layout>
+
+
+<!-- ══════════════════════════════════════════════════
+     STYLES
+     All colours use the site brand tokens — match the rest of the site
+══════════════════════════════════════════════════ -->
+<style>
+  /* ── Brand tokens (must match the rest of the site) ── */
+  :root {
+    --navy:       #0d1f3c;
+    --blue:       #4a90c4;
+    --pale-blue:  #e8f2f9;
+    --gold:       #c9a84c;
+    --gold-dark:  #b8943d;
+    --cream:      #f7f9fc;
+    --text:       #1a2a3a;
+    --text-muted: #4a5568;
+    --font:       'Nunito', 'Century Gothic', sans-serif;
+    --radius:     10px;
+    --max-w:      1160px;
+    /* Romania accent colour — red, matching the flag -->
+    --ro-red:     #c0392b;
+    --ro-red-dark:#a93226;
+  }
+
+  /* ── Shared utilities ─────────────────────────────── */
+  * { box-sizing: border-box; }
+
+  .container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .ro-hero {
+    position: relative;
+    min-height: 520px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 40%;
+    transform: scale(1.04);
+    transition: transform 8s ease;
+  }
+
+  /* Subtle ken-burns on load */
+  .ro-hero:hover .hero-bg { transform: scale(1); }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(13, 31, 60, 0.92) 0%,
+      rgba(13, 31, 60, 0.55) 50%,
+      rgba(13, 31, 60, 0.20) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 80px 28px 64px;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--gold); }
+
+  .hero-eyebrow {
+    display: block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: var(--font);
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 16px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font);
+    font-size: clamp(15px, 2vw, 18px);
+    line-height: 1.65;
+    color: rgba(255,255,255,0.82);
+    margin: 0 0 28px;
+    max-width: 640px;
+  }
+
+  .map-link {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 9px 18px;
+    border-radius: 20px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .map-link:hover { border-color: var(--gold); color: var(--gold); }
+
+
+  /* ── STATS BAND ───────────────────────────────────── */
+  .stats-band {
+    background: var(--navy);
+    padding: 0;
+  }
+
+  .stats-row {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .stat-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 32px 16px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: var(--font);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.60);
+    max-width: 140px;
+    line-height: 1.4;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.10);
+    margin: 20px 0;
+  }
+
+
+  /* ── PAGE CONTENT ─────────────────────────────────── */
+  .page-content {
+    background: var(--cream);
+    padding: 72px 0 64px;
+  }
+
+
+  /* ── CONTENT BLOCKS ───────────────────────────────── */
+  .content-block {
+    display: grid;
+    gap: 56px;
+    align-items: center;
+  }
+
+  /* Photo left, text right */
+  .layout-text-right {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Text left, photo right */
+  .layout-text-left {
+    grid-template-columns: 1fr 1fr;
+  }
+  .layout-text-left .block-text { order: 1; }
+  .layout-text-left .block-photo,
+  .layout-text-left .village-carousel { order: 2; }
+
+  /* Full-width photo */
+  .layout-photo-wide {
+    grid-template-columns: 1fr;
+  }
+
+
+  /* ── BLOCK PHOTO ──────────────────────────────────── */
+  .block-photo {
+    margin: 0;
+  }
+
+  .block-photo img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+    box-shadow: 0 4px 24px rgba(13,31,60,0.12);
+  }
+
+  /* Portrait photo (Mick & Lorraine) — constrained height so it doesn't stretch */
+  .block-photo--portrait img {
+    height: 460px;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .block-photo figcaption {
+    font-family: var(--font);
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    padding-left: 4px;
+    font-style: italic;
+  }
+
+  /* Wide photo strip */
+  .block-photo-wide {
+    margin: 0;
+  }
+
+  .block-photo-wide img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+    box-shadow: 0 4px 24px rgba(13,31,60,0.12);
+  }
+
+  .block-photo-wide figcaption {
+    font-family: var(--font);
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    padding-left: 4px;
+    font-style: italic;
+    text-align: center;
+  }
+
+
+  /* ── VILLAGE CAROUSEL ─────────────────────────────── */
+  /* A simple auto-sliding carousel for the 3 village photos */
+  .village-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 24px rgba(13,31,60,0.12);
+    background: var(--navy);
+    height: 380px;
+  }
+
+  .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    height: 100%;
+  }
+
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Gold dot indicators at the bottom of the carousel */
+  .carousel-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .dot.active {
+    background: var(--gold);
+    transform: scale(1.25);
+  }
+
+
+  /* ── BLOCK TEXT ───────────────────────────────────── */
+  .section-eyebrow {
+    display: block;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ro-red);
+    margin-bottom: 12px;
+  }
+
+  .block-text h2 {
+    font-family: var(--font);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 20px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .block-text p {
+    font-family: var(--font);
+    font-size: 15.5px;
+    line-height: 1.78;
+    color: var(--text);
+    margin: 0 0 16px;
+  }
+
+  .block-text p:last-child { margin-bottom: 0; }
+
+  .block-text strong { color: var(--navy); font-weight: 800; }
+
+  /* Personal sign-off */
+  .signature {
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: var(--navy) !important;
+    font-style: italic;
+    margin-top: 24px !important;
+    padding-top: 20px;
+    border-top: 2px solid var(--pale-blue);
+  }
+
+
+  /* ── HIGHLIGHTS BOX ───────────────────────────────── */
+  .highlight-box {
+    background: var(--pale-blue);
+    border-left: 4px solid var(--ro-red);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 22px 24px;
+    margin-top: 24px;
+  }
+
+  .highlight-box h3 {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin: 0 0 14px;
+  }
+
+  .highlight-box ul {
+    margin: 0;
+    padding: 0 0 0 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .highlight-box li {
+    font-family: var(--font);
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+
+  /* ── SECTION DIVIDER ──────────────────────────────── */
+  .section-divider {
+    height: 1px;
+    background: rgba(13,31,60,0.08);
+    margin: 64px 0;
+  }
+
+
+  /* ── PRAYER SECTION ───────────────────────────────── */
+  .prayer-section {
+    background: linear-gradient(135deg, var(--navy) 0%, #1a3a6b 100%);
+    border-radius: 16px;
+    padding: 56px 48px;
+    margin: 0 0 8px;
+  }
+
+  .prayer-inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow.light {
+    color: var(--gold);
+  }
+
+  .prayer-section h2 {
+    font-family: var(--font);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .prayer-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 40px;
+  }
+
+  .prayer-list li {
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.82);
+    padding-left: 28px;
+    position: relative;
+  }
+
+  .prayer-list li::before {
+    content: '🙏';
+    position: absolute;
+    left: 0;
+    font-size: 14px;
+    top: 2px;
+  }
+
+
+  /* ── SUPPORT SECTION ──────────────────────────────── */
+  .support-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 48px;
+  }
+
+  .support-header h2 {
+    font-family: var(--font);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .support-header .section-eyebrow { display: block; margin-bottom: 10px; }
+
+  .support-header p {
+    font-family: var(--font);
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .support-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .support-card {
+    background: #ffffff;
+    border: 1px solid rgba(13,31,60,0.09);
+    border-radius: 12px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 2px 12px rgba(13,31,60,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .support-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(13,31,60,0.12);
+  }
+
+  .support-card-icon {
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+
+  .support-card h3 {
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0;
+  }
+
+  .support-card p {
+    font-family: var(--font);
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contact-list li {
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .contact-list a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .contact-list a:hover { text-decoration: underline; }
+
+  .btn-gold {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 12px 22px;
+    border-radius: 6px;
+    transition: background 0.18s, color 0.18s;
+    width: fit-content;
+    margin-top: 4px;
+  }
+  .btn-gold:hover { background: var(--gold-dark); color: #ffffff; }
+
+
+  /* ── BOTTOM CTA ───────────────────────────────────── */
+  .bottom-cta {
+    background: var(--navy);
+    border-top: 3px solid var(--gold);
+    padding: 72px 0;
+  }
+
+  .cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .cta-text h2 {
+    font-family: var(--font);
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .cta-text p {
+    font-family: var(--font);
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.72);
+    margin: 0;
+    max-width: 520px;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .btn-cta-gold {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 14px 28px;
+    border-radius: 6px;
+    transition: background 0.18s;
+    white-space: nowrap;
+  }
+  .btn-cta-gold:hover { background: var(--gold-dark); color: #ffffff; }
+
+  .btn-cta-outline {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #ffffff;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.35);
+    padding: 14px 28px;
+    border-radius: 6px;
+    transition: border-color 0.18s, background 0.18s;
+    white-space: nowrap;
+  }
+  .btn-cta-outline:hover {
+    border-color: #ffffff;
+    background: rgba(255,255,255,0.08);
+  }
+
+
+  /* ── RESPONSIVE ───────────────────────────────────── */
+
+  /* Tablet */
+  @media (max-width: 960px) {
+    .support-cards {
+      grid-template-columns: 1fr 1fr;
+    }
+    .prayer-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+
+    .ro-hero { min-height: 400px; }
+    .hero-content { padding: 60px 20px 48px; }
+
+    /* Stack two-column content blocks */
+    .layout-text-right,
+    .layout-text-left {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    /* On mobile, photo always comes first */
+    .layout-text-left .block-text { order: 2; }
+    .layout-text-left .block-photo,
+    .layout-text-left .village-carousel { order: 1; }
+
+    .block-photo img,
+    .block-photo-wide img { height: 260px; }
+    .block-photo--portrait img { height: 320px; }
+    .village-carousel { height: 260px; }
+
+    .prayer-section { padding: 40px 24px; }
+    .prayer-list { grid-template-columns: 1fr; }
+
+    .support-cards { grid-template-columns: 1fr; }
+
+    .cta-inner {
+      flex-direction: column;
+      text-align: center;
+    }
+    .cta-text p { max-width: 100%; }
+    .cta-buttons { flex-direction: column; width: 100%; }
+    .btn-cta-gold,
+    .btn-cta-outline { text-align: center; }
+
+    /* Stat band wraps on small screens */
+    .stat-divider { display: none; }
+    .stat-item { flex: 0 0 50%; border-bottom: 1px solid rgba(255,255,255,0.08); }
+
+    .section-divider { margin: 40px 0; }
+  }
+</style>
+
+
+<!-- ══════════════════════════════════════════════════
+     CAROUSEL SCRIPT
+     Auto-advances the village photo carousel every 3.5 seconds.
+     Clicking a dot jumps to that slide.
+     Pauses when the user hovers over the carousel.
+══════════════════════════════════════════════════ -->
+<script>
+  (function () {
+    const track  = document.getElementById('villageTrack');
+    const dots   = document.querySelectorAll('#villageDots .dot');
+    const total  = dots.length;
+    let current  = 0;
+    let timer;
+
+    function goTo(index) {
+      current = (index + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+
+    function next() { goTo(current + 1); }
+
+    function startAuto() { timer = setInterval(next, 3500); }
+    function stopAuto()  { clearInterval(timer); }
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        stopAuto();
+        goTo(parseInt(dot.dataset.index));
+        startAuto();
+      });
+    });
+
+    // Pause on hover
+    const carousel = track.closest('.village-carousel');
+    carousel.addEventListener('mouseenter', stopAuto);
+    carousel.addEventListener('mouseleave', startAuto);
+
+    startAuto();
+  })();
+</script>
