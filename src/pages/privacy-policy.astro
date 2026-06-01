@@ -1,0 +1,740 @@
+---
+// privacy-policy.astro — Hope Community Church
+// ─────────────────────────────────────────────────────
+// Drop this in src/pages/privacy-policy.astro
+//
+// EDIT: To update the effective date, search for "EDIT: Effective date"
+// EDIT: To update the Data Controller contact, search for "EDIT: Data Controller"
+// EDIT: To update any section of the policy, find the relevant section heading
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Hope Community Church</title>
+  <meta name="description" content="Hope Community Church's Privacy Policy — how we collect, use and protect your personal information." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0d1f3c;
+      --blue:   #4a90c4;
+      --pale:   #e8f2f9;
+      --gold:   #c9a84c;
+      --cream:  #f7f9fc;
+      --white:  #ffffff;
+      --text-on-navy: rgba(255,255,255,0.82);
+      --muted: rgba(255,255,255,0.58);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* ── Page background ── */
+    .page-wrapper {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Decorative top gradient band ── */
+    .page-hero {
+      background: linear-gradient(160deg, #0d1f3c 0%, #1a3665 55%, #2a5070 100%);
+      border-bottom: 3px solid var(--gold);
+      padding: 3.5rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .page-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 0.85rem;
+    }
+
+    .page-hero h1 span { color: var(--gold); }
+
+    .page-hero p {
+      color: var(--text-on-navy);
+      font-size: 1rem;
+      font-weight: 600;
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    .gold-rule {
+      width: 56px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 1.25rem auto 0;
+    }
+
+    /* ── Content layout ── */
+    .content-wrapper {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+      width: 100%;
+    }
+
+    /* ── Summary card at top ── */
+    .summary-card {
+      background: rgba(74,144,196,0.14);
+      border: 1px solid rgba(74,144,196,0.28);
+      border-left: 4px solid var(--blue);
+      border-radius: 14px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-card p {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-on-navy);
+      line-height: 1.7;
+    }
+
+    /* ── Table of contents ── */
+    .toc {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 3rem;
+    }
+
+    .toc h2 {
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.3rem 2rem;
+    }
+
+    .toc ol li {
+      counter-increment: toc-counter;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+
+    .toc ol li::before {
+      content: counter(toc-counter);
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: var(--gold);
+      min-width: 1.2rem;
+    }
+
+    .toc ol li a {
+      color: rgba(255,255,255,0.70);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: color 0.2s;
+      line-height: 1.5;
+    }
+
+    .toc ol li a:hover {
+      color: var(--white);
+    }
+
+    /* ── Sections ── */
+    .policy-section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 100px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .section-num {
+      width: 36px;
+      height: 36px;
+      background: var(--gold);
+      color: var(--navy);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.88rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .policy-section p {
+      color: var(--text-on-navy);
+      font-size: 0.97rem;
+      font-weight: 600;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .policy-section p:last-child { margin-bottom: 0; }
+
+    /* Inline links */
+    .policy-section a {
+      color: #7ec8f0;
+      text-decoration: underline;
+    }
+    .policy-section a:hover { color: var(--white); }
+
+    /* Lists within policy */
+    .policy-list {
+      list-style: none;
+      margin: 0.75rem 0 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .policy-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--text-on-navy);
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.65;
+    }
+
+    .policy-list li::before {
+      content: '›';
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      line-height: 1.5;
+    }
+
+    /* Sub-heading within a section */
+    .sub-heading {
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--white);
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: rgba(201,168,76,0.10);
+      border: 1px solid rgba(201,168,76,0.28);
+      border-left: 4px solid var(--gold);
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      margin: 1.25rem 0;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0 !important;
+      color: rgba(255,255,255,0.85) !important;
+    }
+
+    /* Contact inline box */
+    .contact-box {
+      background: rgba(13,31,60,0.60);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .contact-box p {
+      margin-bottom: 0.35rem !important;
+      font-size: 0.9rem !important;
+    }
+
+    .contact-box p:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    .contact-box strong { color: var(--gold); }
+
+    /* Rights grid */
+    .rights-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin: 1rem 0;
+    }
+
+    .right-item {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+
+    .right-item h4 {
+      font-size: 0.82rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    .right-item p {
+      font-size: 0.86rem !important;
+      margin-bottom: 0 !important;
+      color: rgba(255,255,255,0.70) !important;
+      line-height: 1.55 !important;
+    }
+
+    /* ── Effective date bar ── */
+    .date-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+      padding: 0.85rem 1.25rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .date-bar span {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .date-bar span strong { color: rgba(255,255,255,0.75); }
+
+    /* ── Back to top ── */
+    .back-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--gold);
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 1rem;
+      transition: opacity 0.2s;
+    }
+    .back-top:hover { opacity: 0.75; }
+
+    /* ── Footer ── */
+    .page-footer {
+      text-align: center;
+      padding: 1.5rem 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.40);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: auto;
+    }
+
+    .page-footer a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: underline;
+    }
+
+    /* ── Mobile responsive ── */
+    @media (max-width: 640px) {
+      .content-wrapper { padding: 2rem 1.1rem 4rem; }
+
+      .toc ol { grid-template-columns: 1fr; }
+
+      .rights-grid { grid-template-columns: 1fr; }
+
+      .section-header h2 { font-size: 1.1rem; }
+
+      .date-bar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+
+    <!-- Navbar -->
+    <!-- EDIT: Replace this with your Navbar component: <Navbar /> -->
+    <nav style="background:#0d1f3c;border-bottom:2px solid #c9a84c;padding:0 2rem;">
+      <div style="max-width:1200px;margin:0 auto;height:68px;display:flex;align-items:center;justify-content:space-between;">
+        <a href="/" style="text-decoration:none;">
+          <img src="/images/logo-white.svg" alt="Hope Community Church" style="height:52px;width:auto;" />
+        </a>
+        <div style="display:flex;gap:1.5rem;align-items:center;">
+          <a href="/" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Home</a>
+          <a href="/whats-on" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">What's On</a>
+          <a href="/mission" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Mission</a>
+          <a href="/room-hire" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Room Hire</a>
+          <a href="/contact" style="background:#c9a84c;color:#0d1f3c;padding:8px 16px;border-radius:4px;font-weight:800;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;">Contact Us</a>
+        </div>
+      </div>
+    </nav>
+    <!-- EDIT: Once you have replaced this with <Navbar />, delete the nav block above -->
+
+    <!-- Hero -->
+    <header class="page-hero" id="top">
+      <span class="eyebrow">Hope Community Church</span>
+      <h1>Privacy <span>Policy</span></h1>
+      <p>We respect your privacy and handle your personal information with care, transparency and integrity.</p>
+      <div class="gold-rule"></div>
+    </header>
+
+    <!-- Policy content -->
+    <main class="content-wrapper">
+
+      <!-- Date bar -->
+      <!-- EDIT: Effective date — update these when the policy is reviewed -->
+      <div class="date-bar">
+        <span>📅 <strong>Effective date:</strong> June 2026</span>
+        <span>🔄 <strong>Last reviewed:</strong> June 2026</span>
+        <span>📋 <strong>Registered Charity No:</strong> 1108872</span>
+      </div>
+
+      <!-- Plain-English summary -->
+      <div class="summary-card">
+        <strong>In plain English</strong>
+        <p>
+          We only collect the information we need, we keep it safe, we never sell it, and we always respect your right to know what we hold about you. If you have any questions about this policy, please get in touch — we're happy to help.
+        </p>
+      </div>
+
+      <!-- Table of contents -->
+      <nav class="toc" aria-label="Policy contents">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#who-we-are">Who We Are</a></li>
+          <li><a href="#what-we-collect">Information We Collect</a></li>
+          <li><a href="#how-we-use">How We Use Your Information</a></li>
+          <li><a href="#legal-basis">Legal Basis for Processing</a></li>
+          <li><a href="#who-we-share">Who We Share It With</a></li>
+          <li><a href="#how-long">How Long We Keep It</a></li>
+          <li><a href="#your-rights">Your Rights</a></li>
+          <li><a href="#cookies">Cookies & Website</a></li>
+          <li><a href="#children">Children's Privacy</a></li>
+          <li><a href="#changes">Changes to This Policy</a></li>
+          <li><a href="#contact-us">Contact Us</a></li>
+        </ol>
+      </nav>
+
+      <!-- ─── Section 1 ── Who We Are ─────────────────── -->
+      <section class="policy-section" id="who-we-are">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <h2>Who We Are</h2>
+        </div>
+        <!-- EDIT: Data Controller — update if contacts change -->
+        <p>
+          Hope Community Church ("the Church", "we", "us", "our") is a Christian church based at Deveron Way, Hinckley, Leicestershire, LE10 0XD. We are a registered charity in England and Wales (Charity No. 1108872).
+        </p>
+        <p>
+          For the purposes of data protection law, Hope Community Church is the <strong style="color:var(--white);">Data Controller</strong> for any personal information we hold about you. This means we are responsible for deciding how and why your personal data is used, and for keeping it safe.
+        </p>
+        <div class="contact-box">
+          <p><strong>Data Controller:</strong> Hope Community Church</p>
+          <p><strong>Address:</strong> Deveron Way, Hinckley, Leicestershire, LE10 0XD</p>
+          <p><strong>Email:</strong> <a href="mailto:info@hopecc.org.uk">info@hopecc.org.uk</a></p>
+          <p><strong>Phone:</strong> <a href="tel:01455233798">01455 233798</a></p>
+        </div>
+      </section>
+
+      <!-- ─── Section 2 ── What We Collect ────────────── -->
+      <section class="policy-section" id="what-we-collect">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <h2>Information We Collect</h2>
+        </div>
+        <p>We only collect information that is necessary for the life and activities of our church. This may include:</p>
+
+        <h3 class="sub-heading">Information you give us directly</h3>
+        <ul class="policy-list">
+          <li>Your name, email address and phone number when you contact us via our website, email or phone</li>
+          <li>Your name and contact details when you enquire about room hire, volunteering, or church membership</li>
+          <li>Prayer requests or pastoral information you choose to share with church leaders</li>
+          <li>Gift Aid declarations, which include your name, address and taxpayer status</li>
+          <li>Information provided when volunteering with children or vulnerable adults (including DBS check information and self-declaration forms, as required by our Safeguarding Policy)</li>
+        </ul>
+
+        <h3 class="sub-heading">Information we collect automatically</h3>
+        <ul class="policy-list">
+          <li>Basic technical data when you visit our website (such as browser type and pages visited), collected via cookies and similar technologies</li>
+          <li>IP address for security and analytics purposes</li>
+        </ul>
+
+        <h3 class="sub-heading">Information from third parties</h3>
+        <ul class="policy-list">
+          <li>References provided by referees when someone applies to volunteer in a role involving children or vulnerable adults</li>
+          <li>DBS check results from the Disclosure and Barring Service, processed via Thirtyone:eight</li>
+        </ul>
+      </section>
+
+      <!-- ─── Section 3 ── How We Use It ──────────────── -->
+      <section class="policy-section" id="how-we-use">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <h2>How We Use Your Information</h2>
+        </div>
+        <p>We use your personal information only for the purposes for which it was collected. These include:</p>
+        <ul class="policy-list">
+          <li>Responding to your enquiries and keeping in touch with you about church life and events</li>
+          <li>Processing room hire bookings and related communications</li>
+          <li>Administering Gift Aid claims with HMRC on your behalf</li>
+          <li>Keeping records required for safeguarding, including DBS checks and training records for volunteers and staff who work with children or vulnerable adults</li>
+          <li>Maintaining a church membership or contact list, where you have agreed to be included</li>
+          <li>Sending church newsletters, event updates or prayer updates, where you have opted in to receive these</li>
+          <li>Complying with our legal and regulatory obligations as a registered charity</li>
+        </ul>
+        <div class="highlight-box">
+          <p>
+            💡 <strong style="color:var(--white);">We will never use your information for marketing purposes unrelated to the Church, and we will never sell your data to any third party.</strong>
+          </p>
+        </div>
+      </section>
+
+      <!-- ─── Section 4 ── Legal Basis ─────────────────── -->
+      <section class="policy-section" id="legal-basis">
+        <div class="section-header">
+          <div class="section-num">4</div>
+          <h2>Legal Basis for Processing</h2>
+        </div>
+        <p>
+          Under UK data protection law (UK GDPR and the Data Protection Act 2018), we must have a lawful basis for using your personal information. We rely on the following:
+        </p>
+        <ul class="policy-list">
+          <li><strong style="color:var(--white);">Your consent</strong> — for example, when you sign up to our newsletter or submit a contact form</li>
+          <li><strong style="color:var(--white);">Legitimate interests</strong> — for example, keeping records of room hire bookings or responding to general enquiries</li>
+          <li><strong style="color:var(--white);">Legal obligation</strong> — for example, keeping financial records for Gift Aid, or maintaining safeguarding records as required by law and our Safeguarding Policy</li>
+          <li><strong style="color:var(--white);">Vital interests</strong> — in exceptional circumstances, where we need to share information to protect someone's safety</li>
+        </ul>
+        <p>
+          Where we rely on your consent, you always have the right to withdraw it at any time. This will not affect anything we have already done based on your consent before it was withdrawn.
+        </p>
+      </section>
+
+      <!-- ─── Section 5 ── Who We Share With ───────────── -->
+      <section class="policy-section" id="who-we-share">
+        <div class="section-header">
+          <div class="section-num">5</div>
+          <h2>Who We Share Your Information With</h2>
+        </div>
+        <p>We do not sell, rent or share your personal data with third parties for commercial purposes. We may share your information in the following limited circumstances:</p>
+        <ul class="policy-list">
+          <li><strong style="color:var(--white);">Thirtyone:eight</strong> — our independent Christian safeguarding partner, who manages DBS checks and provides safeguarding advice</li>
+          <li><strong style="color:var(--white);">HMRC</strong> — to process Gift Aid claims on your behalf, where you have completed a Gift Aid declaration</li>
+          <li><strong style="color:var(--white);">Statutory authorities</strong> — such as the Police, Children's Social Services or Adult Social Services, where we are legally required to do so or where there is a safeguarding concern</li>
+          <li><strong style="color:var(--white);">The Charity Commission</strong> — if we are required to make a reportable incident submission as a registered charity</li>
+          <li><strong style="color:var(--white);">Church leadership and trustees</strong> — on a need-to-know basis for the running of the church</li>
+        </ul>
+        <p>
+          Any third parties with whom we share data are required to keep it confidential and to use it only for the purpose for which it was shared.
+        </p>
+      </section>
+
+      <!-- ─── Section 6 ── Retention ────────────────────── -->
+      <section class="policy-section" id="how-long">
+        <div class="section-header">
+          <div class="section-num">6</div>
+          <h2>How Long We Keep Your Information</h2>
+        </div>
+        <p>We keep your information only for as long as is necessary for the purpose for which it was collected, or as required by law. As a general guide:</p>
+        <ul class="policy-list">
+          <li>Contact enquiries — up to 2 years after last contact, unless you become a regular church member</li>
+          <li>Gift Aid declarations — 7 years from the last Gift Aid claim, as required by HMRC</li>
+          <li>Safeguarding records — retained in accordance with our Safeguarding Policy and statutory guidance (this may be for many years in serious cases)</li>
+          <li>DBS records — we record only the date and reference number of a DBS check, not the certificate itself, and update these every three years</li>
+          <li>Room hire records — up to 2 years after the hire date for accounting purposes</li>
+          <li>Church membership or contact lists — as long as you remain part of the church community or until you ask to be removed</li>
+        </ul>
+        <p>
+          When your data is no longer required, it is securely deleted or disposed of.
+        </p>
+      </section>
+
+      <!-- ─── Section 7 ── Your Rights ─────────────────── -->
+      <section class="policy-section" id="your-rights">
+        <div class="section-header">
+          <div class="section-num">7</div>
+          <h2>Your Rights</h2>
+        </div>
+        <p>
+          Under UK data protection law, you have a number of rights regarding the personal information we hold about you. These are summarised below. You can exercise any of these rights by contacting us at <a href="mailto:info@hopecc.org.uk">info@hopecc.org.uk</a>.
+        </p>
+
+        <div class="rights-grid">
+          <div class="right-item">
+            <h4>📋 Right to Access</h4>
+            <p>You can request a copy of the personal information we hold about you.</p>
+          </div>
+          <div class="right-item">
+            <h4>✏️ Right to Rectification</h4>
+            <p>You can ask us to correct any information we hold that is inaccurate or incomplete.</p>
+          </div>
+          <div class="right-item">
+            <h4>🗑️ Right to Erasure</h4>
+            <p>You can ask us to delete your personal data in certain circumstances ("the right to be forgotten").</p>
+          </div>
+          <div class="right-item">
+            <h4>⏸️ Right to Restrict</h4>
+            <p>You can ask us to limit how we use your data while a concern is being resolved.</p>
+          </div>
+          <div class="right-item">
+            <h4>🚫 Right to Object</h4>
+            <p>You can object to us using your data for certain purposes, including direct communications.</p>
+          </div>
+          <div class="right-item">
+            <h4>📦 Right to Portability</h4>
+            <p>In some cases, you can ask for your data in a format that makes it easy to take elsewhere.</p>
+          </div>
+        </div>
+
+        <div class="highlight-box">
+          <p>
+            If you are unhappy with how we have handled your personal data, you also have the right to make a complaint to the <strong style="color:var(--white);">Information Commissioner's Office (ICO)</strong> at <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer">ico.org.uk</a> or by calling <strong style="color:var(--white);">0303 123 1113</strong>. We would, however, always appreciate the opportunity to address your concern directly first.
+          </p>
+        </div>
+      </section>
+
+      <!-- ─── Section 8 ── Cookies ──────────────────────── -->
+      <section class="policy-section" id="cookies">
+        <div class="section-header">
+          <div class="section-num">8</div>
+          <h2>Cookies &amp; Our Website</h2>
+        </div>
+        <p>
+          Our website may use cookies — small text files placed on your device — to help us understand how visitors use the site and to improve your experience. We do not use cookies for advertising or to track you across other websites.
+        </p>
+        <ul class="policy-list">
+          <li><strong style="color:var(--white);">Essential cookies</strong> — required for the website to function correctly</li>
+          <li><strong style="color:var(--white);">Analytics cookies</strong> — help us understand which pages are visited most often so we can improve the site (no personal information is collected)</li>
+        </ul>
+        <p>
+          Our website may contain links to external sites (such as Google Maps, YouTube, or Facebook). We are not responsible for the privacy practices of those sites and encourage you to read their own privacy policies.
+        </p>
+        <p>
+          Our YouTube channel and Facebook page are operated by third-party platforms. Any data you share through those platforms is governed by YouTube's and Meta's own privacy policies respectively.
+        </p>
+      </section>
+
+      <!-- ─── Section 9 ── Children ─────────────────────── -->
+      <section class="policy-section" id="children">
+        <div class="section-header">
+          <div class="section-num">9</div>
+          <h2>Children's Privacy</h2>
+        </div>
+        <p>
+          We take the privacy of children very seriously. We do not collect personal information from children under 13 without the clear consent of a parent or guardian. Where we collect information about children as part of our church activities (for example, for signing-in purposes at children's groups), we handle that information in accordance with our Safeguarding Policy and with the utmost care.
+        </p>
+        <p>
+          Information relating to children and vulnerable adults involved in safeguarding matters is treated with additional sensitivity and is stored securely in our confidential Safeguarding File, accessible only to authorised safeguarding personnel.
+        </p>
+      </section>
+
+      <!-- ─── Section 10 ── Changes ─────────────────────── -->
+      <section class="policy-section" id="changes">
+        <div class="section-header">
+          <div class="section-num">10</div>
+          <h2>Changes to This Policy</h2>
+        </div>
+        <p>
+          We may update this Privacy Policy from time to time to reflect changes in our practices or in data protection law. When we do, we will update the effective date at the top of this page. We encourage you to check this page periodically.
+        </p>
+        <p>
+          If we make significant changes that affect how we use your personal data, we will make reasonable efforts to notify you directly — for example, by email if we hold one for you, or by a notice on our website.
+        </p>
+      </section>
+
+      <!-- ─── Section 11 ── Contact Us ─────────────────── -->
+      <section class="policy-section" id="contact-us">
+        <div class="section-header">
+          <div class="section-num">11</div>
+          <h2>Contact Us</h2>
+        </div>
+        <p>
+          If you have any questions about this Privacy Policy, want to exercise any of your rights, or wish to raise a concern about how we handle your data, please contact us using any of the details below. We aim to respond within 30 days.
+        </p>
+
+        <div class="contact-box">
+          <p><strong>Hope Community Church</strong></p>
+          <p>Deveron Way, Hinckley, Leicestershire, LE10 0XD</p>
+          <p>📧 <a href="mailto:info@hopecc.org.uk">info@hopecc.org.uk</a></p>
+          <p>📞 <a href="tel:01455233798">01455 233798</a></p>
+          <p style="margin-top:0.5rem;color:rgba(255,255,255,0.55) !important;">Charity No. 1108872 &nbsp;·&nbsp; Registered in England and Wales</p>
+        </div>
+
+        <a href="#top" class="back-top">↑ &nbsp;Back to top</a>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      © 2026 Hope Community Church · Registered Charity No. 1108872 · Deveron Way, Hinckley LE10 0XD
+      · <a href="/safeguarding">Safeguarding</a>
+      · <a href="/contact">Contact</a>
+    </footer>
+
+  </div>
+</body>
+</html>
