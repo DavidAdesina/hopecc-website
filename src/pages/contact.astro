@@ -2,6 +2,14 @@
 // contact.astro — Hope Community Church
 // Drop this in src/pages/contact.astro
 // Place church-building.jpeg in public/images/church-building.jpeg
+//
+// ROOM HIRE MODE: When this page is loaded with ?enquiry=room-hire in the URL
+// (e.g. from the nav Room Hire link), a gold Room Hire banner appears above the
+// form, the Subject field is pre-filled, and a checklist of required details is shown.
+// No separate room-hire page is needed — everything is handled here.
+//
+// EDIT: To update the room hire checklist items, search for "EDIT: Room hire checklist"
+// EDIT: To update the heading or sub-text on the banner, search for "EDIT: Room hire banner"
 ---
 
 <!DOCTYPE html>
@@ -229,6 +237,13 @@
     /* ── Form card ── */
     .form-card {
       padding: 2.25rem 2rem;
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+
+    /* Gold glow when in room-hire mode — JS adds .room-hire-active */
+    .form-card.room-hire-active {
+      border-color: rgba(201,168,76,0.55) !important;
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.18), 0 8px 40px rgba(201,168,76,0.15);
     }
 
     .form-card h2 {
@@ -240,6 +255,125 @@
       margin-bottom: 1.4rem;
     }
 
+    /* ── Room Hire Banner ── */
+    /* Hidden by default; shown when ?enquiry=room-hire is detected */
+    .room-hire-banner {
+      display: none;
+      margin-bottom: 1.6rem;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.4);
+    }
+
+    .room-hire-banner.visible {
+      display: block;
+      animation: bannerSlideIn 0.45s ease both;
+    }
+
+    @keyframes bannerSlideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .banner-header {
+      background: linear-gradient(135deg, #c9a84c 0%, #a07830 100%);
+      padding: 1rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .banner-header-icon {
+      font-size: 1.75rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .banner-header-text {
+      flex: 1;
+    }
+
+    .banner-header-text strong {
+      display: block;
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .banner-header-text span {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: rgba(13,31,60,0.75);
+    }
+
+    .banner-body {
+      background: rgba(201,168,76,0.08);
+      padding: 1.1rem 1.4rem 1.3rem;
+    }
+
+    .banner-body p {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 0.9rem;
+      line-height: 1.55;
+    }
+
+    /* EDIT: Room hire checklist — update the items in the HTML below (search "checklist-item") */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.45;
+    }
+
+    .checklist-item .check-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.25);
+      border: 1.5px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 0.6rem;
+      color: var(--gold);
+    }
+
+    .banner-dismiss {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.45);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: 'Nunito', sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .banner-dismiss:hover { color: rgba(255,255,255,0.75); }
+
+    /* ── Form rows ── */
     .form-row { margin-bottom: 1.1rem; }
 
     .form-row label {
@@ -276,7 +410,16 @@
       background: rgba(74,144,196,0.12);
     }
 
+    /* Subject field highlighted gold border in room-hire mode */
+    .form-row input.room-hire-prefilled {
+      border-color: rgba(201,168,76,0.6);
+      background: rgba(201,168,76,0.08);
+    }
+
     .form-row textarea { resize: vertical; min-height: 120px; }
+
+    /* Larger textarea in room-hire mode to encourage full details */
+    .form-row textarea.room-hire-textarea { min-height: 160px; }
 
     .form-grid-2 {
       display: grid;
@@ -378,10 +521,11 @@
       </div>
     </nav>
 
-    <!-- Heading -->
-    <header class="page-heading">
-      <h1>Get in <span>Touch</span></h1>
-      <p>We'd love to hear from you — everyone is welcome</p>
+    <!-- Heading — JS updates this text if in room-hire mode -->
+    <!-- EDIT: Room hire banner — update heading/subtext for room-hire mode in the JS below (search "roomHireMode") -->
+    <header class="page-heading" id="pageHeading">
+      <h1 id="pageTitle">Get in <span>Touch</span></h1>
+      <p id="pageSubtitle">We'd love to hear from you — everyone is welcome</p>
       <div class="gold-rule"></div>
     </header>
 
@@ -453,8 +597,62 @@
       </div>
 
       <!-- Right: Contact form -->
-      <div class="glass form-card">
-        <h2>Send Us a Message</h2>
+      <div class="glass form-card" id="formCard">
+
+        <!-- ═══════════════════════════════════════════════════
+             ROOM HIRE BANNER
+             Hidden by default. JS adds class "visible" when
+             ?enquiry=room-hire is in the URL.
+             EDIT: Room hire checklist — update the text inside each .checklist-item below
+        ═══════════════════════════════════════════════════ -->
+        <div class="room-hire-banner" id="roomHireBanner" role="note" aria-label="Room Hire Enquiry guidance">
+
+          <div class="banner-header">
+            <div class="banner-header-icon">🏠</div>
+            <div class="banner-header-text">
+              <!-- EDIT: Room hire banner — update the heading and sub-line here -->
+              <strong>Room Hire Enquiry</strong>
+              <span>Use the form below to check availability and book a room</span>
+            </div>
+          </div>
+
+          <div class="banner-body">
+            <p>
+              To help us confirm your booking as quickly as possible, please include the following details in your message:
+            </p>
+
+            <!-- EDIT: Room hire checklist — add, remove or change items here -->
+            <div class="checklist">
+              <div class="checklist-item">
+                <div class="check-icon">✓</div>
+                <span><strong>Date required</strong> — the day and date you need the room</span>
+              </div>
+              <div class="checklist-item">
+                <div class="check-icon">✓</div>
+                <span><strong>Start and finish time</strong> — including any set-up time you may need</span>
+              </div>
+              <div class="checklist-item">
+                <div class="check-icon">✓</div>
+                <span><strong>Purpose of hire</strong> — what the room will be used for</span>
+              </div>
+              <div class="checklist-item">
+                <div class="check-icon">✓</div>
+                <span><strong>Number of people</strong> — how many will be attending</span>
+              </div>
+              <div class="checklist-item">
+                <div class="check-icon">✓</div>
+                <span><strong>Your contact details</strong> — name, phone number and email address</span>
+              </div>
+            </div>
+
+            <button class="banner-dismiss" id="bannerDismiss" aria-label="Dismiss room hire guidance">
+              ✕ &nbsp;Dismiss this guidance
+            </button>
+          </div>
+        </div>
+        <!-- end room hire banner -->
+
+        <h2 id="formTitle">Send Us a Message</h2>
 
         <form id="contactForm" novalidate>
           <div class="form-grid-2">
@@ -480,6 +678,7 @@
 
           <div class="form-row">
             <label for="subject">Subject</label>
+            <!-- EDIT: Room hire pre-fill text — update the value set in JS (search "Room Hire Enquiry" in the script) -->
             <input type="text" id="subject" name="subject" placeholder="How can we help?" />
           </div>
 
@@ -514,8 +713,79 @@
   </div>
 
   <script>
-    const form = document.getElementById('contactForm');
-    const btn  = document.getElementById('submitBtn');
+    // ══════════════════════════════════════════════════════
+    //  ROOM HIRE MODE — activated by ?enquiry=room-hire URL param
+    // ══════════════════════════════════════════════════════
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const isRoomHire = params.get('enquiry') === 'room-hire';
+
+      if (isRoomHire) {
+        // 1. Update page heading
+        // EDIT: Room hire banner — update heading text here if needed
+        const titleEl = document.getElementById('pageTitle');
+        const subtitleEl = document.getElementById('pageSubtitle');
+        if (titleEl) titleEl.innerHTML = 'Room <span>Hire</span>';
+        if (subtitleEl) subtitleEl.textContent = 'Use the form below to make a room hire enquiry';
+
+        // 2. Show the banner
+        const banner = document.getElementById('roomHireBanner');
+        if (banner) banner.classList.add('visible');
+
+        // 3. Add gold glow to form card
+        const formCard = document.getElementById('formCard');
+        if (formCard) formCard.classList.add('room-hire-active');
+
+        // 4. Pre-fill subject field
+        // EDIT: Room hire pre-fill text — update this string if needed
+        const subjectInput = document.getElementById('subject');
+        if (subjectInput) {
+          subjectInput.value = 'Room Hire Enquiry';
+          subjectInput.classList.add('room-hire-prefilled');
+        }
+
+        // 5. Update message placeholder with helpful prompt
+        const messageInput = document.getElementById('message');
+        if (messageInput) {
+          messageInput.placeholder =
+            'Please include: date required, start and finish time, purpose of hire, number of people attending, and your contact details.';
+          messageInput.classList.add('room-hire-textarea');
+        }
+
+        // 6. Update form heading
+        const formTitle = document.getElementById('formTitle');
+        if (formTitle) formTitle.textContent = 'Room Hire Enquiry Form';
+
+        // 7. Scroll form into view smoothly after a brief delay
+        setTimeout(() => {
+          const formCard2 = document.getElementById('formCard');
+          if (formCard2) {
+            formCard2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }, 350);
+      }
+
+      // Dismiss button
+      const dismiss = document.getElementById('bannerDismiss');
+      const banner2 = document.getElementById('roomHireBanner');
+      if (dismiss && banner2) {
+        dismiss.addEventListener('click', () => {
+          banner2.style.animation = 'none';
+          banner2.style.transition = 'opacity 0.3s, max-height 0.4s';
+          banner2.style.opacity = '0';
+          banner2.style.maxHeight = '0';
+          banner2.style.overflow = 'hidden';
+          banner2.style.marginBottom = '0';
+          setTimeout(() => { banner2.style.display = 'none'; }, 400);
+        });
+      }
+    })();
+
+    // ══════════════════════════════════════════════════════
+    //  CONTACT FORM SUBMIT HANDLER
+    // ══════════════════════════════════════════════════════
+    const form  = document.getElementById('contactForm');
+    const btn   = document.getElementById('submitBtn');
     const toast = document.getElementById('toast');
 
     form.addEventListener('submit', async (e) => {

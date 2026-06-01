@@ -1,0 +1,36 @@
+---
+// src/pages/room-hire.astro — Hope Community Church
+// ─────────────────────────────────────────────────
+// This page immediately redirects the visitor to the contact page
+// with a ?enquiry=room-hire parameter, which triggers the Room Hire
+// banner and pre-fills the subject field on the contact form.
+//
+// EDIT: No content to update here — all room hire copy lives in contact.astro
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0;url=/contact?enquiry=room-hire" />
+  <title>Room Hire — Hope Community Church</title>
+  <style>
+    body {
+      background: #0d1f3c;
+      color: #ffffff;
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Instant JS redirect (meta refresh is fallback)
+    window.location.replace('/contact?enquiry=room-hire');
+  </script>
+  <p>Redirecting to Room Hire enquiry…</p>
+</body>
+</html>
