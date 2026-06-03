@@ -1,290 +1,944 @@
 ---
+// src/pages/whats-on.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// CONTENT GUIDE FOR IAN:
+//   • Service times: edit the regularServices array near the top of this file.
+//   • Activity cards: edit the activities array (title, day, time, price, desc).
+//   • Gallery images: edit the galleryImages array — add/remove photos freely.
+//     All images are placed in a masonry grid that handles ANY image size.
+//   • Calendar: the Google Calendar embed uses diary@hopecc.org.uk — no changes
+//     needed unless the calendar address changes.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 
 const regularServices = [
   {
-    title: 'Sunday morning service',
-    time: '10:30 am · every Sunday',
-    description:
-      "Sung worship, Bible teaching, and a warm welcome for all. Children's groups run during the service.",
+    title: 'Sunday Morning Service',
+    time: '10:30 am · Every Sunday',
+    description: "Sung worship, Bible teaching, and a warm welcome for all. Children's groups run during the service.",
+    icon: '☀️',
     colour: '#4a90c4',
   },
   {
-    title: 'Sunday evening prayer',
-    time: '6:00 pm · every Sunday',
-    description:
-      'A quieter gathering for prayer and reflection together as a church family.',
+    title: 'Sunday Evening Prayer',
+    time: '6:00 pm · Every Sunday',
+    description: 'A quieter gathering for prayer and reflection together as a church family.',
+    icon: '🌙',
     colour: '#c9a84c',
+  },
+  {
+    title: 'Coffee N Chat',
+    time: '10:00 am · Every Tuesday',
+    description: 'Drop in for a coffee, a chat, and great company. Everyone is welcome — no strings attached.',
+    icon: '☕',
+    colour: '#5ba08a',
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PHOTO CAROUSEL IMAGES
-// To add a new photo: copy the image into public/images/ and add a new line
-// below following the same pattern. The alt text describes what's in the photo
-// (this helps people who use screen readers).
-// ─────────────────────────────────────────────────────────────────────────────
-const carouselImages = [
-  { src: '/images/Church-Front.jpg',  alt: 'Hope Community Church building at night' },
-  { src: '/images/Church-Back.jpg',   alt: 'Hope Community Church exterior with Cancer Research banner' },
+// ── REGULAR ACTIVITIES ─────────────────────────────────────────────────────
+// Each activity card features an image (use the poster or a photo), a title,
+// key details, and a short description. Update text here; images live in
+// public/images/ — change the `img` path to swap the photo.
+// ─────────────────────────────────────────────────────────────────────────
+const activities = [
+  {
+    title: 'Rocky Kids',
+    img: '/images/RockyKids.jpg',
+    tag: 'Children · Yrs 2–6',
+    schedule: 'Fridays in term time · 5:30–7:15pm',
+    price: '£2 entry',
+    description: 'Games, crafts, team challenges, worship, and a tuck shop. A fantastic Friday night out for primary school children.',
+    colour: '#9b2020',
+    tagColour: '#9b2020',
+  },
+  {
+    title: 'Fusion Youth',
+    img: '/images/FusionKids.jpg',
+    tag: 'Youth · Yr 7+',
+    schedule: 'First 3 Fridays monthly · 7:45–9:30pm',
+    price: '£1.50 entry',
+    description: 'Tribal wars, team games, table games, hot chocolates, and a tuck shop. An amazing night out for secondary-age young people.',
+    colour: '#1a3a1a',
+    tagColour: '#2d6e2d',
+  },
+  {
+    title: 'Dadz',
+    img: '/images/Dadz.jpg',
+    tag: 'Families',
+    schedule: 'First Saturday monthly · 10am–12noon',
+    price: '£5 per family',
+    description: 'Dads and kids — arts & crafts, video games, pool, snooker, table tennis, and a hot breakfast cob. A brilliant morning together.',
+    colour: '#1a3556',
+    tagColour: '#2c5f9e',
+  },
+  {
+    title: 'Coffee N Chat',
+    img: '/images/CoffeeNChat.jpg',
+    tag: 'Everyone Welcome',
+    schedule: 'Every Tuesday · 10:00am',
+    price: 'Free',
+    description: 'A relaxed morning drop-in for anyone in the community. Come for coffee, stay for the conversation.',
+    colour: '#5b3a1a',
+    tagColour: '#c07d3a',
+  },
+];
+
+// ── GALLERY IMAGES ─────────────────────────────────────────────────────────
+// These appear in a masonry grid — portrait, landscape, square — it handles
+// them all beautifully. Add or remove images freely.
+// ─────────────────────────────────────────────────────────────────────────
+const galleryImages = [
+  { src: '/images/Church-Front.jpg',  alt: 'Hope Community Church lit up at night' },
   { src: '/images/Christmas.jpg',     alt: 'Christmas fair inside the church hall' },
   { src: '/images/Food.jpg',          alt: 'Homemade cakes and bakes at a church event' },
-  { src: '/images/CoffeeNChat.jpg',   alt: 'Coffee N Chat sign outside the church' },
-  { src: '/images/Dadz.jpg',          alt: 'Dadz event poster – first Saturday of each month' },
-  { src: '/images/RockyKids.jpg',     alt: 'Rocky Kids – Friday evening youth club poster' },
-  { src: '/images/FusionKids.jpg',    alt: 'Fusion Youth event poster' },
-  { src: '/images/Snooker.jpg',       alt: 'Young person playing snooker at the church' },
   { src: '/images/Children.jpg',      alt: 'Children playing video games at a church event' },
+  { src: '/images/Snooker.jpg',       alt: 'Young person playing snooker at the church' },
+  { src: '/images/Church-Back.jpg',   alt: 'Hope Community Church front entrance' },
 ];
 ---
 
 <Layout
   title="What's On | Hope Community Church"
-  description="Regular services, special events, and everything happening at Hope Community Church in Hinckley."
+  description="Regular services, special events, and everything happening at Hope Community Church in Hinckley. Sunday services, Rocky Kids, Fusion Youth, Dadz, Coffee N Chat and more."
 >
 
-  <!-- PAGE HERO -->
-  <section class="bg-navy text-cream py-16 px-6">
-    <div class="max-w-4xl mx-auto">
-      <h1 class="font-extrabold text-4xl md:text-5xl uppercase tracking-wide mb-3">
-        What's on at Hope
-      </h1>
-      <p class="text-baby-blue text-lg max-w-xl">
-        Regular services, special events, and everything in between —
-        you're always welcome.
-      </p>
+<!-- ════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════ -->
+<section class="wo-hero">
+  <div class="wo-hero-bg" aria-hidden="true">
+    <img src="/images/Church-Front.jpg" alt="" class="wo-hero-img" />
+    <div class="wo-hero-overlay"></div>
+  </div>
+  <div class="wo-hero-content">
+    <span class="wo-eyebrow">Hope Community Church · Hinckley</span>
+    <h1 class="wo-hero-title">What's On<br><em>at Hope</em></h1>
+    <p class="wo-hero-sub">
+      Regular services, special events, and everything in between —
+      you're always welcome.
+    </p>
+    <div class="wo-hero-ctas">
+      <a href="#services" class="wo-btn-gold">Our Services</a>
+      <a href="#calendar" class="wo-btn-outline">Full Calendar</a>
     </div>
-  </section>
+  </div>
+  <div class="wo-hero-wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#f7f9fc"/>
+    </svg>
+  </div>
+</section>
 
-  <!-- ═══════════════════════════════════════════════════════════════════════
-    MAIN CONTENT — three columns on desktop, stacked on mobile
-    ┌──────────────┬─────────────────────────┬──────────────────┐
-    │  Services    │      Calendar           │    Carousel      │
-    │  (left col)  │    (centre, wider)      │   (right col)    │
-    └──────────────┴─────────────────────────┴──────────────────┘
-  ════════════════════════════════════════════════════════════════════════ -->
-  <section class="bg-cream py-16 px-6">
-    <div class="max-w-screen-2.3xl mx-auto">
+<!-- ════════════════════════════════════════════════
+     SERVICES
+════════════════════════════════════════════════ -->
+<section class="wo-section wo-services-section" id="services">
+  <div class="wo-container">
+    <div class="wo-section-header">
+      <span class="wo-label">Every week</span>
+      <h2 class="wo-section-title">Regular Services</h2>
+      <p class="wo-section-sub">Whether it's your first visit or you've been coming for years — there's always a seat and a warm welcome waiting for you.</p>
+    </div>
 
-      <div class="grid gap-8 grid-cols-1 lg:grid-cols-[1fr_2fr_2fr] items-start">
-
-        <!-- ── COLUMN 1: Regular Services ── -->
-        <div>
-          <h2 class="font-extrabold text-2xl uppercase text-navy mb-6">
-            Regular services
-          </h2>
-
-          <div class="flex flex-col gap-5">
-            {regularServices.map((s) => (
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-pale-blue">
-                <div class="flex items-center gap-3 mb-2">
-                  <span
-                    class="w-3 h-3 rounded-full shrink-0"
-                    style={`background:${s.colour}`}
-                  />
-                  <h3 class="font-extrabold text-navy text-base uppercase">
-                    {s.title}
-                  </h3>
-                </div>
-                <p class="text-sm text-gray-500 mb-3">{s.time}</p>
-                <p class="text-navy/80 leading-relaxed text-sm">{s.description}</p>
-              </div>
-            ))}
-
-            <!-- A small welcome nudge card to fill remaining space -->
-            <div class="bg-navy rounded-2xl p-6 text-cream shadow-sm">
-              <p class="font-extrabold text-base uppercase mb-2" style="color:#c9a84c">
-                New here?
-              </p>
-              <p class="text-sm leading-relaxed text-cream/80">
-                Whether it's your first time or you've been coming for years —
-                there's always a seat and a warm welcome waiting for you.
-              </p>
-            </div>
+    <div class="wo-services-grid">
+      {regularServices.map((s) => (
+        <div class="wo-service-card">
+          <div class="wo-service-bar" style={`background:${s.colour}`}></div>
+          <div class="wo-service-icon" style={`background:${s.colour}18; color:${s.colour}`}>
+            <span>{s.icon}</span>
+          </div>
+          <div class="wo-service-body">
+            <h3 class="wo-service-title">{s.title}</h3>
+            <p class="wo-service-time">{s.time}</p>
+            <p class="wo-service-desc">{s.description}</p>
           </div>
         </div>
+      ))}
+    </div>
 
-        <!-- ── COLUMN 2: Google Calendar (centre, wider) ── -->
-        <div>
-          <h2 class="font-extrabold text-2xl uppercase text-navy mb-6">
-            Full events calendar
-          </h2>
+    <div class="wo-new-here">
+      <div class="wo-new-here-icon">👋</div>
+      <div>
+        <strong>New here?</strong>
+        Our Sunday morning service at 10:30am is a great place to start.
+        Come as you are — no dress code, no pressure.
+        <a href="/contact" class="wo-inline-link">Get in touch if you have questions →</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-          {/* REPLACE the iframe src below once Ian shares the Google Calendar public URL */}
-          {/* Instructions: Calendar → Settings → share publicly → copy embed code → paste src here */}
-          <div class="rounded-2xl overflow-hidden border border-pale-blue shadow-sm">
+<!-- Wave into dark section -->
+<div class="wo-wave-divider wo-wave-top" aria-hidden="true">
+  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,0 C480,60 960,0 1440,30 L1440,60 L0,60 Z" fill="#0d1f3c"/>
+  </svg>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ACTIVITIES
+════════════════════════════════════════════════ -->
+<section class="wo-section wo-activities-section" id="activities">
+  <div class="wo-container">
+    <div class="wo-section-header wo-section-header--light">
+      <span class="wo-label wo-label--gold">What's happening</span>
+      <h2 class="wo-section-title wo-section-title--light">Activities &amp; Groups</h2>
+      <p class="wo-section-sub wo-section-sub--light">Something for every age and stage — all based right here at Hope.</p>
+    </div>
+
+    <div class="wo-activities-grid">
+      {activities.map((a) => (
+        <div class="wo-activity-card">
+          <div class="wo-activity-img-wrap">
+            <img src={a.img} alt={a.title} class="wo-activity-img" loading="lazy" />
+            <span class="wo-activity-tag" style={`background:${a.tagColour}`}>{a.tag}</span>
+          </div>
+          <div class="wo-activity-body">
+            <h3 class="wo-activity-title">{a.title}</h3>
+            <div class="wo-activity-meta">
+              <span class="wo-meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                {a.schedule}
+              </span>
+              <span class="wo-meta-item wo-meta-price">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                {a.price}
+              </span>
+            </div>
+            <p class="wo-activity-desc">{a.description}</p>
+          </div>
+          <div class="wo-activity-accent" style={`background:${a.colour}`}></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- Wave out of dark section -->
+<div class="wo-wave-divider wo-wave-bottom" aria-hidden="true">
+  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,30 C480,60 960,0 1440,30 L1440,0 L0,0 Z" fill="#0d1f3c"/>
+  </svg>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     CALENDAR
+════════════════════════════════════════════════ -->
+<section class="wo-section wo-calendar-section" id="calendar">
+  <div class="wo-container">
+    <div class="wo-calendar-layout">
+      <div class="wo-calendar-intro">
+        <span class="wo-label">Always up to date</span>
+        <h2 class="wo-section-title">Full Events Calendar</h2>
+        <p class="wo-section-sub">Our live calendar shows everything happening at Hope — services, activities, room bookings, and more. Updated in real time.</p>
+        <div class="wo-calendar-tips">
+          <div class="wo-tip">
+            <span class="wo-tip-icon">📅</span>
+            <span>Click any event for full details</span>
+          </div>
+          <div class="wo-tip">
+            <span class="wo-tip-icon">🔔</span>
+            <span>Add to your own Google Calendar</span>
+          </div>
+          <div class="wo-tip">
+            <span class="wo-tip-icon">📱</span>
+            <span>Works on phone and tablet too</span>
+          </div>
+        </div>
+        <a
+          href="https://calendar.google.com/calendar/embed?src=diary%40hopecc.org.uk&ctz=Europe%2FLondon"
+          class="wo-btn-navy"
+          target="_blank"
+          rel="noopener"
+        >
+          Open in Google Calendar ↗
+        </a>
+      </div>
+
+      <div class="wo-calendar-embed-wrap">
+        <div class="wo-calendar-chrome">
+          <div class="wo-calendar-chrome-bar">
+            <span class="wo-chrome-dot wo-chrome-dot--r"></span>
+            <span class="wo-chrome-dot wo-chrome-dot--y"></span>
+            <span class="wo-chrome-dot wo-chrome-dot--g"></span>
+            <span class="wo-chrome-label">Hope Community Church Calendar</span>
+          </div>
+          <div class="wo-calendar-frame-wrap">
+            <!-- EDIT: If the calendar address changes, update the src value below -->
             <iframe
               src="https://calendar.google.com/calendar/embed?src=diary%40hopecc.org.uk&ctz=Europe%2FLondon&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA"
               style="border:0"
               width="100%"
-              height="620"
+              height="540"
               frameborder="0"
               scrolling="no"
               title="Hope Community Church events calendar"
-            />
+            ></iframe>
           </div>
-
-          <p class="text-sm text-navy font-semibold mt-4 text-center">
-            Calendar not showing?{' '}
-            <a
-              href="https://calendar.google.com/calendar/embed?src=diary%40hopecc.org.uk&ctz=Europe%2FLondon"
-              class="text-baby-blue underline"
-              target="_blank"
-              rel="noopener"
-            >
-              Open in Google Calendar ↗
-            </a>
-          </p>
         </div>
-
-        <!-- ── COLUMN 3: Photo Carousel ── -->
-        <!--
-          HOW THE CAROUSEL WORKS
-          ─────────────────────────────────────────────────────────────────
-          • All photos are stacked on top of each other (position:absolute).
-          • Only the "active" photo is visible; the rest have opacity:0.
-          • A small JavaScript timer (at the bottom of this file) switches
-            the active photo every 4 seconds with a smooth crossfade.
-          • Dot indicators show which photo is active and let visitors click
-            to jump to any photo.
-          • The container height matches the calendar so both columns align.
-          ─────────────────────────────────────────────────────────────────
-        -->
-        <div>
-          <h2 class="font-extrabold text-2xl uppercase text-navy mb-6">
-            Life at Hope
-          </h2>
-
-          <div
-            id="photo-carousel"
-            class="relative w-full rounded-2xl overflow-hidden shadow-sm border border-pale-blue bg-navy"
-            style="height: 620px;"
-            aria-label="Photos from Hope Community Church events"
-          >
-            {carouselImages.map((img, i) => (
-              <img
-                src={img.src}
-                alt={img.alt}
-                class="carousel-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
-                style={i === 0 ? 'opacity:1;' : 'opacity:0;'}
-                loading={i === 0 ? 'eager' : 'lazy'}
-              />
-            ))}
-
-            <!-- Dark gradient at bottom so dots stay readable over any photo -->
-            <div
-              class="absolute bottom-0 left-0 right-0 h-20 pointer-events-none"
-              style="background: linear-gradient(to top, rgba(13,31,60,0.7), transparent);"
-            />
-
-            <!-- Prev / Next arrows -->
-            <button
-              id="carousel-prev"
-              aria-label="Previous photo"
-              class="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-navy/60 hover:bg-navy/90 text-cream rounded-full w-10 h-10 flex items-center justify-center text-xl transition"
-            >
-              &#8249;
-            </button>
-            <button
-              id="carousel-next"
-              aria-label="Next photo"
-              class="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-navy/60 hover:bg-navy/90 text-cream rounded-full w-10 h-10 flex items-center justify-center text-xl transition"
-            >
-              &#8250;
-            </button>
-
-            <!-- Dot indicators -->
-            <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-              {carouselImages.map((_, i) => (
-                <button
-                  class="carousel-dot w-2.5 h-2.5 rounded-full transition-all duration-300"
-                  style={i === 0
-                    ? 'background:#c9a84c; transform:scale(1.3);'
-                    : 'background:rgba(255,255,255,0.5);'}
-                  aria-label={`Go to photo ${i + 1}`}
-                  data-index={i}
-                />
-              ))}
-            </div>
-          </div>
-
-          <p class="text-sm text-navy/60 text-center mt-3 italic">
-            Photos from our community — follow us on{' '}
-            <a
-              href="https://www.facebook.com/hopechurchhinc"
-              class="text-baby-blue underline"
-              target="_blank"
-              rel="noopener"
-            >
-              Facebook
-            </a>
-          </p>
-        </div>
-
-      </div><!-- end grid -->
+        <p class="wo-calendar-fallback">
+          Calendar not showing?
+          <a href="https://calendar.google.com/calendar/embed?src=diary%40hopecc.org.uk&ctz=Europe%2FLondon" target="_blank" rel="noopener" class="wo-inline-link">Open in Google Calendar ↗</a>
+        </p>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CTA STRIP -->
-  <section class="bg-baby-blue py-10 px-6 text-center">
-    <p class="text-white text-lg mb-4">
-      Can't find what you're looking for? We'd love to hear from you.
-    </p>
-    <a
-      href="/contact"
-      class="inline-block bg-gold text-navy font-extrabold uppercase px-8 py-3 rounded-full tracking-wide hover:opacity-90 transition"
-    >
-      Contact us
-    </a>
-  </section>
+<!-- ════════════════════════════════════════════════
+     GALLERY — masonry grid, handles all image sizes
+════════════════════════════════════════════════ -->
+<section class="wo-section wo-gallery-section" id="gallery">
+  <div class="wo-container">
+    <div class="wo-section-header">
+      <span class="wo-label">Our community</span>
+      <h2 class="wo-section-title">Life at Hope</h2>
+      <p class="wo-section-sub">
+        A snapshot of what it looks like to be part of Hope Community Church.
+        <a href="https://www.facebook.com/hopechurchhinc" class="wo-inline-link" target="_blank" rel="noopener">Follow us on Facebook for more →</a>
+      </p>
+    </div>
+
+    <!--
+      MASONRY GALLERY — HOW IT WORKS FOR IAN:
+      ────────────────────────────────────────
+      Photos are placed into CSS columns. They automatically stack and fill
+      the space — portrait photos, landscape photos, posters — all work.
+      You can add as many photos as you like to the galleryImages array above
+      and they will just flow in naturally. No sizing needed.
+    -->
+    <div class="wo-masonry">
+      {galleryImages.map((img) => (
+        <div class="wo-masonry-item">
+          <img
+            src={img.src}
+            alt={img.alt}
+            class="wo-masonry-img"
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     CTA STRIP
+════════════════════════════════════════════════ -->
+<section class="wo-cta-section">
+  <div class="wo-cta-inner">
+    <div class="wo-cta-text">
+      <h2>Can't find what you're looking for?</h2>
+      <p>We'd love to hear from you — drop us a message, give us a call, or just show up on a Sunday.</p>
+    </div>
+    <div class="wo-cta-buttons">
+      <a href="/contact" class="wo-btn-gold">Get in Touch</a>
+      <a href="/room-hire" class="wo-btn-outline">Room Hire</a>
+    </div>
+  </div>
+</section>
 
 </Layout>
 
-<!-- ─────────────────────────────────────────────────────────────────────────
-  CAROUSEL SCRIPT
-  ─────────────────────────────────────────────────────────────────────────
-  Handles: auto-advance, prev/next buttons, dot clicks, pause on hover.
-  To change speed: find 4000 below and change it (1000 = 1 second).
-──────────────────────────────────────────────────────────────────────────── -->
-<script>
-  (function () {
-    const slides = document.querySelectorAll('.carousel-slide');
-    const dots   = document.querySelectorAll('.carousel-dot');
-    let current  = 0;
-    let timer;
+<!-- ════════════════════════════════════════════════
+     STYLES
+════════════════════════════════════════════════ -->
+<style>
+  /* ── Design tokens ─────────────────────────────────────────────────────── */
+  :root {
+    --navy:      #0d1f3c;
+    --blue:      #4a90c4;
+    --pale-blue: #e8f2f9;
+    --gold:      #c9a84c;
+    --gold-dark: #b8943d;
+    --cream:     #f7f9fc;
+    --text:      #1a2a3a;
+    --muted:     #4a5568;
+    --font:      'Nunito', 'Century Gothic', sans-serif;
+    --radius:    14px;
+    --shadow:    0 4px 24px rgba(13,31,60,0.10);
+    --shadow-lg: 0 8px 40px rgba(13,31,60,0.16);
+  }
 
-    const GOLD  = '#c9a84c';
-    const FADED = 'rgba(255,255,255,0.5)';
+  * { box-sizing: border-box; }
 
-    function goTo(index) {
-      slides[current].style.opacity  = '0';
-      dots[current].style.background = FADED;
-      dots[current].style.transform  = 'scale(1)';
+  .wo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
 
-      current = (index + slides.length) % slides.length;
+  .wo-section { padding: 80px 0; }
 
-      slides[current].style.opacity  = '1';
-      dots[current].style.background = GOLD;
-      dots[current].style.transform  = 'scale(1.3)';
-    }
+  .wo-section-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 56px;
+  }
 
-    function next() { goTo(current + 1); }
-    function prev() { goTo(current - 1); }
+  .wo-label {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
 
-    function startTimer() { timer = setInterval(next, 4000); }
-    function resetTimer()  { clearInterval(timer); startTimer(); }
+  .wo-label--gold { color: var(--gold); }
 
-    document.getElementById('carousel-next')?.addEventListener('click', () => { next(); resetTimer(); });
-    document.getElementById('carousel-prev')?.addEventListener('click', () => { prev(); resetTimer(); });
+  .wo-section-title {
+    font-family: var(--font);
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0 0 14px;
+    line-height: 1.2;
+  }
 
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => { goTo(i); resetTimer(); });
-    });
+  .wo-section-title--light { color: #ffffff; }
 
-    const carousel = document.getElementById('photo-carousel');
-    carousel?.addEventListener('mouseenter', () => clearInterval(timer));
-    carousel?.addEventListener('mouseleave', startTimer);
+  .wo-section-sub {
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin: 0;
+  }
 
-    startTimer();
-  })();
-</script>
+  .wo-section-sub--light { color: rgba(255,255,255,0.72); }
+  .wo-section-header--light .wo-section-title { color: #fff; }
+
+  .wo-inline-link {
+    color: var(--blue);
+    text-decoration: underline;
+    font-weight: 700;
+  }
+
+  /* ── Buttons ───────────────────────────────────────────────────────────── */
+  .wo-btn-gold {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--navy);
+    background: var(--gold);
+    padding: 14px 30px;
+    border-radius: 50px;
+    transition: background 0.18s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .wo-btn-gold:hover { background: var(--gold-dark); color: #fff; transform: translateY(-2px); }
+
+  .wo-btn-outline {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #ffffff;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.45);
+    padding: 14px 30px;
+    border-radius: 50px;
+    transition: border-color 0.18s, background 0.18s;
+    white-space: nowrap;
+  }
+  .wo-btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+
+  .wo-btn-navy {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #fff;
+    background: var(--navy);
+    padding: 13px 28px;
+    border-radius: 50px;
+    transition: background 0.18s;
+    white-space: nowrap;
+  }
+  .wo-btn-navy:hover { background: var(--blue); }
+
+  /* ── HERO ──────────────────────────────────────────────────────────────── */
+  .wo-hero {
+    position: relative;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .wo-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .wo-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+  }
+
+  .wo-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(13,31,60,0.92) 0%,
+      rgba(13,31,60,0.75) 50%,
+      rgba(13,31,60,0.55) 100%
+    );
+  }
+
+  .wo-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px 100px;
+    width: 100%;
+  }
+
+  .wo-eyebrow {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .wo-hero-title {
+    font-family: var(--font);
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.05;
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .wo-hero-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .wo-hero-sub {
+    font-family: var(--font);
+    font-size: 18px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.82);
+    max-width: 520px;
+    margin: 0 0 36px;
+  }
+
+  .wo-hero-ctas {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .wo-hero-wave {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    line-height: 0;
+  }
+
+  .wo-hero-wave svg { display: block; width: 100%; }
+
+  /* ── SERVICES ──────────────────────────────────────────────────────────── */
+  .wo-services-section { background: var(--cream); }
+
+  .wo-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .wo-service-card {
+    background: #ffffff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(13,31,60,0.07);
+  }
+
+  .wo-service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .wo-service-bar {
+    height: 5px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .wo-service-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin: 24px 24px 0;
+    flex-shrink: 0;
+  }
+
+  .wo-service-body {
+    padding: 16px 24px 28px;
+    flex: 1;
+  }
+
+  .wo-service-title {
+    font-family: var(--font);
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0 0 6px;
+  }
+
+  .wo-service-time {
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+
+  .wo-service-desc {
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .wo-new-here {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    color: rgba(255,255,255,0.82);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .wo-new-here strong { color: var(--gold); display: block; margin-bottom: 4px; }
+  .wo-new-here .wo-inline-link { color: rgba(255,255,255,0.9); }
+  .wo-new-here-icon { font-size: 32px; flex-shrink: 0; }
+
+  /* ── WAVE DIVIDERS ─────────────────────────────────────────────────────── */
+  .wo-wave-divider { line-height: 0; overflow: hidden; background: var(--cream); }
+  .wo-wave-divider svg { display: block; width: 100%; }
+  .wo-wave-top { margin-bottom: -1px; }
+  .wo-wave-bottom { margin-top: -1px; background: var(--cream); }
+
+  /* ── ACTIVITIES ────────────────────────────────────────────────────────── */
+  .wo-activities-section { background: var(--navy); padding: 80px 0; }
+
+  .wo-activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  .wo-activity-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .wo-activity-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.09);
+  }
+
+  /* Fixed-height image container — crops any image uniformly */
+  .wo-activity-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .wo-activity-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.4s ease;
+  }
+
+  .wo-activity-card:hover .wo-activity-img { transform: scale(1.04); }
+
+  .wo-activity-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-family: var(--font);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 50px;
+  }
+
+  .wo-activity-body { padding: 20px 20px 24px; flex: 1; }
+
+  .wo-activity-title {
+    font-family: var(--font);
+    font-size: 20px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 12px;
+  }
+
+  .wo-activity-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .wo-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.02em;
+  }
+
+  .wo-meta-price { color: var(--gold); }
+
+  .wo-activity-desc {
+    font-family: var(--font);
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.70);
+    margin: 0;
+  }
+
+  .wo-activity-accent { height: 4px; width: 100%; flex-shrink: 0; }
+
+  /* ── CALENDAR ──────────────────────────────────────────────────────────── */
+  .wo-calendar-section { background: var(--cream); }
+
+  .wo-calendar-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .wo-calendar-intro .wo-section-title,
+  .wo-calendar-intro .wo-section-sub,
+  .wo-calendar-intro .wo-label { text-align: left; }
+  .wo-calendar-intro .wo-section-sub { margin-bottom: 24px; }
+  .wo-calendar-intro .wo-label { display: block; }
+
+  .wo-calendar-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding: 20px;
+    background: var(--pale-blue);
+    border-radius: var(--radius);
+    border: 1px solid rgba(74,144,196,0.2);
+  }
+
+  .wo-tip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .wo-tip-icon { font-size: 18px; flex-shrink: 0; }
+
+  .wo-calendar-chrome {
+    background: #ffffff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(13,31,60,0.08);
+  }
+
+  .wo-calendar-chrome-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    background: #f1f3f4;
+    border-bottom: 1px solid rgba(13,31,60,0.08);
+  }
+
+  .wo-chrome-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .wo-chrome-dot--r { background: #ff5f57; }
+  .wo-chrome-dot--y { background: #febc2e; }
+  .wo-chrome-dot--g { background: #28c840; }
+
+  .wo-chrome-label {
+    font-family: var(--font);
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  .wo-calendar-frame-wrap iframe { display: block; }
+
+  .wo-calendar-fallback {
+    text-align: center;
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  /* ── GALLERY ───────────────────────────────────────────────────────────── */
+  .wo-gallery-section { background: #f0f4f8; }
+
+  /*
+    CSS MASONRY — the secret to handling any image size:
+    "columns" splits content into vertical columns.
+    Each image renders at its natural aspect ratio (height: auto).
+    Nothing is cropped or stretched. Posters sit next to landscape shots
+    and the browser just fills each column from top to bottom.
+  */
+  .wo-masonry {
+    columns: 3;
+    column-gap: 16px;
+  }
+
+  .wo-masonry-item {
+    break-inside: avoid;   /* prevents a photo splitting across two columns */
+    margin-bottom: 16px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(13,31,60,0.12);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .wo-masonry-item:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 8px 28px rgba(13,31,60,0.18);
+  }
+
+  .wo-masonry-img {
+    width: 100%;
+    height: auto;     /* natural height — no cropping, no black bars */
+    display: block;
+  }
+
+  /* ── CTA SECTION ───────────────────────────────────────────────────────── */
+  .wo-cta-section {
+    background: var(--navy);
+    border-top: 4px solid var(--gold);
+    padding: 64px 0;
+  }
+
+  .wo-cta-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .wo-cta-text h2 {
+    font-family: var(--font);
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 10px;
+  }
+
+  .wo-cta-text p {
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.70);
+    margin: 0;
+    max-width: 480px;
+  }
+
+  .wo-cta-buttons { display: flex; gap: 14px; flex-shrink: 0; }
+
+  /* ── RESPONSIVE ────────────────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .wo-calendar-layout { grid-template-columns: 1fr; }
+
+    .wo-calendar-intro .wo-section-title,
+    .wo-calendar-intro .wo-section-sub,
+    .wo-calendar-intro .wo-label { text-align: center; }
+
+    .wo-calendar-intro .wo-btn-navy { display: block; text-align: center; }
+
+    .wo-masonry { columns: 2; }
+  }
+
+  @media (max-width: 680px) {
+    .wo-hero { min-height: 440px; }
+    .wo-hero-content { padding: 60px 20px 80px; }
+    .wo-hero-ctas { flex-direction: column; align-items: flex-start; }
+
+    .wo-section { padding: 56px 0; }
+
+    .wo-masonry { columns: 1; }
+
+    .wo-cta-inner { flex-direction: column; text-align: center; }
+    .wo-cta-text p { max-width: 100%; }
+    .wo-cta-buttons { flex-direction: column; width: 100%; }
+    .wo-btn-gold, .wo-btn-outline { text-align: center; }
+
+    .wo-new-here { flex-direction: column; text-align: center; gap: 12px; }
+
+    .wo-services-grid { grid-template-columns: 1fr; }
+  }
+</style>
