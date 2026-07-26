@@ -1,600 +1,24 @@
 ---
 // safeguarding.astro — Hope Community Church
 // ─────────────────────────────────────────────────────
-// Drop this in src/pages/safeguarding.astro
+// MIGRATED to use the shared <Layout> (Navbar + Footer) instead of a
+// standalone HTML document, so this page gets the same mobile hamburger
+// menu and footer as the rest of the site.
+//
 // Place the PDF at: public/documents/Safeguarding_Policy_-_Issue_2.pdf
 // Place safeguarding.jpg at: public/images/safeguarding.jpg
 //
 // EDIT: To update the safeguarding lead name/email, search for "EDIT: Safeguarding contacts"
 // EDIT: To update the PDF filename, search for "EDIT: PDF link"
 // EDIT: To change the intro text, search for "EDIT: Intro text"
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Safeguarding — Hope Community Church</title>
-  <meta name="description" content="Hope Community Church is committed to the safety and wellbeing of every child, young person and vulnerable adult in our care. Read our safeguarding policy here." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<Layout
+  title="Safeguarding"
+  description="Hope Community Church is committed to the safety and wellbeing of every child, young person and vulnerable adult in our care. Read our safeguarding policy here."
+>
 
-    :root {
-      --navy:   #0d1f3c;
-      --blue:   #4a90c4;
-      --pale:   #e8f2f9;
-      --gold:   #c9a84c;
-      --gold-dark: #a07830;
-      --cream:  #f7f9fc;
-      --white:  #ffffff;
-    }
-
-    html, body {
-      min-height: 100%;
-      font-family: 'Nunito', sans-serif;
-    }
-
-    /* ── Fixed background ── */
-    .page-wrapper {
-      min-height: 100vh;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .bg-image {
-      position: fixed;
-      inset: 0;
-      /* EDIT: Background image — swap for any suitable photo in public/images/ */
-      background: url('/images/church-building.jpeg') center center / cover no-repeat;
-      z-index: 0;
-    }
-
-    .bg-overlay {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(
-        160deg,
-        rgba(13,31,60,0.88) 0%,
-        rgba(13,31,60,0.76) 45%,
-        rgba(74,144,196,0.60) 100%
-      );
-      z-index: 1;
-    }
-
-    /* ── Page heading ── */
-    .page-heading {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 3.5rem 1.5rem 2.5rem;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-    }
-
-    .page-heading h1 {
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 900;
-      color: var(--white);
-      letter-spacing: 0.02em;
-      line-height: 1.1;
-    }
-
-    .page-heading h1 span { color: var(--gold); }
-
-    .page-heading p {
-      margin-top: 0.85rem;
-      color: rgba(255,255,255,0.78);
-      font-size: 1.1rem;
-      font-weight: 600;
-      max-width: 560px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.6;
-    }
-
-    .gold-rule {
-      width: 64px;
-      height: 4px;
-      background: var(--gold);
-      border-radius: 2px;
-      margin: 1.25rem auto 0;
-    }
-
-    /* ── Main content area ── */
-    .content-area {
-      position: relative;
-      z-index: 10;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 1.5rem 5rem;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
-    }
-
-    /* ── Glass card base ── */
-    .glass {
-      background: rgba(13,31,60,0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255,255,255,0.13);
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    /* ── Commitment card ── */
-    .commitment-card {
-      padding: 2.25rem 2rem;
-    }
-
-    .card-eyebrow {
-      font-size: 0.68rem;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.6rem;
-    }
-
-    .commitment-card h2 {
-      font-size: 1.45rem;
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 1.1rem;
-      line-height: 1.25;
-    }
-
-    .commitment-card p {
-      color: rgba(255,255,255,0.82);
-      font-size: 1.02rem;
-      font-weight: 600;
-      line-height: 1.75;
-      margin-bottom: 1rem;
-    }
-
-    .commitment-card p:last-child { margin-bottom: 0; }
-
-    /* ── Pillars grid ── */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .pillar {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-top: 3px solid var(--gold);
-      border-radius: 12px;
-      padding: 1.25rem 1rem;
-      text-align: center;
-    }
-
-    .pillar-icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    .pillar h3 {
-      font-size: 0.85rem;
-      font-weight: 900;
-      color: var(--white);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-
-    .pillar p {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.70);
-      line-height: 1.55;
-      margin-bottom: 0 !important;
-    }
-
-    /* ── PDF download card ── */
-    .pdf-card {
-      padding: 2.25rem 2rem;
-      border: 1px solid rgba(201,168,76,0.30);
-      background: rgba(13,31,60,0.78);
-    }
-
-    .pdf-inner {
-      display: flex;
-      align-items: center;
-      gap: 1.75rem;
-      flex-wrap: wrap;
-    }
-
-    .pdf-icon-wrap {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, rgba(201,168,76,0.25), rgba(201,168,76,0.10));
-      border: 2px solid rgba(201,168,76,0.45);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 2.5rem;
-    }
-
-    .pdf-text { flex: 1; min-width: 200px; }
-
-    .pdf-text h2 {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 0.35rem;
-    }
-
-    .pdf-text p {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.55;
-    }
-
-    .pdf-meta {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-top: 0.6rem;
-    }
-
-    .pdf-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 6px;
-      padding: 0.25rem 0.65rem;
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-    }
-
-    .pdf-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      background: var(--gold);
-      color: var(--navy);
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      padding: 0.85rem 1.75rem;
-      border-radius: 10px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 4px 16px rgba(201,168,76,0.30);
-      white-space: nowrap;
-    }
-
-    .btn-primary:hover {
-      background: #dbb84d;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(201,168,76,0.40);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
-    }
-
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      background: rgba(255,255,255,0.10);
-      color: var(--white);
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 700;
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.20);
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      white-space: nowrap;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.17);
-      transform: translateY(-1px);
-    }
-
-    /* ── Two-column lower section ── */
-    .lower-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.75rem;
-    }
-
-    /* ── Contact card ── */
-    .contact-card {
-      padding: 2rem 1.75rem;
-    }
-
-    .contact-card h2 {
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-    }
-
-    .contact-card > p {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.6;
-      margin-bottom: 1.25rem;
-    }
-
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.9rem 1rem;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 12px;
-      text-decoration: none;
-      margin-bottom: 0.75rem;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .contact-item:last-child { margin-bottom: 0; }
-
-    .contact-item:hover {
-      background: rgba(74,144,196,0.22);
-      transform: translateX(4px);
-    }
-
-    .ci-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      flex-shrink: 0;
-    }
-
-    .ci-icon.gold   { background: linear-gradient(135deg, #c9a84c, #a07830); }
-    .ci-icon.blue   { background: linear-gradient(135deg, #4a90c4, #2980b9); }
-    .ci-icon.green  { background: linear-gradient(135deg, #27ae60, #2ecc71); }
-    .ci-icon.red    { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-
-    .ci-text { flex: 1; min-width: 0; }
-
-    .ci-label {
-      font-size: 0.67rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.15rem;
-    }
-
-    .ci-value {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--white);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ci-arrow {
-      color: rgba(255,255,255,0.28);
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    /* ── Concern card ── */
-    .concern-card {
-      padding: 2rem 1.75rem;
-    }
-
-    .concern-card h2 {
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-    }
-
-    .concern-card > p {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.6;
-      margin-bottom: 1.25rem;
-    }
-
-    .concern-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .concern-step:last-child { margin-bottom: 0; }
-
-    .step-num {
-      width: 36px;
-      height: 36px;
-      background: var(--gold);
-      color: var(--navy);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 900;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .step-body { flex: 1; }
-
-    .step-body strong {
-      display: block;
-      font-size: 0.92rem;
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 0.2rem;
-    }
-
-    .step-body span {
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.55;
-    }
-
-    /* ── Charity Commission notice ── */
-    .charity-notice {
-      padding: 1.5rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      background: rgba(74,144,196,0.15);
-      border: 1px solid rgba(74,144,196,0.28);
-      flex-wrap: wrap;
-    }
-
-    .notice-icon {
-      font-size: 2rem;
-      flex-shrink: 0;
-    }
-
-    .notice-text { flex: 1; min-width: 200px; }
-
-    .notice-text strong {
-      display: block;
-      font-size: 0.88rem;
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 0.25rem;
-    }
-
-    .notice-text p {
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.72);
-      line-height: 1.6;
-    }
-
-    .notice-text a {
-      color: #7ec8f0;
-      text-decoration: underline;
-    }
-
-    .notice-text a:hover {
-      color: var(--white);
-    }
-
-    /* ── Footer ── */
-    .page-footer {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 1.5rem 1.5rem;
-      border-top: 1px solid rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.45);
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-top: auto;
-    }
-
-    /* ── Emergency banner ── */
-    .emergency-banner {
-      position: relative;
-      z-index: 10;
-      background: rgba(231,76,60,0.18);
-      border-top: 3px solid #e74c3c;
-      border-bottom: 1px solid rgba(231,76,60,0.30);
-      padding: 0.9rem 1.5rem;
-      text-align: center;
-      color: var(--white);
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-
-    .emergency-banner a {
-      color: #f4a6a0;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .emergency-banner a:hover {
-      color: var(--white);
-      text-decoration: underline;
-    }
-
-    /* ── Mobile responsive ── */
-    @media (max-width: 680px) {
-      .page-heading { padding: 2.5rem 1.25rem 2rem; }
-
-      .content-area { padding: 0 1rem 4rem; gap: 1.25rem; }
-
-      .commitment-card, .pdf-card, .contact-card, .concern-card {
-        padding: 1.5rem 1.25rem;
-      }
-
-      .pillars-grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-      }
-
-      .pillar { text-align: left; display: flex; align-items: flex-start; gap: 1rem; }
-      .pillar-icon { font-size: 1.6rem; margin-bottom: 0; flex-shrink: 0; margin-top: 2px; }
-
-      .pdf-inner { flex-direction: column; gap: 1.25rem; }
-      .pdf-icon-wrap { width: 64px; height: 64px; font-size: 2rem; }
-      .pdf-actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
-      .btn-primary, .btn-secondary { flex: 1; min-width: 140px; }
-
-      .lower-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-
-      .charity-notice { padding: 1.25rem; }
-    }
-  </style>
-</head>
-<body>
   <div class="page-wrapper">
 
     <!-- Fixed background -->
@@ -606,24 +30,6 @@
       ⚠️ &nbsp;If a child or vulnerable person is in <strong>immediate danger</strong>, call <a href="tel:999">999</a> immediately.
       &nbsp;|&nbsp; Non-emergency police: <a href="tel:101">101</a>
     </div>
-
-    <!-- Navbar -->
-    <!-- EDIT: Replace this with your Navbar component: <Navbar /> -->
-    <nav style="position:relative;z-index:10;background:#0d1f3c;border-bottom:2px solid #c9a84c;padding:0 2rem;">
-      <div style="max-width:1200px;margin:0 auto;height:68px;display:flex;align-items:center;justify-content:space-between;">
-        <a href="/" style="text-decoration:none;">
-          <img src="/images/logo-white.svg" alt="Hope Community Church" style="height:52px;width:auto;" />
-        </a>
-        <div style="display:flex;gap:1.5rem;align-items:center;">
-          <a href="/" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Home</a>
-          <a href="/whats-on" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">What's On</a>
-          <a href="/mission" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Mission</a>
-          <a href="/room-hire" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Room Hire</a>
-          <a href="/contact" style="background:#c9a84c;color:#0d1f3c;padding:8px 16px;border-radius:4px;font-weight:800;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;">Contact Us</a>
-        </div>
-      </div>
-    </nav>
-    <!-- EDIT: Once you have replaced this with <Navbar />, delete the nav block above -->
 
     <!-- Page heading -->
     <header class="page-heading">
@@ -830,12 +236,555 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="page-footer">
-      © 2026 Hope Community Church · Registered Charity No. 1108872 · Deveron Way, Hinckley LE10 0XD
-      · <a href="/privacy-policy" style="color:rgba(255,255,255,0.55);text-decoration:underline;">Privacy Policy</a>
-    </footer>
-
   </div>
-</body>
-</html>
+
+</Layout>
+
+<style>
+  :root {
+    --navy:   #0d1f3c;
+    --blue:   #4a90c4;
+    --pale:   #e8f2f9;
+    --gold:   #c9a84c;
+    --gold-dark: #a07830;
+    --cream:  #f7f9fc;
+    --white:  #ffffff;
+  }
+
+  /* ── Fixed background ── */
+  .page-wrapper {
+    min-height: calc(100vh - 300px);
+    position: relative;
+  }
+
+  .bg-image {
+    position: fixed;
+    inset: 0;
+    /* EDIT: Background image — swap for any suitable photo in public/images/ */
+    background: url('/images/church-building.jpeg') center center / cover no-repeat;
+    z-index: -2;
+  }
+
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+      160deg,
+      rgba(13,31,60,0.88) 0%,
+      rgba(13,31,60,0.76) 45%,
+      rgba(74,144,196,0.60) 100%
+    );
+    z-index: -1;
+  }
+
+  /* ── Page heading ── */
+  .page-heading {
+    position: relative;
+    text-align: center;
+    padding: 3.5rem 1.5rem 2.5rem;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .page-heading h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+
+  .page-heading h1 span { color: var(--gold); }
+
+  .page-heading p {
+    margin-top: 0.85rem;
+    color: rgba(255,255,255,0.78);
+    font-size: 1.1rem;
+    font-weight: 600;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .gold-rule {
+    width: 64px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 2px;
+    margin: 1.25rem auto 0;
+  }
+
+  /* ── Main content area ── */
+  .content-area {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  /* ── Glass card base ── */
+  .glass {
+    background: rgba(13,31,60,0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  /* ── Commitment card ── */
+  .commitment-card {
+    padding: 2.25rem 2rem;
+  }
+
+  .card-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  .commitment-card h2 {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 1.1rem;
+    line-height: 1.25;
+  }
+
+  .commitment-card p {
+    color: rgba(255,255,255,0.82);
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .commitment-card p:last-child { margin-bottom: 0; }
+
+  /* ── Pillars grid ── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .pillar {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-top: 3px solid var(--gold);
+    border-radius: 12px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+
+  .pillar-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .pillar h3 {
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .pillar p {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.70);
+    line-height: 1.55;
+    margin-bottom: 0 !important;
+  }
+
+  /* ── PDF download card ── */
+  .pdf-card {
+    padding: 2.25rem 2rem;
+    border: 1px solid rgba(201,168,76,0.30);
+    background: rgba(13,31,60,0.78);
+  }
+
+  .pdf-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  .pdf-icon-wrap {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.25), rgba(201,168,76,0.10));
+    border: 2px solid rgba(201,168,76,0.45);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 2.5rem;
+  }
+
+  .pdf-text { flex: 1; min-width: 200px; }
+
+  .pdf-text h2 {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.35rem;
+  }
+
+  .pdf-text p {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.55;
+  }
+
+  .pdf-meta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+  }
+
+  .pdf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .pdf-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 0.85rem 1.75rem;
+    border-radius: 10px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(201,168,76,0.30);
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover {
+    background: #dbb84d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.40);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: rgba(255,255,255,0.10);
+    color: var(--white);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.20);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.17);
+    transform: translateY(-1px);
+  }
+
+  /* ── Two-column lower section ── */
+  .lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+  }
+
+  /* ── Contact card ── */
+  .contact-card {
+    padding: 2rem 1.75rem;
+  }
+
+  .contact-card h2 {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-card > p {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 12px;
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .contact-item:last-child { margin-bottom: 0; }
+
+  .contact-item:hover {
+    background: rgba(74,144,196,0.22);
+    transform: translateX(4px);
+  }
+
+  .ci-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .ci-icon.gold   { background: linear-gradient(135deg, #c9a84c, #a07830); }
+  .ci-icon.blue   { background: linear-gradient(135deg, #4a90c4, #2980b9); }
+  .ci-icon.green  { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+  .ci-icon.red    { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+  .ci-text { flex: 1; min-width: 0; }
+
+  .ci-label {
+    font-size: 0.67rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.15rem;
+  }
+
+  .ci-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ci-arrow {
+    color: rgba(255,255,255,0.28);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Concern card ── */
+  .concern-card {
+    padding: 2rem 1.75rem;
+  }
+
+  .concern-card h2 {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .concern-card > p {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .concern-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .concern-step:last-child { margin-bottom: 0; }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-body { flex: 1; }
+
+  .step-body strong {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+  }
+
+  .step-body span {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.55;
+  }
+
+  /* ── Charity Commission notice ── */
+  .charity-notice {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: rgba(74,144,196,0.15);
+    border: 1px solid rgba(74,144,196,0.28);
+    flex-wrap: wrap;
+  }
+
+  .notice-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .notice-text { flex: 1; min-width: 200px; }
+
+  .notice-text strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .notice-text p {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.6;
+  }
+
+  .notice-text a {
+    color: #7ec8f0;
+    text-decoration: underline;
+  }
+
+  .notice-text a:hover {
+    color: var(--white);
+  }
+
+  /* ── Emergency banner ── */
+  .emergency-banner {
+    position: relative;
+    background: rgba(231,76,60,0.18);
+    border-top: 3px solid #e74c3c;
+    border-bottom: 1px solid rgba(231,76,60,0.30);
+    padding: 0.9rem 1.5rem;
+    text-align: center;
+    color: var(--white);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .emergency-banner a {
+    color: #f4a6a0;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .emergency-banner a:hover {
+    color: var(--white);
+    text-decoration: underline;
+  }
+
+  /* ── Mobile responsive ── */
+  @media (max-width: 680px) {
+    .page-heading { padding: 2.5rem 1.25rem 2rem; }
+
+    .content-area { padding: 0 1rem 4rem; gap: 1.25rem; }
+
+    .commitment-card, .pdf-card, .contact-card, .concern-card {
+      padding: 1.5rem 1.25rem;
+    }
+
+    .pillars-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .pillar { text-align: left; display: flex; align-items: flex-start; gap: 1rem; }
+    .pillar-icon { font-size: 1.6rem; margin-bottom: 0; flex-shrink: 0; margin-top: 2px; }
+
+    .pdf-inner { flex-direction: column; gap: 1.25rem; }
+    .pdf-icon-wrap { width: 64px; height: 64px; font-size: 2rem; }
+    .pdf-actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
+    .btn-primary, .btn-secondary { flex: 1; min-width: 140px; }
+
+    .lower-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+
+    .charity-notice { padding: 1.25rem; }
+  }
+</style>

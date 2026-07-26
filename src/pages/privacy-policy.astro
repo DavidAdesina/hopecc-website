@@ -1,438 +1,22 @@
 ---
 // privacy-policy.astro — Hope Community Church
 // ─────────────────────────────────────────────────────
-// Drop this in src/pages/privacy-policy.astro
+// MIGRATED to use the shared <Layout> (Navbar + Footer) instead of a
+// standalone HTML document, so this page gets the same mobile hamburger
+// menu and footer as the rest of the site.
 //
 // EDIT: To update the effective date, search for "EDIT: Effective date"
 // EDIT: To update the Data Controller contact, search for "EDIT: Data Controller"
 // EDIT: To update any section of the policy, find the relevant section heading
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy — Hope Community Church</title>
-  <meta name="description" content="Hope Community Church's Privacy Policy — how we collect, use and protect your personal information." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<Layout
+  title="Privacy Policy"
+  description="Hope Community Church's Privacy Policy — how we collect, use and protect your personal information."
+>
 
-    :root {
-      --navy:   #0d1f3c;
-      --blue:   #4a90c4;
-      --pale:   #e8f2f9;
-      --gold:   #c9a84c;
-      --cream:  #f7f9fc;
-      --white:  #ffffff;
-      --text-on-navy: rgba(255,255,255,0.82);
-      --muted: rgba(255,255,255,0.58);
-    }
-
-    html, body {
-      min-height: 100%;
-      font-family: 'Nunito', sans-serif;
-    }
-
-    /* ── Page background ── */
-    .page-wrapper {
-      min-height: 100vh;
-      background: var(--navy);
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Decorative top gradient band ── */
-    .page-hero {
-      background: linear-gradient(160deg, #0d1f3c 0%, #1a3665 55%, #2a5070 100%);
-      border-bottom: 3px solid var(--gold);
-      padding: 3.5rem 1.5rem 3rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .page-hero::before {
-      content: '';
-      position: absolute;
-      top: -80px;
-      right: -80px;
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-    }
-
-    .page-hero h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 900;
-      color: var(--white);
-      line-height: 1.15;
-      margin-bottom: 0.85rem;
-    }
-
-    .page-hero h1 span { color: var(--gold); }
-
-    .page-hero p {
-      color: var(--text-on-navy);
-      font-size: 1rem;
-      font-weight: 600;
-      max-width: 540px;
-      margin: 0 auto;
-      line-height: 1.65;
-    }
-
-    .gold-rule {
-      width: 56px;
-      height: 4px;
-      background: var(--gold);
-      border-radius: 2px;
-      margin: 1.25rem auto 0;
-    }
-
-    /* ── Content layout ── */
-    .content-wrapper {
-      max-width: 840px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 5rem;
-      width: 100%;
-    }
-
-    /* ── Summary card at top ── */
-    .summary-card {
-      background: rgba(74,144,196,0.14);
-      border: 1px solid rgba(74,144,196,0.28);
-      border-left: 4px solid var(--blue);
-      border-radius: 14px;
-      padding: 1.5rem 1.75rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .summary-card strong {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-    }
-
-    .summary-card p {
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: var(--text-on-navy);
-      line-height: 1.7;
-    }
-
-    /* ── Table of contents ── */
-    .toc {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 14px;
-      padding: 1.5rem 1.75rem;
-      margin-bottom: 3rem;
-    }
-
-    .toc h2 {
-      font-size: 0.75rem;
-      font-weight: 900;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
-    }
-
-    .toc ol {
-      list-style: none;
-      counter-reset: toc-counter;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.3rem 2rem;
-    }
-
-    .toc ol li {
-      counter-increment: toc-counter;
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-    }
-
-    .toc ol li::before {
-      content: counter(toc-counter);
-      font-size: 0.72rem;
-      font-weight: 900;
-      color: var(--gold);
-      min-width: 1.2rem;
-    }
-
-    .toc ol li a {
-      color: rgba(255,255,255,0.70);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 700;
-      transition: color 0.2s;
-      line-height: 1.5;
-    }
-
-    .toc ol li a:hover {
-      color: var(--white);
-    }
-
-    /* ── Sections ── */
-    .policy-section {
-      margin-bottom: 3rem;
-      scroll-margin-top: 100px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-    }
-
-    .section-num {
-      width: 36px;
-      height: 36px;
-      background: var(--gold);
-      color: var(--navy);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.88rem;
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    .section-header h2 {
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: var(--white);
-      line-height: 1.2;
-    }
-
-    .policy-section p {
-      color: var(--text-on-navy);
-      font-size: 0.97rem;
-      font-weight: 600;
-      line-height: 1.8;
-      margin-bottom: 1rem;
-    }
-
-    .policy-section p:last-child { margin-bottom: 0; }
-
-    /* Inline links */
-    .policy-section a {
-      color: #7ec8f0;
-      text-decoration: underline;
-    }
-    .policy-section a:hover { color: var(--white); }
-
-    /* Lists within policy */
-    .policy-list {
-      list-style: none;
-      margin: 0.75rem 0 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-    }
-
-    .policy-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      color: var(--text-on-navy);
-      font-size: 0.95rem;
-      font-weight: 600;
-      line-height: 1.65;
-    }
-
-    .policy-list li::before {
-      content: '›';
-      color: var(--gold);
-      font-size: 1.1rem;
-      font-weight: 900;
-      flex-shrink: 0;
-      line-height: 1.5;
-    }
-
-    /* Sub-heading within a section */
-    .sub-heading {
-      font-size: 1rem;
-      font-weight: 900;
-      color: var(--white);
-      margin: 1.5rem 0 0.5rem;
-    }
-
-    /* Highlight box */
-    .highlight-box {
-      background: rgba(201,168,76,0.10);
-      border: 1px solid rgba(201,168,76,0.28);
-      border-left: 4px solid var(--gold);
-      border-radius: 10px;
-      padding: 1.1rem 1.4rem;
-      margin: 1.25rem 0;
-    }
-
-    .highlight-box p {
-      margin-bottom: 0 !important;
-      color: rgba(255,255,255,0.85) !important;
-    }
-
-    /* Contact inline box */
-    .contact-box {
-      background: rgba(13,31,60,0.60);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 14px;
-      padding: 1.25rem 1.5rem;
-      margin-top: 1.25rem;
-    }
-
-    .contact-box p {
-      margin-bottom: 0.35rem !important;
-      font-size: 0.9rem !important;
-    }
-
-    .contact-box p:last-child {
-      margin-bottom: 0 !important;
-    }
-
-    .contact-box strong { color: var(--gold); }
-
-    /* Rights grid */
-    .rights-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.85rem;
-      margin: 1rem 0;
-    }
-
-    .right-item {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 10px;
-      padding: 1rem 1.1rem;
-    }
-
-    .right-item h4 {
-      font-size: 0.82rem;
-      font-weight: 900;
-      color: var(--gold);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-
-    .right-item p {
-      font-size: 0.86rem !important;
-      margin-bottom: 0 !important;
-      color: rgba(255,255,255,0.70) !important;
-      line-height: 1.55 !important;
-    }
-
-    /* ── Effective date bar ── */
-    .date-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
-      padding: 0.85rem 1.25rem;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .date-bar span {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .date-bar span strong { color: rgba(255,255,255,0.75); }
-
-    /* ── Back to top ── */
-    .back-top {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--gold);
-      font-size: 0.85rem;
-      font-weight: 800;
-      text-decoration: none;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-top: 1rem;
-      transition: opacity 0.2s;
-    }
-    .back-top:hover { opacity: 0.75; }
-
-    /* ── Footer ── */
-    .page-footer {
-      text-align: center;
-      padding: 1.5rem 1.5rem;
-      border-top: 1px solid rgba(255,255,255,0.10);
-      color: rgba(255,255,255,0.40);
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-top: auto;
-    }
-
-    .page-footer a {
-      color: rgba(255,255,255,0.55);
-      text-decoration: underline;
-    }
-
-    /* ── Mobile responsive ── */
-    @media (max-width: 640px) {
-      .content-wrapper { padding: 2rem 1.1rem 4rem; }
-
-      .toc ol { grid-template-columns: 1fr; }
-
-      .rights-grid { grid-template-columns: 1fr; }
-
-      .section-header h2 { font-size: 1.1rem; }
-
-      .date-bar { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
-</head>
-<body>
   <div class="page-wrapper">
-
-    <!-- Navbar -->
-    <!-- EDIT: Replace this with your Navbar component: <Navbar /> -->
-    <nav style="background:#0d1f3c;border-bottom:2px solid #c9a84c;padding:0 2rem;">
-      <div style="max-width:1200px;margin:0 auto;height:68px;display:flex;align-items:center;justify-content:space-between;">
-        <a href="/" style="text-decoration:none;">
-          <img src="/images/logo-white.svg" alt="Hope Community Church" style="height:52px;width:auto;" />
-        </a>
-        <div style="display:flex;gap:1.5rem;align-items:center;">
-          <a href="/" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Home</a>
-          <a href="/whats-on" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">What's On</a>
-          <a href="/mission" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Mission</a>
-          <a href="/room-hire" style="color:rgba(255,255,255,0.75);text-decoration:none;font-weight:700;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;">Room Hire</a>
-          <a href="/contact" style="background:#c9a84c;color:#0d1f3c;padding:8px 16px;border-radius:4px;font-weight:800;font-size:12.5px;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;">Contact Us</a>
-        </div>
-      </div>
-    </nav>
-    <!-- EDIT: Once you have replaced this with <Navbar />, delete the nav block above -->
 
     <!-- Hero -->
     <header class="page-hero" id="top">
@@ -728,13 +312,375 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="page-footer">
-      © 2026 Hope Community Church · Registered Charity No. 1108872 · Deveron Way, Hinckley LE10 0XD
-      · <a href="/safeguarding">Safeguarding</a>
-      · <a href="/contact">Contact</a>
-    </footer>
-
   </div>
-</body>
-</html>
+
+</Layout>
+
+<style>
+  :root {
+    --navy:   #0d1f3c;
+    --blue:   #4a90c4;
+    --pale:   #e8f2f9;
+    --gold:   #c9a84c;
+    --cream:  #f7f9fc;
+    --white:  #ffffff;
+    --text-on-navy: rgba(255,255,255,0.82);
+    --muted: rgba(255,255,255,0.58);
+  }
+
+  /* ── Page background ── */
+  .page-wrapper {
+    background: var(--navy);
+  }
+
+  /* ── Decorative top gradient band ── */
+  .page-hero {
+    background: linear-gradient(160deg, #0d1f3c 0%, #1a3665 55%, #2a5070 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 3.5rem 1.5rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .page-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 0.85rem;
+  }
+
+  .page-hero h1 span { color: var(--gold); }
+
+  .page-hero p {
+    color: var(--text-on-navy);
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  .gold-rule {
+    width: 56px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 2px;
+    margin: 1.25rem auto 0;
+  }
+
+  /* ── Content layout ── */
+  .content-wrapper {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    width: 100%;
+  }
+
+  /* ── Summary card at top ── */
+  .summary-card {
+    background: rgba(74,144,196,0.14);
+    border: 1px solid rgba(74,144,196,0.28);
+    border-left: 4px solid var(--blue);
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .summary-card strong {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .summary-card p {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-on-navy);
+    line-height: 1.7;
+  }
+
+  /* ── Table of contents ── */
+  .toc {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 3rem;
+  }
+
+  .toc h2 {
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: toc-counter;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.3rem 2rem;
+  }
+
+  .toc ol li {
+    counter-increment: toc-counter;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .toc ol li::before {
+    content: counter(toc-counter);
+    font-size: 0.72rem;
+    font-weight: 900;
+    color: var(--gold);
+    min-width: 1.2rem;
+  }
+
+  .toc ol li a {
+    color: rgba(255,255,255,0.70);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: color 0.2s;
+    line-height: 1.5;
+  }
+
+  .toc ol li a:hover {
+    color: var(--white);
+  }
+
+  /* ── Sections ── */
+  .policy-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 100px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+  }
+
+  .section-num {
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.88rem;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .policy-section p {
+    color: var(--text-on-navy);
+    font-size: 0.97rem;
+    font-weight: 600;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .policy-section p:last-child { margin-bottom: 0; }
+
+  /* Inline links */
+  .policy-section a {
+    color: #7ec8f0;
+    text-decoration: underline;
+  }
+  .policy-section a:hover { color: var(--white); }
+
+  /* Lists within policy */
+  .policy-list {
+    list-style: none;
+    margin: 0.75rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .policy-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: var(--text-on-navy);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.65;
+  }
+
+  .policy-list li::before {
+    content: '›';
+    color: var(--gold);
+    font-size: 1.1rem;
+    font-weight: 900;
+    flex-shrink: 0;
+    line-height: 1.5;
+  }
+
+  /* Sub-heading within a section */
+  .sub-heading {
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--white);
+    margin: 1.5rem 0 0.5rem;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: rgba(201,168,76,0.10);
+    border: 1px solid rgba(201,168,76,0.28);
+    border-left: 4px solid var(--gold);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.25rem 0;
+  }
+
+  .highlight-box p {
+    margin-bottom: 0 !important;
+    color: rgba(255,255,255,0.85) !important;
+  }
+
+  /* Contact inline box */
+  .contact-box {
+    background: rgba(13,31,60,0.60);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .contact-box p {
+    margin-bottom: 0.35rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .contact-box p:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .contact-box strong { color: var(--gold); }
+
+  /* Rights grid */
+  .rights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    margin: 1rem 0;
+  }
+
+  .right-item {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+  }
+
+  .right-item h4 {
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .right-item p {
+    font-size: 0.86rem !important;
+    margin-bottom: 0 !important;
+    color: rgba(255,255,255,0.70) !important;
+    line-height: 1.55 !important;
+  }
+
+  /* ── Effective date bar ── */
+  .date-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .date-bar span {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .date-bar span strong { color: rgba(255,255,255,0.75); }
+
+  /* ── Back to top ── */
+  .back-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gold);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    transition: opacity 0.2s;
+  }
+  .back-top:hover { opacity: 0.75; }
+
+  /* ── Mobile responsive ── */
+  @media (max-width: 640px) {
+    .content-wrapper { padding: 2rem 1.1rem 4rem; }
+
+    .toc ol { grid-template-columns: 1fr; }
+
+    .rights-grid { grid-template-columns: 1fr; }
+
+    .section-header h2 { font-size: 1.1rem; }
+
+    .date-bar { flex-direction: column; align-items: flex-start; }
+  }
+</style>
