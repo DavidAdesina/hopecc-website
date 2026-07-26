@@ -1,10 +1,32 @@
 ---
 // src/components/Navbar.astro — Hope Community Church
-// ─────────────────────────────────────────────────────
-// To add a new dropdown to any nav link, wrap it in a
-// <div class="nav-dropdown-wrapper"> and add a
-// <div class="nav-dropdown"> with your <a> links inside.
-// Everything else is handled automatically by the CSS/JS.
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This is the dark blue menu bar at the top of every page — logo, menu
+//   links, the "Mission" dropdown, and the hamburger menu used on phones.
+//   Because it's one shared file, changing it here updates it everywhere.
+//
+// IMPORTANT: THERE ARE TWO MENUS TO KEEP IN SYNC
+//   This file lists the menu links TWICE — once for desktop (search
+//   "EDIT: desktop menu links") and once for the phone hamburger menu
+//   (search "EDIT: mobile menu links"). If you add, remove or rename a
+//   page link, update BOTH lists so desktop and mobile match.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Add/remove/rename a menu link → update both "EDIT: desktop menu
+//     links" and "EDIT: mobile menu links" below
+//   • Add a dropdown to a menu link  → wrap it in a
+//     <div class="nav-dropdown-wrapper"> and add a
+//     <div class="nav-dropdown"> with your <a> links inside — the
+//     styling and hover/click behaviour is handled automatically
+//
+// This file has three parts, in this order:
+//   1. The HTML below   — the menu structure and links
+//   2. The <style> block — colours, spacing, the dropdown animation
+//   3. The <script> block at the very bottom — makes the hamburger
+//      button open/close the phone menu. You shouldn't need to touch
+//      the <style> or <script> blocks for normal updates.
+// ─────────────────────────────────────────────────────────────────────────
 ---
 
 <header class="navbar">
@@ -14,6 +36,7 @@
     </a>
 
     <!-- Desktop nav -->
+    <!-- EDIT: desktop menu links — remember to also update "EDIT: mobile menu links" below -->
     <nav class="navbar-links" aria-label="Main navigation">
       <a href="/">Home</a>
       <a href="/whats-on">What's On</a>
@@ -51,6 +74,7 @@
   </div>
 
   <!-- Mobile dropdown -->
+  <!-- EDIT: mobile menu links — keep this in sync with "EDIT: desktop menu links" above -->
   <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
     <a href="/">Home</a>
     <a href="/whats-on">What's On</a>

@@ -1,13 +1,29 @@
 ---
 // privacy-policy.astro — Hope Community Church
-// ─────────────────────────────────────────────────────
-// MIGRATED to use the shared <Layout> (Navbar + Footer) instead of a
-// standalone HTML document, so this page gets the same mobile hamburger
-// menu and footer as the rest of the site.
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This produces the Privacy Policy page — an 11-section legal document
+//   with a table of contents, using the shared <Layout> (Navbar + Footer)
+//   like every other page.
 //
-// EDIT: To update the effective date, search for "EDIT: Effective date"
-// EDIT: To update the Data Controller contact, search for "EDIT: Data Controller"
-// EDIT: To update any section of the policy, find the relevant section heading
+// HOW TO MAKE COMMON CHANGES
+//   • Effective/last-reviewed date → search "EDIT: Effective date"
+//   • Data Controller contact
+//     details (address/email/phone) → search "EDIT: Data Controller"
+//   • Any policy wording            → find the matching numbered section
+//     below — each one is clearly marked, e.g. "Section 1 — Who We Are",
+//     and matches the same order as the "Contents" list near the top of
+//     the page
+//   • Adding a brand-new section    → copy a whole
+//     <section class="policy-section"> block, give it a unique id, add
+//     a matching link to the "Contents" list, and renumber the
+//     "section-num" badges that follow so they stay in order
+//
+// This file has two parts, in this order:
+//   1. The HTML below   — the words and layout people see on the page
+//   2. The <style> block at the bottom — colours, spacing and fonts.
+//      You shouldn't need to touch the <style> block for normal updates.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 ---
 

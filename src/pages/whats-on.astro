@@ -1,15 +1,36 @@
 ---
 // src/pages/whats-on.astro — Hope Community Church
 // ─────────────────────────────────────────────────────────────────────────
-// CONTENT GUIDE FOR IAN:
-//   • Service times: edit the regularServices array near the top of this file.
-//   • Activity cards: edit the activities array (title, day, time, price, desc).
-//   • Gallery images: edit the galleryImages array — add/remove photos freely.
-//     All images are placed in a masonry grid that handles ANY image size.
-//   • Calendar: the Google Calendar embed uses diary@hopecc.org.uk — no changes
-//     needed unless the calendar address changes.
+// WHAT THIS FILE DOES
+//   This produces the "What's On" page — regular services, activity cards
+//   (Rocky Kids, Fusion Youth, etc.), the events calendar, and a photo
+//   gallery.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Service times & descriptions → edit the regularServices list below
+//     (search "EDIT: service times")
+//   • Activity cards (day, time,
+//     price, description, photo)   → edit the activities list below
+//     (search "EDIT: activity cards")
+//   • Gallery photos                → edit the galleryImages list below
+//     (search "EDIT: gallery images") — add or remove photos freely, the
+//     grid automatically arranges portrait, landscape and square photos
+//   • Calendar                      → the embedded calendar uses
+//     diary@hopecc.org.uk — no changes needed unless that email address
+//     changes (search "EDIT: calendar")
+//   • Page hero text                → search "EDIT: hero text"
+//   • Bottom call-to-action text    → search "EDIT: cta text"
+//
+// This file has two parts, in this order:
+//   1. The lists below (regularServices, activities, galleryImages) plus
+//      the HTML further down — the words and layout people see on the
+//      page, broken into labelled sections (HERO, SERVICES, etc.)
+//   2. The <style> block near the end — colours, spacing and fonts.
+//      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
+
+// EDIT: service times — each entry below is one row on the "Services" section
 
 const regularServices = [
   {
@@ -35,10 +56,11 @@ const regularServices = [
   },
 ];
 
-// ── REGULAR ACTIVITIES ─────────────────────────────────────────────────────
-// Each activity card features an image (use the poster or a photo), a title,
-// key details, and a short description. Update text here; images live in
-// public/images/ — change the `img` path to swap the photo.
+// ── EDIT: activity cards ─────────────────────────────────────────────────
+// Each activity card shows an image (a poster or photo), a title, key
+// details, and a short description. Update the text directly below; the
+// image files themselves live in the public/images/ folder — change the
+// `img` value to point at a different file to swap the photo.
 // ─────────────────────────────────────────────────────────────────────────
 const activities = [
   {
@@ -83,9 +105,11 @@ const activities = [
   },
 ];
 
-// ── GALLERY IMAGES ─────────────────────────────────────────────────────────
-// These appear in a masonry grid — portrait, landscape, square — it handles
-// them all beautifully. Add or remove images freely.
+// ── EDIT: gallery images ────────────────────────────────────────────────
+// These appear in a masonry grid — portrait, landscape, square photos are
+// all handled automatically. Add or remove images freely by adding or
+// removing lines below; each photo also needs a short alt description
+// (what's in the photo) for accessibility.
 // ─────────────────────────────────────────────────────────────────────────
 const galleryImages = [
   { src: '/images/Church-Front.jpg',  alt: 'Hope Community Church lit up at night' },
@@ -97,6 +121,7 @@ const galleryImages = [
 ];
 ---
 
+<!-- EDIT: page title/description — shown in browser tabs and search engine results -->
 <Layout
   title="What's On | Hope Community Church"
   description="Regular services, special events, and everything happening at Hope Community Church in Hinckley. Sunday services, Rocky Kids, Fusion Youth, Dadz, Coffee N Chat and more."
@@ -104,6 +129,7 @@ const galleryImages = [
 
 <!-- ════════════════════════════════════════════════
      HERO
+     EDIT: hero text — the heading and subtitle below
 ════════════════════════════════════════════════ -->
 <section class="wo-hero">
   <div class="wo-hero-bg" aria-hidden="true">
@@ -131,6 +157,8 @@ const galleryImages = [
 
 <!-- ════════════════════════════════════════════════
      SERVICES
+     EDIT: service times — the section heading/intro below, and the
+     regularServices list near the top of this file for the cards
 ════════════════════════════════════════════════ -->
 <section class="wo-section wo-services-section" id="services">
   <div class="wo-container">
@@ -156,6 +184,7 @@ const galleryImages = [
       ))}
     </div>
 
+    <!-- EDIT: "New here?" callout — the text below -->
     <div class="wo-new-here">
       <div class="wo-new-here-icon">👋</div>
       <div>
@@ -177,6 +206,8 @@ const galleryImages = [
 
 <!-- ════════════════════════════════════════════════
      ACTIVITIES
+     EDIT: activity cards — the section heading/intro below, and the
+     activities list near the top of this file for the cards themselves
 ════════════════════════════════════════════════ -->
 <section class="wo-section wo-activities-section" id="activities">
   <div class="wo-container">
@@ -223,6 +254,9 @@ const galleryImages = [
 
 <!-- ════════════════════════════════════════════════
      CALENDAR
+     EDIT: calendar — the heading/intro text below. The calendar itself
+     pulls live from Google Calendar (diary@hopecc.org.uk) so events don't
+     need to be added here — just add them to that Google Calendar directly.
 ════════════════════════════════════════════════ -->
 <section class="wo-section wo-calendar-section" id="calendar">
   <div class="wo-container">
@@ -264,7 +298,7 @@ const galleryImages = [
             <span class="wo-chrome-label">Hope Community Church Calendar</span>
           </div>
           <div class="wo-calendar-frame-wrap">
-            <!-- EDIT: If the calendar address changes, update the src value below -->
+            <!-- EDIT: calendar — if the calendar email address ever changes, update the src value below (it appears twice on this page — also update the "Open in Google Calendar" link above) -->
             <iframe
               src="https://calendar.google.com/calendar/embed?src=diary%40hopecc.org.uk&ctz=Europe%2FLondon&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA"
               style="border:0"
@@ -287,6 +321,8 @@ const galleryImages = [
 
 <!-- ════════════════════════════════════════════════
      GALLERY — masonry grid, handles all image sizes
+     EDIT: gallery images — the section heading/intro below, and the
+     galleryImages list near the top of this file for the photos themselves
 ════════════════════════════════════════════════ -->
 <section class="wo-section wo-gallery-section" id="gallery">
   <div class="wo-container">
@@ -300,12 +336,12 @@ const galleryImages = [
     </div>
 
     <!--
-      MASONRY GALLERY — HOW IT WORKS FOR IAN:
+      HOW THE MASONRY GALLERY WORKS
       ────────────────────────────────────────
       Photos are placed into CSS columns. They automatically stack and fill
       the space — portrait photos, landscape photos, posters — all work.
-      You can add as many photos as you like to the galleryImages array above
-      and they will just flow in naturally. No sizing needed.
+      Add as many photos as you like to the galleryImages list near the top
+      of this file and they will just flow in naturally. No resizing needed.
     -->
     <div class="wo-masonry">
       {galleryImages.map((img) => (
@@ -324,6 +360,7 @@ const galleryImages = [
 
 <!-- ════════════════════════════════════════════════
      CTA STRIP
+     EDIT: cta text — the heading, text and buttons below
 ════════════════════════════════════════════════ -->
 <section class="wo-cta-section">
   <div class="wo-cta-inner">

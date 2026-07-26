@@ -1,25 +1,47 @@
 ---
+// src/pages/watch-listen.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This produces the "Watch & Listen" page. Right now the live stream and
+//   sermon archive aren't live yet, so the page shows a "coming soon"
+//   layout instead. There's ready-made (but switched off) code further
+//   down for embedding a real YouTube playlist once one exists.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Page title/meta description → search "EDIT: page title/description"
+//   • YouTube channel/playlist IDs → search "EDIT: YouTube IDs"
+//   • Hero heading & text          → search "EDIT: page hero"
+//   • "Coming soon" banner text    → search "EDIT: coming soon banner"
+//   • The four feature cards       → search "EDIT: feature cards"
+//   • "Better in person" section   → search "EDIT: join us section"
+//   • Turning on the real YouTube
+//     playlist once it exists      → search "EDIT: turn on playlist"
+//
+// This file has two parts, in this order:
+//   1. The HTML below   — the words and layout people see on the page
+//   2. The <style> block at the bottom — colours, spacing and fonts.
+//      You shouldn't need to touch the <style> block for normal updates.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 
 const pageTitle = "Watch & Listen | Hope Community Church";
 const pageDescription = "Watch sermons, catch up on recent talks, and join our Sunday live stream at Hope Community Church, Hinckley.";
 
 /*
-  ── DEV NOTES ──
-  Replace these placeholder values once Ian provides them:
+  EDIT: YouTube IDs
+  Fill these in once a YouTube channel and "Sermons" playlist exist:
   - YOUTUBE_CHANNEL_ID   → found in YouTube Studio → Customisation → Basic info
   - YOUTUBE_PLAYLIST_ID  → the "Sermons" playlist ID from the channel
-  - LIVE_STREAM_VIDEO_ID → the recurring live stream URL (if they use one)
-                           or leave as is — the channel live tab link works too.
 
-  Sermon data below is dummy content. Once Ian gives real YouTube links,
-  replace `videoId` with the 11-char ID from youtube.com/watch?v=XXXXXXXXXXX
+  The sample sermon below is placeholder content. Once real YouTube links
+  are available, replace `videoId` with the 11-character ID found in
+  youtube.com/watch?v=XXXXXXXXXXX
 */
 
-const YOUTUBE_CHANNEL_ID = 'CHANNEL_ID_HERE';   // ← replace
-const YOUTUBE_PLAYLIST_ID = 'PLAYLIST_ID_HERE'; // ← replace
+const YOUTUBE_CHANNEL_ID = 'CHANNEL_ID_HERE';   // ← replace (not used on the page yet — ready for when it's needed)
+const YOUTUBE_PLAYLIST_ID = 'PLAYLIST_ID_HERE'; // ← replace — used by the switched-off playlist block, see "EDIT: turn on playlist" below
 
-// Sample sermons — replace with real data from Ian / YouTube playlist API later
+// Sample sermon data — not shown on the page yet (kept ready for when the sermon archive is built)
 const featuredSermons = [
   {
     videoId: 'dQw4w9WgXcQ', // placeholder — replace with real video ID
@@ -32,9 +54,10 @@ const featuredSermons = [
 ];
 ---
 
+<!-- EDIT: page title/description — shown in browser tabs and search engine results (set above, near the top of this file) -->
 <Layout title={pageTitle} description={pageDescription}>
 
-  <!-- PAGE HERO -->
+  <!-- PAGE HERO — EDIT: page hero — the heading and text below -->
   <section class="page-hero">
     <div class="page-hero__inner">
       <p class="page-hero__eyebrow">Sermons &amp; Streaming</p>
@@ -46,7 +69,7 @@ const featuredSermons = [
     </div>
   </section>
 
-<!-- COMING SOON BANNER -->
+<!-- COMING SOON BANNER — EDIT: coming soon banner — the heading and text below -->
   <section class="coming-banner">
     <div class="container">
       <div class="coming-banner__inner">
@@ -75,7 +98,7 @@ const featuredSermons = [
         </p>
       </div>
 
-      <!-- FEATURE CARDS -->
+      <!-- FEATURE CARDS — EDIT: feature cards — each card's icon/title/text/status badge below -->
       <div class="feature-grid">
 
         <div class="feature-card feature-card--live">
@@ -141,7 +164,8 @@ const featuredSermons = [
   </section>
 
   <!-- EMBEDDED PLAYLIST
-       Uncomment once YOUTUBE_PLAYLIST_ID is known.
+       EDIT: turn on playlist — uncomment this whole block once
+       YOUTUBE_PLAYLIST_ID above has been filled in with a real ID.
        This shows a scrollable playlist widget.
 
   <section class="playlist-section">
@@ -171,7 +195,7 @@ const featuredSermons = [
   </section>
   -->
 
-  <!-- JOIN US CTA -->
+  <!-- JOIN US CTA — EDIT: join us section — the "Better in person" heading and text below -->
   <section class="join-cta">
     <div class="container">
       <div class="join-cta__inner">
@@ -431,7 +455,9 @@ const featuredSermons = [
   }
   .btn--outline-light:hover { background: rgba(255,255,255,0.1); }
 
-  /* ── SERMONS SECTION ── */
+  /* ── SERMONS SECTION ──
+     Not used by the page as it stands today — kept ready for when the
+     sermon archive (featuredSermons, above) goes live. */
   .sermons-section { padding: 4rem 1.5rem; background: #fff; }
 
   .sermons-placeholder {

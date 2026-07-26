@@ -1,5 +1,28 @@
 ---
 // src/components/Footer.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This is the dark blue footer bar that appears at the bottom of every
+//   page on the site — address, service times, quick links and social
+//   media. Because it's one shared file, changing it here updates it
+//   everywhere at once.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Church description text  → search "EDIT: about text"
+//   • Address                  → search "EDIT: address"
+//   • Parking info             → search "EDIT: parking"
+//   • Service times            → search "EDIT: service times"
+//   • Menu links (Navigate)    → search "EDIT: navigate links"
+//   • Safeguarding/Privacy/
+//     social media links       → search "EDIT: more links"
+//   • Copyright line at the
+//     very bottom              → search "EDIT: copyright line"
+//
+// This file has two parts, in this order:
+//   1. The HTML below   — the words and layout people see on the page
+//   2. The <style> block at the bottom — colours, spacing, fonts.
+//      You shouldn't need to touch the <style> block for normal updates.
+// ─────────────────────────────────────────────────────────────────────────
 ---
 
 <footer class="footer">
@@ -8,6 +31,7 @@
     <!-- Col 1: About -->
     <div class="footer-about">
       <img src="/images/logo-navy.svg" alt="Hope Community Church" class="h-16 w-auto mb-4" />
+      <!-- EDIT: about text — the short welcome message below -->
       <p class="footer-desc">
         A warm, welcoming church family in the heart of Hinckley.
         Everyone is genuinely welcome — come as you are.
@@ -19,14 +43,17 @@
       <h4>Visit us</h4>
       <ul class="footer-info-list">
         <li>
+          <!-- EDIT: address — the church address below -->
           <span class="info-label">Address</span>
           <span>Deveron Way<br>Hinckley<br>LE10 0XD</span>
         </li>
         <li>
+          <!-- EDIT: parking — the parking info below -->
           <span class="info-label">Parking</span>
           <span>Free on-site car park &amp; on-street parking nearby</span>
         </li>
         <li>
+          <!-- EDIT: service times — the two lines below -->
           <span class="info-label">Sunday service</span>
           <span>10:30 am</span>
         </li>
@@ -40,6 +67,7 @@
     <!-- Col 3: Navigate -->
     <div>
       <h4>Navigate</h4>
+      <!-- EDIT: navigate links — add, remove or rename links here -->
       <ul class="footer-links">
         <li><a href="/">Home</a></li>
         <li><a href="/whats-on">What's On</a></li>
@@ -52,6 +80,7 @@
     <!-- Col 4: More -->
     <div>
       <h4>More</h4>
+      <!-- EDIT: more links — safeguarding, privacy and social media links -->
       <ul class="footer-links">
         <li><a href="/safeguarding">Safeguarding</a></li>
         <li><a href="/privacy-policy">Privacy Policy</a></li>
@@ -62,6 +91,8 @@
 
   </div>
 
+  <!-- EDIT: copyright line — the charity number and website address below.
+       The year updates itself automatically, so you don't need to change that. -->
   <div class="footer-bottom">
     <span>© {new Date().getFullYear()} Hope Community Church · Registered Charity No. 1108872</span>
     <span>hopecc.org.uk</span>

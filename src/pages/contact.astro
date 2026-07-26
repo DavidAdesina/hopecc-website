@@ -1,19 +1,38 @@
 ---
 // contact.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This produces the Contact page — contact details, a map, and a contact
+//   form. It uses the shared <Layout> (Navbar + Footer) like every other
+//   page, so it gets the same mobile hamburger menu and footer.
 //
-// MIGRATED to use the shared <Layout> (Navbar + Footer) instead of a
-// standalone HTML document. This gives Contact the same mobile hamburger
-// menu, Mission dropdown, and footer as every other page.
+//   ROOM HIRE MODE: when this page is opened with ?enquiry=room-hire in
+//   the web address (e.g. from clicking "Room Hire" in the menu), a gold
+//   banner appears above the form, the Subject field is pre-filled, and a
+//   checklist of details to include is shown. There's no separate
+//   room-hire page — this one file handles both cases.
 //
-// Place church-building.jpeg in public/images/church-building.jpeg
+// HOW TO MAKE COMMON CHANGES
+//   • Contact details (phone,
+//     email, address, socials)   → search "EDIT: contact details"
+//   • Room hire banner heading   → search "EDIT: Room hire banner"
+//   • Room hire checklist items  → search "EDIT: Room hire checklist"
+//   • Room hire pre-filled
+//     subject line                → search "EDIT: Room hire pre-fill text"
+//   • Form fields                → search "EDIT: form fields"
+//   • Success/thank-you message  → search "EDIT: success message"
 //
-// ROOM HIRE MODE: When this page is loaded with ?enquiry=room-hire in the URL
-// (e.g. from the nav Room Hire link), a gold Room Hire banner appears above the
-// form, the Subject field is pre-filled, and a checklist of required details is shown.
-// No separate room-hire page is needed — everything is handled here.
+//   Note: photo used behind the page heading — needs to exist at
+//   public/images/church-building.jpeg
 //
-// EDIT: To update the room hire checklist items, search for "EDIT: Room hire checklist"
-// EDIT: To update the heading or sub-text on the banner, search for "EDIT: Room hire banner"
+// This file has three parts, in this order:
+//   1. The HTML below    — the words and layout people see on the page
+//   2. The <style> block — colours, spacing and fonts
+//   3. The <script> block at the very end — makes the room-hire banner
+//      show/hide and pre-fills the form; handles form submission.
+//      You shouldn't need to touch the <style> or <script> blocks for
+//      normal text updates.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 ---
 
@@ -37,7 +56,7 @@ import Layout from '../layouts/Layout.astro';
     <!-- Main grid -->
     <main class="contact-grid">
 
-      <!-- Left: Contact details -->
+      <!-- Left: Contact details — EDIT: contact details — phone, email, address, socials below -->
       <div class="glass details-card">
         <h2>Contact Details</h2>
 
@@ -159,6 +178,9 @@ import Layout from '../layouts/Layout.astro';
 
         <h2 id="formTitle">Send Us a Message</h2>
 
+        <!-- EDIT: form fields — add, remove or relabel fields below. Any
+             field with `required` must be filled in before the form can
+             be submitted. -->
         <form id="contactForm" novalidate>
           <div class="form-grid-2">
             <div class="form-row">
@@ -729,7 +751,9 @@ import Layout from '../layouts/Layout.astro';
     btn.textContent = 'Sending…';
 
     try {
-      // ── Phase 3: replace this URL with your API Gateway endpoint ──
+      // NOTE: this points at a placeholder endpoint. It will start working
+      // once the real backend is connected as part of the AWS deployment
+      // phase of this project — no change needed here before then.
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -737,13 +761,15 @@ import Layout from '../layouts/Layout.astro';
       });
 
       if (res.ok) {
+        // EDIT: success message — the text shown after a message sends successfully
         showToast('✓ Message sent! We\'ll be in touch soon.', 'success');
         form.reset();
       } else {
         throw new Error('Server error');
       }
     } catch {
-      // Fallback: open email client
+      // Fallback while the real backend isn't connected yet: open the
+      // visitor's own email app instead, pre-filled with their message.
       const subject = encodeURIComponent(data.subject || 'Website enquiry');
       const body = encodeURIComponent(
         `Name: ${data.fname} ${data.lname}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n${data.message}`

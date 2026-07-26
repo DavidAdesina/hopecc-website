@@ -1,14 +1,32 @@
 ---
 // src/pages/mission.astro — Hope Community Church
-// ──────────────────────────────────────────────────────────────────────────
-// CONTENT GUIDE FOR IAN:
-//   • To update the intro text, edit the <p> tags inside the "mission-intro"
-//     section further down this file (search for "<!-- EDIT: intro text -->").
-//   • To add a new country card, copy one of the <div class="country-card">
-//     blocks and update the flag emoji, country name, href, and summary text.
-//   • Stats (baptisms, students, etc.) live in the "mission-stat" spans —
-//     just change the number.
-// ──────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This produces the "Mission" overview page — the hero banner, the
+//   "What We Believe About Mission" intro, and the two country summary
+//   cards (India and Romania) that link through to their own full pages.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Hero heading & subtitle    → search "EDIT: hero text"
+//   • Intro text ("What We
+//     Believe About Mission")    → search "EDIT: intro text"
+//   • Prayer/Presence/Provision
+//     value cards                → search "EDIT: value cards"
+//   • India or Romania summary
+//     card (text, stats, link)   → search "EDIT: India card" or
+//     "EDIT: Romania card"
+//   • Add a brand-new country
+//     card                       → copy one whole
+//     <div class="country-card"> block and update the flag emoji,
+//     country name, link, text and stats inside it
+//
+// This file has two parts, in this order:
+//   1. The HTML below   — the words and layout people see on the page,
+//      broken into labelled sections (HERO SECTION, WHAT IS MISSION?,
+//      MISSION FIELDS)
+//   2. The <style> block at the bottom — colours, spacing and fonts.
+//      You shouldn't need to touch the <style> block for normal updates.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 ---
 
@@ -16,6 +34,7 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- ════════════════════════════════════════════════
        HERO SECTION
+       EDIT: hero text — the heading and subtitle below
   ════════════════════════════════════════════════ -->
   <section class="mission-hero">
     <div class="hero-bg-overlay"></div>
@@ -39,7 +58,7 @@ import Layout from '../layouts/Layout.astro';
     <div class="container">
       <div class="intro-grid">
         <div class="intro-text-col">
-          <!-- EDIT: intro text — update when Ian provides final copy -->
+          <!-- EDIT: intro text — the heading and three paragraphs below -->
           <h2 class="section-title">What We Believe About Mission</h2>
           <p>
             At Hope Community Church, mission sits at the very heart of who we are.
@@ -63,7 +82,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <div class="intro-values-col">
-          <!-- Three pillars of mission — quick visual summary -->
+          <!-- EDIT: value cards — the three pillars of mission (Prayer/Presence/Provision) below -->
           <div class="value-card">
             <span class="value-icon">🙏</span>
             <div>
@@ -102,7 +121,7 @@ import Layout from '../layouts/Layout.astro';
 
       <div class="country-cards-grid">
 
-        <!-- ── INDIA card ── -->
+        <!-- ── EDIT: India card — text, stats and link below ── -->
         <div class="country-card" id="india">
           <div class="card-header india-header">
             <span class="card-flag">🇮🇳</span>
@@ -169,7 +188,7 @@ import Layout from '../layouts/Layout.astro';
           </div>
         </div>
 
-        <!-- ── ROMANIA card ── -->
+        <!-- ── EDIT: Romania card — text, stats and link below ── -->
         <div class="country-card" id="romania">
           <div class="card-header romania-header">
             <span class="card-flag">🇷🇴</span>
@@ -669,7 +688,10 @@ import Layout from '../layouts/Layout.astro';
     transform: translateY(-1px);
   }
 
-  /* ── CTA SECTION ──────────────────────────────────── */
+  /* ── CTA SECTION ──────────────────────────────────────
+     Not currently used on the page — the matching HTML section was
+     removed at some point but these styles were left in place. Safe to
+     ignore, or to remove later if someone wants to tidy up. ── */
   .cta-section {
     background: var(--navy);
     padding: 72px 0;

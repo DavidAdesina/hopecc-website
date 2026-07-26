@@ -1,15 +1,38 @@
 ---
 // src/pages/mission/romania.astro — Hope Community Church
-// ──────────────────────────────────────────────────────────────────────────
-// CONTENT GUIDE FOR IAN:
-//   • To update any text, find the section below and edit the words inside
-//     the HTML tags. Comments like "<!-- EDIT: ... -->" mark every editable spot.
-//   • To update stats (numbers), look for the .stat-number spans.
-//   • To swap a photo, change the src="/images/..." path to your new image name.
-//     All images should be placed in the public/images/ folder.
-//   • Mick & Lorraine's contact details are near the bottom — search "EDIT: contact".
-//   • Prayer points are in the navy prayer section — search "EDIT: prayer".
-// ──────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This produces the full Romania mission story page (Mick & Lorraine
+//   Smith, Satu-Nou) — hero, photo carousel, story sections, prayer
+//   points, and contact details.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Any text on the page       → find the matching "EDIT: ..." comment
+//     next to it and edit the words inside the HTML tags nearby
+//   • Stats (numbers)             → look for the .stat-number spans and
+//     change the number shown
+//   • Photos                      → change the src="/images/..." path to
+//     a different image's filename. All images live in the
+//     public/images/ folder.
+//   • Mick & Lorraine's contact
+//     details                     → search "EDIT: contact"
+//   • Prayer points                → search "EDIT: prayer" (in the navy
+//     prayer section)
+//   • The photo carousel           → this is the sliding set of 3 photos
+//     of the village. Swapping a photo for a different one is a simple
+//     text edit — see "EDIT:" comments near the carousel's HTML. Adding
+//     or removing a photo (changing the count) is more involved, since
+//     the dot indicators below the carousel need to match — see the note
+//     next to "carousel-dots" in the HTML before attempting that.
+//
+// This file has three parts, in this order:
+//   1. The HTML below   — the words and layout people see on the page,
+//      broken into labelled sections (HERO, etc.)
+//   2. The <style> block — colours, spacing and fonts
+//   3. The <script> block at the very end — makes the photo carousel
+//      advance automatically. You shouldn't need to touch the <style>
+//      or <script> blocks for normal text/photo updates.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../../layouts/Layout.astro';
 ---
 
@@ -195,7 +218,10 @@ import Layout from '../../layouts/Layout.astro';
               <img src="/images/Village_3.png" alt="A home in Satu-Nou" loading="lazy" />
             </div>
           </div>
-          <!-- Dot indicators -->
+          <!-- Dot indicators — EDIT: if you add or remove a photo above,
+               add or remove a matching <button class="dot" data-index="N">
+               below too, numbering data-index from 0 upward, so there's
+               exactly one dot per photo -->
           <div class="carousel-dots" id="villageDots" aria-hidden="true">
             <button class="dot active" data-index="0"></button>
             <button class="dot" data-index="1"></button>

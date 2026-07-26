@@ -1,8 +1,29 @@
 ---
 // src/pages/index.astro — Hope Community Church homepage
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This produces the site's homepage — the hero banner, the service-times
+//   strip, the "who we are" section, the three info cards, and the room
+//   hire banner at the bottom.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Page title/meta description → search "EDIT: page title/description"
+//   • Hero heading & text         → search "EDIT: hero text"
+//   • Service times strip         → search "EDIT: service times"
+//   • "Who we are" text           → search "EDIT: welcome text"
+//   • The three info cards        → search "EDIT: info cards"
+//   • Room hire banner text       → search "EDIT: room hire banner"
+//
+// This file has two parts, in this order:
+//   1. The HTML below   — the words and layout people see on the page,
+//      broken into labelled sections (HERO, SERVICE TIMES STRIP, etc.)
+//   2. The <style> block at the bottom — colours, spacing and fonts.
+//      You shouldn't need to touch the <style> block for normal updates.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 ---
 
+<!-- EDIT: page title/description — shown in browser tabs and search engine results -->
 <Layout
   title="Welcome"
   description="Hope Community Church in Hinckley — a warm, welcoming church family. Sunday service at 10:30 am. Christ centred, People focused."
@@ -10,6 +31,7 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- ============================================================
        HERO
+       EDIT: hero text — the heading and text below
   ============================================================ -->
   <section class="hero">
     <div class="hero-inner">
@@ -28,6 +50,7 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- ============================================================
        SERVICE TIMES STRIP
+       EDIT: service times — the four boxes below (times, address, parking)
   ============================================================ -->
   <div class="times-strip">
     <div class="time-item">
@@ -62,6 +85,7 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- ============================================================
        WELCOME / ABOUT
+       EDIT: welcome text — the "who we are" heading and paragraph below
   ============================================================ -->
   <section class="welcome">
     <div class="welcome-inner">
@@ -80,6 +104,7 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- ============================================================
        THREE CARDS
+       EDIT: info cards — the heading, and each card's icon/title/text/link
   ============================================================ -->
   <section class="cards-section">
     <div class="cards-inner">
@@ -129,6 +154,7 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- ============================================================
        ROOM HIRE CTA BANNER
+       EDIT: room hire banner — the heading and text below
   ============================================================ -->
   <section class="hire-banner">
     <div class="hire-inner">

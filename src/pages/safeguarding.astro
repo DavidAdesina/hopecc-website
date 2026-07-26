@@ -1,16 +1,29 @@
 ---
 // safeguarding.astro — Hope Community Church
-// ─────────────────────────────────────────────────────
-// MIGRATED to use the shared <Layout> (Navbar + Footer) instead of a
-// standalone HTML document, so this page gets the same mobile hamburger
-// menu and footer as the rest of the site.
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This produces the Safeguarding page — an emergency contact strip, the
+//   church's commitment statement, a downloadable policy PDF, safeguarding
+//   contacts, and "how to raise a concern" steps. Uses the shared
+//   <Layout> (Navbar + Footer) like every other page.
 //
-// Place the PDF at: public/documents/Safeguarding_Policy_-_Issue_2.pdf
-// Place safeguarding.jpg at: public/images/safeguarding.jpg
+// HOW TO MAKE COMMON CHANGES
+//   • Safeguarding lead name/email → search "EDIT: Safeguarding contacts"
+//   • The policy PDF file/link      → search "EDIT: PDF link"
+//   • PDF issue number/date shown
+//     on the page                   → search "EDIT: PDF metadata"
+//   • Intro/commitment text         → search "EDIT: Intro text"
+//   • Background photo              → search "EDIT: Background image"
 //
-// EDIT: To update the safeguarding lead name/email, search for "EDIT: Safeguarding contacts"
-// EDIT: To update the PDF filename, search for "EDIT: PDF link"
-// EDIT: To change the intro text, search for "EDIT: Intro text"
+//   Note: this page expects two files to exist in the project:
+//     - the policy PDF at public/documents/Safeguarding_Policy_-_Issue_2.pdf
+//     - a background photo at public/images/safeguarding.jpg
+//
+// This file has two parts, in this order:
+//   1. The HTML below   — the words and layout people see on the page
+//   2. The <style> block at the bottom — colours, spacing and fonts.
+//      You shouldn't need to touch the <style> block for normal updates.
+// ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 ---
 
