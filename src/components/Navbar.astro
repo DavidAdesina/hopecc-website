@@ -6,27 +6,51 @@
 //   links, the "Mission" dropdown, and the hamburger menu used on phones.
 //   Because it's one shared file, changing it here updates it everywhere.
 //
-// IMPORTANT: THERE ARE TWO MENUS TO KEEP IN SYNC
-//   This file lists the menu links TWICE — once for desktop (search
-//   "EDIT: desktop menu links") and once for the phone hamburger menu
-//   (search "EDIT: mobile menu links"). If you add, remove or rename a
-//   page link, update BOTH lists so desktop and mobile match.
+// ONE LIST CONTROLS BOTH MENUS
+//   The links below are defined ONCE, in the "navLinks" list right under
+//   this comment (search "EDIT: menu links"). Both the desktop menu and
+//   the phone hamburger menu are built automatically from this same list,
+//   so you only ever need to update it in one place — you can't
+//   accidentally make desktop and mobile show different links.
 //
 // HOW TO MAKE COMMON CHANGES
-//   • Add/remove/rename a menu link → update both "EDIT: desktop menu
-//     links" and "EDIT: mobile menu links" below
-//   • Add a dropdown to a menu link  → wrap it in a
-//     <div class="nav-dropdown-wrapper"> and add a
-//     <div class="nav-dropdown"> with your <a> links inside — the
-//     styling and hover/click behaviour is handled automatically
+//   • Add a menu link      → copy a line inside "EDIT: menu links" below
+//                             and change the label/href
+//   • Remove a menu link    → delete its line inside "EDIT: menu links"
+//   • Rename a menu link    → change the text inside the quotes after
+//                             "label:"
+//   • Add a link to the Mission dropdown → add a line inside the
+//                             "dropdown: [ ... ]" part of the Mission entry
+//   • Make a link the highlighted "button" style (like Contact Us) →
+//                             add   cta: true   after its href
 //
 // This file has three parts, in this order:
-//   1. The HTML below   — the menu structure and links
-//   2. The <style> block — colours, spacing, the dropdown animation
-//   3. The <script> block at the very bottom — makes the hamburger
+//   1. The list below     — the menu links (edit this for content changes)
+//   2. The HTML/markup    — turns the list into the desktop + mobile menus
+//   3. The <style> block  — colours, spacing, the dropdown animation
+//   4. The <script> block at the very bottom — makes the hamburger
 //      button open/close the phone menu. You shouldn't need to touch
-//      the <style> or <script> blocks for normal updates.
+//      the markup, <style>, or <script> for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
+
+// EDIT: menu links — this single list feeds BOTH the desktop and mobile menus
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "What's On", href: "/whats-on" },
+  {
+    label: "Mission",
+    href: "/mission",
+    // Sub-links shown in the "Mission" dropdown (desktop) and as indented
+    // links under "Mission" in the phone menu (mobile).
+    dropdown: [
+      { label: "India", href: "/mission/india", flag: "🇮🇳" },
+      { label: "Romania", href: "/mission/romania", flag: "🇷🇴" },
+    ],
+  },
+  { label: "Room Hire", href: "/room-hire" },
+  // cta: true gives this link the gold "button" highlight on desktop
+  { label: "Contact Us", href: "/contact", cta: true },
+];
 ---
 
 <header class="navbar">
@@ -35,34 +59,32 @@
       <img src="/images/logo-white.svg" alt="Hope Community Church" class="h-16 w-auto" />
     </a>
 
-    <!-- Desktop nav -->
-    <!-- EDIT: desktop menu links — remember to also update "EDIT: mobile menu links" below -->
+    <!-- Desktop nav — built automatically from the "navLinks" list above -->
     <nav class="navbar-links" aria-label="Main navigation">
-      <a href="/">Home</a>
-      <a href="/whats-on">What's On</a>
-
-      <!-- ── Mission link with hover dropdown ── -->
-      <div class="nav-dropdown-wrapper">
-        <a href="/mission" class="nav-dropdown-trigger">
-          Mission
-          <!-- small chevron so users know there's a sub-menu -->
-          <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-            <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <div class="nav-dropdown" role="menu">
-          <a href="/mission/india" role="menuitem">
-            <span class="dropdown-flag">🇮🇳</span>India
-          </a>
-          <a href="/mission/romania" role="menuitem">
-            <span class="dropdown-flag">🇷🇴</span>Romania
-          </a>
-        </div>
-      </div>
-      <!-- ── end Mission dropdown ── -->
-
-      <a href="/room-hire">Room Hire</a>
-      <a href="/contact" class="navbar-cta">Contact Us</a>
+      {navLinks.map((link) => (
+        link.dropdown ? (
+          <!-- ── Link with hover dropdown (e.g. Mission) ── -->
+          <div class="nav-dropdown-wrapper">
+            <a href={link.href} class="nav-dropdown-trigger">
+              {link.label}
+              <!-- small chevron so users know there's a sub-menu -->
+              <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <div class="nav-dropdown" role="menu">
+              {link.dropdown.map((sub) => (
+                <a href={sub.href} role="menuitem">
+                  <span class="dropdown-flag">{sub.flag}</span>{sub.label}
+                </a>
+              ))}
+            </div>
+          </div>
+          <!-- ── end dropdown link ── -->
+        ) : (
+          <a href={link.href} class={link.cta ? "navbar-cta" : undefined}>{link.label}</a>
+        )
+      ))}
     </nav>
 
     <!-- Mobile hamburger -->
@@ -73,17 +95,17 @@
     </button>
   </div>
 
-  <!-- Mobile dropdown -->
-  <!-- EDIT: mobile menu links — keep this in sync with "EDIT: desktop menu links" above -->
+  <!-- Mobile dropdown — also built automatically from the "navLinks" list above -->
   <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
-    <a href="/">Home</a>
-    <a href="/whats-on">What's On</a>
-    <a href="/mission">Mission</a>
-    <!-- Mobile sub-links indented slightly so the hierarchy is clear -->
-    <a href="/mission/india" class="mobile-sub-link">↳ India</a>
-    <a href="/mission/romania" class="mobile-sub-link">↳ Romania</a>
-    <a href="/room-hire">Room Hire</a>
-    <a href="/contact">Contact Us</a>
+    {navLinks.map((link) => (
+      <Fragment>
+        <a href={link.href}>{link.label}</a>
+        {link.dropdown && link.dropdown.map((sub) => (
+          <!-- Mission sub-links indented slightly so the hierarchy is clear -->
+          <a href={sub.href} class="mobile-sub-link">↳ {sub.label}</a>
+        ))}
+      </Fragment>
+    ))}
   </nav>
 </header>
 

@@ -19,11 +19,11 @@
 //   • Prayer points                → search "EDIT: prayer" (in the navy
 //     prayer section)
 //   • The photo carousel           → this is the sliding set of 3 photos
-//     of the village. Swapping a photo for a different one is a simple
-//     text edit — see "EDIT:" comments near the carousel's HTML. Adding
-//     or removing a photo (changing the count) is more involved, since
-//     the dot indicators below the carousel need to match — see the note
-//     next to "carousel-dots" in the HTML before attempting that.
+//     of the village. Swapping a photo for a different one, or adding/
+//     removing a photo altogether, is a simple edit — see "EDIT:"
+//     comments near the carousel's HTML. The little dots below the
+//     carousel are created automatically to match however many photos
+//     are there, so you don't need to touch them yourself.
 //
 // This file has three parts, in this order:
 //   1. The HTML below   — the words and layout people see on the page,
@@ -218,15 +218,11 @@ import Layout from '../../layouts/Layout.astro';
               <img src="/images/Village_3.png" alt="A home in Satu-Nou" loading="lazy" />
             </div>
           </div>
-          <!-- Dot indicators — EDIT: if you add or remove a photo above,
-               add or remove a matching <button class="dot" data-index="N">
-               below too, numbering data-index from 0 upward, so there's
-               exactly one dot per photo -->
-          <div class="carousel-dots" id="villageDots" aria-hidden="true">
-            <button class="dot active" data-index="0"></button>
-            <button class="dot" data-index="1"></button>
-            <button class="dot" data-index="2"></button>
-          </div>
+          <!-- Dot indicators — these are built automatically by the
+               carousel script below, one dot per photo above. You don't
+               need to add or edit anything here yourself; just add or
+               remove a photo above and the dots will match. -->
+          <div class="carousel-dots" id="villageDots" aria-hidden="true"></div>
         </div>
 
       </article>
@@ -1240,14 +1236,30 @@ import Layout from '../../layouts/Layout.astro';
      Auto-advances the village photo carousel every 3.5 seconds.
      Clicking a dot jumps to that slide.
      Pauses when the user hovers over the carousel.
+
+     This script counts the photos itself and builds one dot per photo,
+     so the photos (above) are the only list anyone needs to edit —
+     there's no separate dot list to keep in sync by hand.
 ══════════════════════════════════════════════════ -->
 <script>
   (function () {
-    const track  = document.getElementById('villageTrack');
-    const dots   = document.querySelectorAll('#villageDots .dot');
-    const total  = dots.length;
-    let current  = 0;
+    const track     = document.getElementById('villageTrack');
+    const slides    = track.querySelectorAll('.carousel-slide');
+    const dotsHolder = document.getElementById('villageDots');
+    const total     = slides.length;
+    let current     = 0;
     let timer;
+
+    // Build one dot per photo, in order, and remember them in a list
+    // so the rest of the script can use them the same way as before.
+    const dots = [];
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.dataset.index = i;
+      dotsHolder.appendChild(dot);
+      dots.push(dot);
+    }
 
     function goTo(index) {
       current = (index + total) % total;

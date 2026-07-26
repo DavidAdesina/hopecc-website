@@ -688,86 +688,6 @@ import Layout from '../layouts/Layout.astro';
     transform: translateY(-1px);
   }
 
-  /* ── CTA SECTION ──────────────────────────────────────
-     Not currently used on the page — the matching HTML section was
-     removed at some point but these styles were left in place. Safe to
-     ignore, or to remove later if someone wants to tidy up. ── */
-  .cta-section {
-    background: var(--navy);
-    padding: 72px 0;
-    border-top: 3px solid var(--gold);
-  }
-
-  .cta-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 40px;
-  }
-
-  .cta-text h2 {
-    font-family: var(--font);
-    font-size: clamp(22px, 3vw, 30px);
-    font-weight: 800;
-    color: #ffffff;
-    margin: 0 0 12px;
-  }
-
-  .cta-text p {
-    font-family: var(--font);
-    font-size: 16px;
-    line-height: 1.65;
-    color: rgba(255,255,255,0.72);
-    margin: 0;
-    max-width: 520px;
-  }
-
-  .cta-buttons {
-    display: flex;
-    gap: 14px;
-    flex-shrink: 0;
-  }
-
-  .btn-cta-gold {
-    display: inline-block;
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--navy);
-    background: var(--gold);
-    padding: 14px 28px;
-    border-radius: 6px;
-    transition: background 0.18s;
-    white-space: nowrap;
-  }
-
-  .btn-cta-gold:hover { background: var(--gold-dark); color: #ffffff; }
-
-  .btn-cta-outline {
-    display: inline-block;
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: #ffffff;
-    background: transparent;
-    border: 2px solid rgba(255,255,255,0.35);
-    padding: 14px 28px;
-    border-radius: 6px;
-    transition: border-color 0.18s, background 0.18s;
-    white-space: nowrap;
-  }
-
-  .btn-cta-outline:hover {
-    border-color: #ffffff;
-    background: rgba(255,255,255,0.08);
-  }
-
   /* ── RESPONSIVE ───────────────────────────────────── */
   @media (max-width: 900px) {
     .intro-grid,
@@ -781,21 +701,11 @@ import Layout from '../layouts/Layout.astro';
     .mission-hero { min-height: 360px; }
     .hero-content { padding: 60px 20px 48px; }
 
-    .cta-inner {
-      flex-direction: column;
-      text-align: center;
-    }
-    .cta-text p { max-width: 100%; }
-    .cta-buttons { flex-direction: column; width: 100%; }
-    .btn-cta-gold,
-    .btn-cta-outline { text-align: center; }
-
     .stats-row { flex-wrap: wrap; }
     .stat-block { flex: 0 0 50%; border-bottom: 1px solid rgba(13,31,60,0.08); }
     .stat-block:nth-child(even) { border-right: none; }
 
     .mission-intro-section,
     .mission-fields-section { padding: 56px 0; }
-    .cta-section { padding: 56px 0; }
   }
 </style>
