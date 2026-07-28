@@ -17,9 +17,18 @@ developers setting up the project or working on the code itself.
   Astro outputs plain, fast HTML/CSS with very little JavaScript sent to
   visitors' browsers.
 - **[Tailwind CSS](https://tailwindcss.com) v4** — utility CSS framework,
-  wired in via the official Vite plugin (`@tailwindcss/vite`). Most pages on
-  this site currently use hand-written CSS in `<style>` blocks rather than
-  Tailwind utility classes (see [Styling notes](#styling-notes) below for why).
+  wired in via the official PostCSS plugin (`@tailwindcss/postcss`, see
+  [Tailwind/Vite build fix](#tailwind--vite-build-fix-important) below for
+  why it's PostCSS and not the Vite plugin). Most pages on this site
+  currently use hand-written CSS in `<style>` blocks rather than Tailwind
+  utility classes (see [Styling notes](#styling-notes) below for why).
+- **[Prettier](https://prettier.io)**, with the official
+  [`prettier-plugin-astro`](https://github.com/withastro/prettier-plugin-astro) —
+  handles code formatting (indentation, quotes, trailing commas, line
+  wrapping). Config lives in `.prettierrc.json`; `.prettierignore` excludes
+  `watch-listen.astro` (under active development — see below) and build
+  output. Run `npx prettier --write .` to reformat everything, or
+  `npx prettier --check .` to see what would change without writing.
 - **Plain HTML/CSS/JS** — all pages, including `contact.astro`,
   `safeguarding.astro`, and `privacy-policy.astro`, use the shared
   `Layout.astro` (Navbar + Footer), so navigation only has to be maintained
@@ -66,7 +75,8 @@ Other available scripts:
 | `npm run preview` | Serves the built `dist/` folder locally, so you can check a build    |
 | `npm run astro`   | Runs the Astro CLI directly (e.g. `npm run astro -- check`)          |
 
-There is no test suite or linter configured yet (see the pre-launch plan below).
+There is no test suite configured yet. Prettier is configured for formatting
+(see [Tech stack](#tech-stack) above) — there's no linter (e.g. ESLint) yet.
 
 ---
 
@@ -74,9 +84,13 @@ There is no test suite or linter configured yet (see the pre-launch plan below).
 
 ```
 hopecc-website/
-├── astro.config.mjs        Astro's main config file — site URL, Vite plugins
+├── astro.config.mjs        Astro's main config file — site URL
+├── postcss.config.mjs       Registers the Tailwind PostCSS plugin (see
+│                            Tailwind / Vite build fix above)
 ├── tailwind.config.mjs      Tailwind v4 config (see note below — most brand
 │                            tokens actually live in global.css, not here)
+├── .prettierrc.json          Prettier formatting config (Astro plugin)
+├── .prettierignore           Files Prettier skips (watch-listen.astro, dist/)
 ├── package.json             Dependencies and npm scripts
 ├── tsconfig.json             TypeScript config (for editor tooling/type checks)
 │
@@ -141,6 +155,39 @@ hopecc-website/
   | Gold        | `#c9a84c`  |
   | Cream       | `#f7f9fc`  |
   | Font        | Nunito, weight 800 for headings |
+
+---
+
+## Tailwind / Vite build fix (important)
+
+**As of this update, `@tailwindcss/vite` no longer works with this project.**
+This isn't specific to this site — it's a known, currently-open upstream
+incompatibility between `@tailwindcss/vite` and the Rolldown-based Vite that
+Astro 6 bundles by default. Running a plain `npm install` on the previous
+`package.json` would build successfully today but fail the moment any
+dependency patch-updates, with an error like:
+
+```
+[@tailwindcss/vite:generate:build] Missing field `tsconfigPaths` on
+BindingViteResolvePluginConfig.resolveOptions
+```
+
+(Tracked upstream: [vitejs/vite#22322](https://github.com/vitejs/vite/issues/22322),
+[withastro/astro#16542](https://github.com/withastro/astro/issues/16542).)
+
+**The fix:** switched Tailwind from the Vite plugin to the PostCSS plugin,
+which doesn't have this issue.
+
+- `astro.config.mjs` no longer imports or registers `@tailwindcss/vite`.
+- A new `postcss.config.mjs` registers `@tailwindcss/postcss` instead.
+- `package.json` now depends on `@tailwindcss/postcss` instead of
+  `@tailwindcss/vite`.
+
+Verified with a completely clean install (`rm -rf node_modules
+package-lock.json && npm install && npm run build`) — all 10 pages build
+successfully. No visual or behavioural change; this only affects how
+Tailwind is wired into the build, and the site doesn't yet use Tailwind
+utility classes on any page (see [Styling notes](#styling-notes)).
 
 ---
 
@@ -210,6 +257,24 @@ resolved (see below) — one remains outstanding by design:
   standalone HTML documents with their own duplicated `<nav>` markup~~ —
   migrated onto the shared `Layout.astro` / `Navbar` component, so
   navigation is maintained in one place across the whole site.
+- ~~`mission/romania.astro` had a malformed CSS comment~~ — a comment
+  written as `/* ... -->` (mixing CSS and HTML comment syntax) was silently
+  swallowing the entire rest of the stylesheet as one giant unclosed
+  comment. Fixed by closing it properly with `*/`.
+- ~~`Navbar.astro` was leaking internal comments into the live site's
+  HTML~~ — three HTML-style comments (`<!-- -->`) were sitting inside JS
+  map/ternary expressions, so Astro rendered them as literal text into
+  every page's navigation markup instead of stripping them at build time
+  (one was duplicating once per dropdown sub-link). Converted to JS-style
+  `{/* */}` comments, which Astro does strip. Verified via a diff of the
+  built HTML before and after — the comments no longer appear in any
+  shipped page.
+- Code formatting pass completed with Prettier + the official Astro plugin
+  across all 13 in-use files (`watch-listen.astro` excluded, per its
+  active-development status above). Verified via a real `astro build`
+  before and after, plus a whitespace-normalized diff of every generated
+  page — all differences were harmless whitespace inside existing tags,
+  never new gaps between elements.
 
 ---
 
@@ -224,7 +289,7 @@ resolved (see below) — one remains outstanding by design:
 | 3c | Navbar.astro duplicate-list fix (single shared `navLinks` list) | ✅ Done |
 | 3d | mission.astro dead `.cta-section` CSS removed | ✅ Done |
 | 3e | romania.astro carousel dot-indicator dependency removed (dots now auto-generated from photo count) | ✅ Done |
-| 4 | Code formatting pass (watch-listen.astro scaffold left untouched — page under active development) | Not started |
+| 4 | Code formatting pass (Prettier + Astro plugin, watch-listen.astro scaffold left untouched — page under active development). Also fixed the Tailwind/Vite build bug and two other bugs found along the way (see Resolved, above) | ✅ Done |
 | 5 | Decap CMS setup (config, GitHub OAuth app) | Not started |
 | 6 | CMS testing + maintainer instructions for `/admin` | Not started |
 | 7+ | AWS deployment (S3, CloudFront, Route 53, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | Not started |

@@ -35,21 +35,21 @@
 
 // EDIT: menu links — this single list feeds BOTH the desktop and mobile menus
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "What's On", href: "/whats-on" },
+  { label: 'Home', href: '/' },
+  { label: "What's On", href: '/whats-on' },
   {
-    label: "Mission",
-    href: "/mission",
+    label: 'Mission',
+    href: '/mission',
     // Sub-links shown in the "Mission" dropdown (desktop) and as indented
     // links under "Mission" in the phone menu (mobile).
     dropdown: [
-      { label: "India", href: "/mission/india", flag: "🇮🇳" },
-      { label: "Romania", href: "/mission/romania", flag: "🇷🇴" },
+      { label: 'India', href: '/mission/india', flag: '🇮🇳' },
+      { label: 'Romania', href: '/mission/romania', flag: '🇷🇴' },
     ],
   },
-  { label: "Room Hire", href: "/room-hire" },
+  { label: 'Room Hire', href: '/room-hire' },
   // cta: true gives this link the gold "button" highlight on desktop
-  { label: "Contact Us", href: "/contact", cta: true },
+  { label: 'Contact Us', href: '/contact', cta: true },
 ];
 ---
 
@@ -61,34 +61,57 @@ const navLinks = [
 
     <!-- Desktop nav — built automatically from the "navLinks" list above -->
     <nav class="navbar-links" aria-label="Main navigation">
-      {navLinks.map((link) => (
-        link.dropdown ? (
-          <!-- ── Link with hover dropdown (e.g. Mission) ── -->
-          <div class="nav-dropdown-wrapper">
-            <a href={link.href} class="nav-dropdown-trigger">
-              {link.label}
-              <!-- small chevron so users know there's a sub-menu -->
-              <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-            <div class="nav-dropdown" role="menu">
-              {link.dropdown.map((sub) => (
-                <a href={sub.href} role="menuitem">
-                  <span class="dropdown-flag">{sub.flag}</span>{sub.label}
-                </a>
-              ))}
+      {
+        navLinks.map((link) =>
+          link.dropdown ? (
+            /* ── Link with hover dropdown (e.g. Mission) ── */
+            <div class="nav-dropdown-wrapper">
+              <a href={link.href} class="nav-dropdown-trigger">
+                {link.label}
+                {/* small chevron so users know there's a sub-menu */}
+                <svg
+                  class="chevron"
+                  width="10"
+                  height="6"
+                  viewBox="0 0 10 6"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M1 1l4 4 4-4"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+              <div class="nav-dropdown" role="menu">
+                {link.dropdown.map((sub) => (
+                  <a href={sub.href} role="menuitem">
+                    <span class="dropdown-flag">{sub.flag}</span>
+                    {sub.label}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-          <!-- ── end dropdown link ── -->
-        ) : (
-          <a href={link.href} class={link.cta ? "navbar-cta" : undefined}>{link.label}</a>
+          ) : (
+            /* ── end dropdown link ── */
+            <a href={link.href} class={link.cta ? 'navbar-cta' : undefined}>
+              {link.label}
+            </a>
+          ),
         )
-      ))}
+      }
     </nav>
 
     <!-- Mobile hamburger -->
-    <button class="navbar-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <button
+      class="navbar-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
       <span></span>
       <span></span>
       <span></span>
@@ -96,16 +119,21 @@ const navLinks = [
   </div>
 
   <!-- Mobile dropdown — also built automatically from the "navLinks" list above -->
+  <!-- Any dropdown sub-links (e.g. Mission's India/Romania) render indented, one level below their parent link -->
   <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
-    {navLinks.map((link) => (
-      <Fragment>
-        <a href={link.href}>{link.label}</a>
-        {link.dropdown && link.dropdown.map((sub) => (
-          <!-- Mission sub-links indented slightly so the hierarchy is clear -->
-          <a href={sub.href} class="mobile-sub-link">↳ {sub.label}</a>
-        ))}
-      </Fragment>
-    ))}
+    {
+      navLinks.map((link) => (
+        <Fragment>
+          <a href={link.href}>{link.label}</a>
+          {link.dropdown &&
+            link.dropdown.map((sub) => (
+              <a href={sub.href} class="mobile-sub-link">
+                ↳ {sub.label}
+              </a>
+            ))}
+        </Fragment>
+      ))
+    }
   </nav>
 </header>
 
@@ -154,14 +182,16 @@ const navLinks = [
     text-decoration: none;
     padding: 8px 13px;
     border-radius: 4px;
-    transition: color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      background 0.15s;
     display: inline-flex;
     align-items: center;
     gap: 5px;
   }
 
   .navbar-links > a:hover,
-  .navbar-links > a[aria-current="page"],
+  .navbar-links > a[aria-current='page'],
   .nav-dropdown-wrapper:hover .nav-dropdown-trigger,
   .nav-dropdown-wrapper:focus-within .nav-dropdown-trigger {
     color: #ffffff;
@@ -200,7 +230,7 @@ const navLinks = [
   /* The dropdown panel — hidden by default */
   .nav-dropdown {
     position: absolute;
-    top: calc(100% + 6px);  /* small gap below the trigger */
+    top: calc(100% + 6px); /* small gap below the trigger */
     left: 0;
     min-width: 170px;
     background: #0d1f3c;
@@ -214,7 +244,10 @@ const navLinks = [
     opacity: 0;
     visibility: hidden;
     transform: translateY(-6px);
-    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease,
+      visibility 0.18s;
   }
 
   /* Show on hover OR keyboard focus-within */
@@ -236,7 +269,9 @@ const navLinks = [
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
-    transition: color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      background 0.15s;
   }
 
   .nav-dropdown a:hover {
@@ -266,16 +301,18 @@ const navLinks = [
     height: 2px;
     background: #ffffff;
     border-radius: 2px;
-    transition: transform 0.2s, opacity 0.2s;
+    transition:
+      transform 0.2s,
+      opacity 0.2s;
   }
 
-  .navbar-toggle[aria-expanded="true"] span:nth-child(1) {
+  .navbar-toggle[aria-expanded='true'] span:nth-child(1) {
     transform: translateY(7px) rotate(45deg);
   }
-  .navbar-toggle[aria-expanded="true"] span:nth-child(2) {
+  .navbar-toggle[aria-expanded='true'] span:nth-child(2) {
     opacity: 0;
   }
-  .navbar-toggle[aria-expanded="true"] span:nth-child(3) {
+  .navbar-toggle[aria-expanded='true'] span:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
   }
 
@@ -300,7 +337,9 @@ const navLinks = [
     color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
     padding: 13px 28px;
-    transition: color 0.15s, background 0.15s;
+    transition:
+      color 0.15s,
+      background 0.15s;
   }
 
   .mobile-menu a:hover {
@@ -333,7 +372,7 @@ const navLinks = [
 <script>
   // ── Mobile hamburger toggle ──────────────────────────
   const toggle = document.querySelector('.navbar-toggle') as HTMLButtonElement;
-  const menu   = document.getElementById('mobile-menu') as HTMLElement;
+  const menu = document.getElementById('mobile-menu') as HTMLElement;
 
   toggle?.addEventListener('click', () => {
     const isOpen = toggle.getAttribute('aria-expanded') === 'true';

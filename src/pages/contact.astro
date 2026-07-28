@@ -40,7 +40,6 @@ import Layout from '../layouts/Layout.astro';
   title="Contact"
   description="Get in touch with Hope Community Church in Hinckley — phone, email, room hire enquiries and directions."
 >
-
   <div class="page-wrapper">
     <div class="bg-image"></div>
     <div class="bg-overlay"></div>
@@ -55,7 +54,6 @@ import Layout from '../layouts/Layout.astro';
 
     <!-- Main grid -->
     <main class="contact-grid">
-
       <!-- Left: Contact details — EDIT: contact details — phone, email, address, socials below -->
       <div class="glass details-card">
         <h2>Contact Details</h2>
@@ -78,8 +76,12 @@ import Layout from '../layouts/Layout.astro';
           <div class="detail-arrow">›</div>
         </a>
 
-        <a href="https://www.google.co.uk/maps/dir//Hope+Community+Church,+Deveron+Way,+Hinckley+LE10+0XD/@52.5440641,-1.3877352,17z/data=!4m9!4m8!1m0!1m5!1m1!1s0x4877500b54eaece5:0x3aa0e27e6b840aec!2m2!1d-1.3877306!2d52.5440545!3e0?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
-           class="detail-item" target="_blank" rel="noopener">
+        <a
+          href="https://www.google.co.uk/maps/dir//Hope+Community+Church,+Deveron+Way,+Hinckley+LE10+0XD/@52.5440641,-1.3877352,17z/data=!4m9!4m8!1m0!1m5!1m1!1s0x4877500b54eaece5:0x3aa0e27e6b840aec!2m2!1d-1.3877306!2d52.5440545!3e0?entry=ttu&g_ep=EgoyMDI2MDUyMC4wIKXMDSoASAFQAw%3D%3D"
+          class="detail-item"
+          target="_blank"
+          rel="noopener"
+        >
           <div class="detail-icon icon-map">📍</div>
           <div class="detail-text">
             <div class="detail-label">Find Us</div>
@@ -88,9 +90,17 @@ import Layout from '../layouts/Layout.astro';
           <div class="detail-arrow">›</div>
         </a>
 
-        <a href="https://www.facebook.com/hopechurchhinc" class="detail-item" target="_blank" rel="noopener">
+        <a
+          href="https://www.facebook.com/hopechurchhinc"
+          class="detail-item"
+          target="_blank"
+          rel="noopener"
+        >
           <div class="detail-icon icon-fb">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"
+              ><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              ></path></svg
+            >
           </div>
           <div class="detail-text">
             <div class="detail-label">Facebook</div>
@@ -99,9 +109,19 @@ import Layout from '../layouts/Layout.astro';
           <div class="detail-arrow">›</div>
         </a>
 
-        <a href="https://www.youtube.com/@hopecommunitychurch328/featured" class="detail-item" target="_blank" rel="noopener">
+        <a
+          href="https://www.youtube.com/@hopecommunitychurch328/featured"
+          class="detail-item"
+          target="_blank"
+          rel="noopener"
+        >
           <div class="detail-icon icon-yt">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#cc0000"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"
+              ><path
+                d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"
+              ></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#cc0000"
+              ></polygon></svg
+            >
           </div>
           <div class="detail-text">
             <div class="detail-label">YouTube</div>
@@ -122,15 +142,18 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- Right: Contact form -->
       <div class="glass form-card" id="formCard">
-
         <!-- ═══════════════════════════════════════════════════
              ROOM HIRE BANNER
              Hidden by default. JS adds class "visible" when
              ?enquiry=room-hire is in the URL.
              EDIT: Room hire checklist — update the text inside each .checklist-item below
         ═══════════════════════════════════════════════════ -->
-        <div class="room-hire-banner" id="roomHireBanner" role="note" aria-label="Room Hire Enquiry guidance">
-
+        <div
+          class="room-hire-banner"
+          id="roomHireBanner"
+          role="note"
+          aria-label="Room Hire Enquiry guidance"
+        >
           <div class="banner-header">
             <div class="banner-header-icon">🏠</div>
             <div class="banner-header-text">
@@ -142,7 +165,8 @@ import Layout from '../layouts/Layout.astro';
 
           <div class="banner-body">
             <p>
-              To help us confirm your booking as quickly as possible, please include the following details in your message:
+              To help us confirm your booking as quickly as possible, please include the following
+              details in your message:
             </p>
 
             <!-- EDIT: Room hire checklist — add, remove or change items here -->
@@ -153,7 +177,9 @@ import Layout from '../layouts/Layout.astro';
               </div>
               <div class="checklist-item">
                 <div class="check-icon">✓</div>
-                <span><strong>Start and finish time</strong> — including any set-up time you may need</span>
+                <span
+                  ><strong>Start and finish time</strong> — including any set-up time you may need</span
+                >
               </div>
               <div class="checklist-item">
                 <div class="check-icon">✓</div>
@@ -165,11 +191,17 @@ import Layout from '../layouts/Layout.astro';
               </div>
               <div class="checklist-item">
                 <div class="check-icon">✓</div>
-                <span><strong>Your contact details</strong> — name, phone number and email address</span>
+                <span
+                  ><strong>Your contact details</strong> — name, phone number and email address</span
+                >
               </div>
             </div>
 
-            <button class="banner-dismiss" id="bannerDismiss" aria-label="Dismiss room hire guidance">
+            <button
+              class="banner-dismiss"
+              id="bannerDismiss"
+              aria-label="Dismiss room hire guidance"
+            >
               ✕ &nbsp;Dismiss this guidance
             </button>
           </div>
@@ -211,7 +243,8 @@ import Layout from '../layouts/Layout.astro';
 
           <div class="form-row">
             <label for="message">Message</label>
-            <textarea id="message" name="message" placeholder="Write your message here…" required></textarea>
+            <textarea id="message" name="message" placeholder="Write your message here…" required
+            ></textarea>
           </div>
 
           <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
@@ -227,24 +260,22 @@ import Layout from '../layouts/Layout.astro';
           allowfullscreen
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          title="Hope Community Church location">
+          title="Hope Community Church location"
+        >
         </iframe>
       </div>
-
     </main>
-
   </div>
-
 </Layout>
 
 <style>
   :root {
-    --navy:   #0d1f3c;
-    --blue:   #4a90c4;
-    --pale:   #e8f2f9;
-    --gold:   #c9a84c;
-    --cream:  #f7f9fc;
-    --white:  #ffffff;
+    --navy: #0d1f3c;
+    --blue: #4a90c4;
+    --pale: #e8f2f9;
+    --gold: #c9a84c;
+    --cream: #f7f9fc;
+    --white: #ffffff;
   }
 
   /* ── Hero background ── */
@@ -265,9 +296,9 @@ import Layout from '../layouts/Layout.astro';
     inset: 0;
     background: linear-gradient(
       160deg,
-      rgba(13,31,60,0.82) 0%,
-      rgba(13,31,60,0.70) 40%,
-      rgba(74,144,196,0.55) 100%
+      rgba(13, 31, 60, 0.82) 0%,
+      rgba(13, 31, 60, 0.7) 40%,
+      rgba(74, 144, 196, 0.55) 100%
     );
     z-index: -1;
   }
@@ -287,11 +318,13 @@ import Layout from '../layouts/Layout.astro';
     line-height: 1.1;
   }
 
-  .page-heading h1 span { color: var(--gold); }
+  .page-heading h1 span {
+    color: var(--gold);
+  }
 
   .page-heading p {
     margin-top: 0.75rem;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255, 255, 255, 0.75);
     font-size: 1.1rem;
     font-weight: 600;
   }
@@ -318,10 +351,10 @@ import Layout from '../layouts/Layout.astro';
 
   /* ── Glass card base ── */
   .glass {
-    background: rgba(13,31,60,0.72);
+    background: rgba(13, 31, 60, 0.72);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.13);
+    border: 1px solid rgba(255, 255, 255, 0.13);
     border-radius: 20px;
     overflow: hidden;
   }
@@ -349,14 +382,16 @@ import Layout from '../layouts/Layout.astro';
     gap: 1.1rem;
     padding: 1rem 1.1rem;
     border-radius: 14px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.09);
-    transition: background 0.2s, transform 0.2s;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    transition:
+      background 0.2s,
+      transform 0.2s;
     text-decoration: none;
   }
 
   .detail-item:hover {
-    background: rgba(74,144,196,0.22);
+    background: rgba(74, 144, 196, 0.22);
     transform: translateX(4px);
   }
 
@@ -371,14 +406,29 @@ import Layout from '../layouts/Layout.astro';
     font-size: 1.5rem;
   }
 
-  .icon-phone  { background: linear-gradient(135deg, #27ae60, #2ecc71); }
-  .icon-email  { background: linear-gradient(135deg, #4a90c4, #2980b9); }
-  .icon-map    { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-  .icon-fb     { background: linear-gradient(135deg, #1877f2, #0c5dc7); }
-  .icon-yt     { background: linear-gradient(135deg, #ff0000, #cc0000); }
-  .icon-sg     { background: linear-gradient(135deg, #c9a84c, #a07830); }
+  .icon-phone {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+  }
+  .icon-email {
+    background: linear-gradient(135deg, #4a90c4, #2980b9);
+  }
+  .icon-map {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+  }
+  .icon-fb {
+    background: linear-gradient(135deg, #1877f2, #0c5dc7);
+  }
+  .icon-yt {
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+  }
+  .icon-sg {
+    background: linear-gradient(135deg, #c9a84c, #a07830);
+  }
 
-  .detail-text { flex: 1; min-width: 0; }
+  .detail-text {
+    flex: 1;
+    min-width: 0;
+  }
   .detail-label {
     font-size: 0.72rem;
     font-weight: 800;
@@ -397,7 +447,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .detail-arrow {
-    color: rgba(255,255,255,0.3);
+    color: rgba(255, 255, 255, 0.3);
     font-size: 1.1rem;
     flex-shrink: 0;
   }
@@ -405,13 +455,17 @@ import Layout from '../layouts/Layout.astro';
   /* ── Form card ── */
   .form-card {
     padding: 2.25rem 2rem;
-    transition: border-color 0.4s, box-shadow 0.4s;
+    transition:
+      border-color 0.4s,
+      box-shadow 0.4s;
   }
 
   /* Gold glow when in room-hire mode — JS adds .room-hire-active */
   .form-card.room-hire-active {
-    border-color: rgba(201,168,76,0.55) !important;
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.18), 0 8px 40px rgba(201,168,76,0.15);
+    border-color: rgba(201, 168, 76, 0.55) !important;
+    box-shadow:
+      0 0 0 3px rgba(201, 168, 76, 0.18),
+      0 8px 40px rgba(201, 168, 76, 0.15);
   }
 
   .form-card h2 {
@@ -429,7 +483,7 @@ import Layout from '../layouts/Layout.astro';
     margin-bottom: 1.6rem;
     border-radius: 14px;
     overflow: hidden;
-    border: 1px solid rgba(201,168,76,0.4);
+    border: 1px solid rgba(201, 168, 76, 0.4);
   }
 
   .room-hire-banner.visible {
@@ -438,8 +492,14 @@ import Layout from '../layouts/Layout.astro';
   }
 
   @keyframes bannerSlideIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .banner-header {
@@ -472,18 +532,18 @@ import Layout from '../layouts/Layout.astro';
   .banner-header-text span {
     font-size: 0.82rem;
     font-weight: 700;
-    color: rgba(13,31,60,0.75);
+    color: rgba(13, 31, 60, 0.75);
   }
 
   .banner-body {
-    background: rgba(201,168,76,0.08);
+    background: rgba(201, 168, 76, 0.08);
     padding: 1.1rem 1.4rem 1.3rem;
   }
 
   .banner-body p {
     font-size: 0.9rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.85);
+    color: rgba(255, 255, 255, 0.85);
     margin-bottom: 0.9rem;
     line-height: 1.55;
   }
@@ -509,7 +569,7 @@ import Layout from '../layouts/Layout.astro';
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: rgba(201,168,76,0.25);
+    background: rgba(201, 168, 76, 0.25);
     border: 1.5px solid var(--gold);
     display: flex;
     align-items: center;
@@ -527,7 +587,7 @@ import Layout from '../layouts/Layout.astro';
     margin-top: 1rem;
     font-size: 0.78rem;
     font-weight: 700;
-    color: rgba(255,255,255,0.45);
+    color: rgba(255, 255, 255, 0.45);
     cursor: pointer;
     background: none;
     border: none;
@@ -538,10 +598,14 @@ import Layout from '../layouts/Layout.astro';
     transition: color 0.2s;
   }
 
-  .banner-dismiss:hover { color: rgba(255,255,255,0.75); }
+  .banner-dismiss:hover {
+    color: rgba(255, 255, 255, 0.75);
+  }
 
   /* ── Form rows ── */
-  .form-row { margin-bottom: 1.1rem; }
+  .form-row {
+    margin-bottom: 1.1rem;
+  }
 
   .form-row label {
     display: block;
@@ -556,8 +620,8 @@ import Layout from '../layouts/Layout.astro';
   .form-row input,
   .form-row textarea {
     width: 100%;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 10px;
     padding: 0.8rem 1rem;
     color: var(--white);
@@ -565,28 +629,37 @@ import Layout from '../layouts/Layout.astro';
     font-size: 0.95rem;
     font-weight: 600;
     outline: none;
-    transition: border-color 0.2s, background 0.2s;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
   }
 
   .form-row input::placeholder,
-  .form-row textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .form-row textarea::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
 
   .form-row input:focus,
   .form-row textarea:focus {
     border-color: var(--blue);
-    background: rgba(74,144,196,0.12);
+    background: rgba(74, 144, 196, 0.12);
   }
 
   /* Subject field highlighted gold border in room-hire mode */
   .form-row input.room-hire-prefilled {
-    border-color: rgba(201,168,76,0.6);
-    background: rgba(201,168,76,0.08);
+    border-color: rgba(201, 168, 76, 0.6);
+    background: rgba(201, 168, 76, 0.08);
   }
 
-  .form-row textarea { resize: vertical; min-height: 120px; }
+  .form-row textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
 
   /* Larger textarea in room-hire mode to encourage full details */
-  .form-row textarea.room-hire-textarea { min-height: 160px; }
+  .form-row textarea.room-hire-textarea {
+    min-height: 160px;
+  }
 
   .form-grid-2 {
     display: grid;
@@ -608,14 +681,17 @@ import Layout from '../layouts/Layout.astro';
     text-transform: uppercase;
     cursor: pointer;
     margin-top: 0.4rem;
-    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 18px rgba(201,168,76,0.35);
+    transition:
+      opacity 0.2s,
+      transform 0.2s,
+      box-shadow 0.2s;
+    box-shadow: 0 4px 18px rgba(201, 168, 76, 0.35);
   }
 
   .submit-btn:hover {
     opacity: 0.92;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(201,168,76,0.45);
+    box-shadow: 0 8px 24px rgba(201, 168, 76, 0.45);
   }
 
   /* ── Success / error toast ── */
@@ -627,8 +703,16 @@ import Layout from '../layouts/Layout.astro';
     font-weight: 700;
     font-size: 0.9rem;
   }
-  .toast.success { background: rgba(39,174,96,0.22); border: 1px solid rgba(39,174,96,0.5); color: #7effa3; }
-  .toast.error   { background: rgba(231,76,60,0.22);  border: 1px solid rgba(231,76,60,0.5);  color: #ffaaaa; }
+  .toast.success {
+    background: rgba(39, 174, 96, 0.22);
+    border: 1px solid rgba(39, 174, 96, 0.5);
+    color: #7effa3;
+  }
+  .toast.error {
+    background: rgba(231, 76, 60, 0.22);
+    border: 1px solid rgba(231, 76, 60, 0.5);
+    color: #ffaaaa;
+  }
 
   /* ── Map strip ── */
   .map-card {
@@ -647,10 +731,18 @@ import Layout from '../layouts/Layout.astro';
 
   /* ── Responsive ── */
   @media (max-width: 768px) {
-    .contact-grid { grid-template-columns: 1fr; }
-    .form-grid-2 { grid-template-columns: 1fr; }
-    .map-card { grid-column: 1; }
-    .page-heading { padding: 2.5rem 1rem 1.5rem; }
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+    .form-grid-2 {
+      grid-template-columns: 1fr;
+    }
+    .map-card {
+      grid-column: 1;
+    }
+    .page-heading {
+      padding: 2.5rem 1rem 1.5rem;
+    }
   }
 </style>
 
@@ -718,7 +810,9 @@ import Layout from '../layouts/Layout.astro';
         (banner2.style as any).maxHeight = '0';
         banner2.style.overflow = 'hidden';
         banner2.style.marginBottom = '0';
-        setTimeout(() => { banner2.style.display = 'none'; }, 400);
+        setTimeout(() => {
+          banner2.style.display = 'none';
+        }, 400);
       });
     }
   })();
@@ -726,18 +820,18 @@ import Layout from '../layouts/Layout.astro';
   // ══════════════════════════════════════════════════════
   //  CONTACT FORM SUBMIT HANDLER
   // ══════════════════════════════════════════════════════
-  const form  = document.getElementById('contactForm') as HTMLFormElement;
-  const btn   = document.getElementById('submitBtn') as HTMLButtonElement;
+  const form = document.getElementById('contactForm') as HTMLFormElement;
+  const btn = document.getElementById('submitBtn') as HTMLButtonElement;
   const toast = document.getElementById('toast') as HTMLElement;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const data = {
-      fname:   (form.elements.namedItem('fname') as HTMLInputElement).value.trim(),
-      lname:   (form.elements.namedItem('lname') as HTMLInputElement).value.trim(),
-      email:   (form.elements.namedItem('email') as HTMLInputElement).value.trim(),
-      phone:   (form.elements.namedItem('phone') as HTMLInputElement).value.trim(),
+      fname: (form.elements.namedItem('fname') as HTMLInputElement).value.trim(),
+      lname: (form.elements.namedItem('lname') as HTMLInputElement).value.trim(),
+      email: (form.elements.namedItem('email') as HTMLInputElement).value.trim(),
+      phone: (form.elements.namedItem('phone') as HTMLInputElement).value.trim(),
       subject: (form.elements.namedItem('subject') as HTMLInputElement).value.trim(),
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
     };
@@ -762,7 +856,7 @@ import Layout from '../layouts/Layout.astro';
 
       if (res.ok) {
         // EDIT: success message — the text shown after a message sends successfully
-        showToast('✓ Message sent! We\'ll be in touch soon.', 'success');
+        showToast("✓ Message sent! We'll be in touch soon.", 'success');
         form.reset();
       } else {
         throw new Error('Server error');
@@ -772,7 +866,7 @@ import Layout from '../layouts/Layout.astro';
       // visitor's own email app instead, pre-filled with their message.
       const subject = encodeURIComponent(data.subject || 'Website enquiry');
       const body = encodeURIComponent(
-        `Name: ${data.fname} ${data.lname}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n${data.message}`
+        `Name: ${data.fname} ${data.lname}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n${data.message}`,
       );
       window.location.href = `mailto:info@hopecc.org.uk?subject=${subject}&body=${body}`;
       showToast('Opening your email app — API not yet connected (Phase 3).', 'error');
@@ -786,6 +880,8 @@ import Layout from '../layouts/Layout.astro';
     toast.textContent = msg;
     toast.className = `toast ${type}`;
     toast.style.display = 'block';
-    setTimeout(() => { toast.style.display = 'none'; }, 6000);
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 6000);
   }
 </script>

@@ -111,7 +111,26 @@ Almost every photo on the site is referenced by a path like
 and add a new line in the same format as the others — no resizing needed,
 the gallery adjusts automatically to any photo shape.
 
-### 4. Numbers and stats (mission pages)
+### 4. The Romania page's sliding photo carousel
+
+On **`src/pages/mission/romania.astro`**, the "Satu-Nou village" section has
+a small set of photos that slide automatically. To add, remove, or swap a
+photo:
+
+1. Search for `EDIT:` near the carousel — it'll point you to the photo
+   filenames (e.g. `Village_1.png`, `Village_2.png`, `Village_3.png`).
+2. To **swap** a photo, replace the file in `public/images/` (same filename)
+   or update the filename in the file to match a new one — same as any
+   other photo (see "Photos" above).
+3. To **add or remove** a photo, copy or delete one whole
+   `<div class="carousel-slide">...</div>` block, including the image
+   filename inside it.
+
+You **don't** need to add or remove anything else. The little gold dots
+below the photos are created automatically to match however many photos are
+there — one dot per photo, no matter how many you add or take away.
+
+### 5. Numbers and stats (mission pages)
 
 The India and Romania mission pages show headline numbers (like "200+ Easter
 gathering" or "23 children sponsored"). These numbers currently appear in
@@ -126,14 +145,14 @@ gathering" or "23 children sponsored"). These numbers currently appear in
 update it in **both** the summary card and the full country page, or the
 two pages will show different figures.
 
-### 5. Prayer points
+### 6. Prayer points
 
 On the India and Romania pages (`src/pages/mission/india.astro` and
 `src/pages/mission/romania.astro`), search for `EDIT: prayer` or look for the
 navy-blue "How to Pray" section. Each prayer point is one line in a list —
 add, remove, or reword lines freely.
 
-### 6. Contact details (phone, email, address)
+### 7. Contact details (phone, email, address)
 
 Contact details appear in **several different files**, since different pages
 show different combinations of them:
@@ -148,7 +167,7 @@ If the church's phone number, general email, or address changes, search for
 the old value (e.g. search `01455 233798`) across each of these files one
 at a time so nothing gets missed.
 
-### 7. Safeguarding policy PDF
+### 8. Safeguarding policy PDF
 
 To replace the safeguarding policy document:
 
@@ -159,13 +178,13 @@ To replace the safeguarding policy document:
 3. Just above that, search for `EDIT: PDF metadata` and update the "Issue"
    number and date badge so it matches the new document.
 
-### 8. Social media links (Facebook, YouTube)
+### 9. Social media links (Facebook, YouTube)
 
 These appear in **`src/components/Footer.astro`** and **`src/pages/contact.astro`**.
 Search for `facebook.com` or `youtube.com` in either file to find and update
 the links.
 
-### 9. Room hire checklist
+### 10. Room hire checklist
 
 The list of things someone needs to include in a room hire enquiry lives in
 **`src/pages/contact.astro`**. Search for `EDIT: Room hire checklist` — each
@@ -201,6 +220,7 @@ delete it in future; it doesn't affect anything.
 | Activity cards (Rocky Kids, etc.)     | `whats-on.astro`                                               |
 | Gallery photos                        | `whats-on.astro`                                                |
 | Any photo on any page                 | Find the page, swap the file in `public/images/`               |
+| Romania photo carousel                | `mission/romania.astro` — add/remove a `carousel-slide` block; dots update themselves |
 | Mission stats/numbers                 | `mission.astro` **and** the relevant `mission/india.astro` or `mission/romania.astro` |
 | Prayer points                         | `mission/india.astro` or `mission/romania.astro`               |
 | Phone/email/address                   | `Footer.astro`, `contact.astro`, `safeguarding.astro`, `privacy-policy.astro` |
