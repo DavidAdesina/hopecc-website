@@ -9,7 +9,9 @@
 // HOW TO MAKE COMMON CHANGES
 //   • Page title/meta description → search "EDIT: page title/description"
 //   • Hero heading & text         → search "EDIT: hero text"
-//   • Service times strip         → search "EDIT: service times"
+//   • Service times strip         → edit src/data/services.json (shared
+//     with whats-on.astro — one edit updates both pages). Editable via
+//     Decap CMS at /admin. Address/parking text stays in this file.
 //   • "Who we are" text           → search "EDIT: welcome text"
 //   • The three info cards        → search "EDIT: info cards"
 //   • Room hire banner text       → search "EDIT: room hire banner"
@@ -21,6 +23,25 @@
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
+import servicesData from '../data/services.json';
+const services = servicesData.services;
+
+// Pull just the two time values this page needs — labels below stay
+// hardcoded (they're page-specific wording), but the times themselves come
+// from the same file whats-on.astro reads, so the two pages can't drift.
+const sundayMorning = services.find((s) => s.id === 'sunday-morning');
+const sundayEvening = services.find((s) => s.id === 'sunday-evening');
+
+// EDIT: SAFETY NET — do not remove.
+// This homepage strip finds services by matching the Internal ID field in
+// src/data/services.json (the ids "sunday-morning" and "sunday-evening"
+// specifically). If either of those two services is ever deleted, or its
+// Internal ID field is retyped, `.find()` above returns undefined — without
+// this fallback, reading `.shortTime` on that would crash the ENTIRE site
+// build (not just this page). These two lines make sure that instead of a
+// broken build, the homepage just shows a safe placeholder.
+const sundayMorningTime = sundayMorning?.shortTime ?? 'See What’s On for times';
+const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times';
 ---
 
 <!-- EDIT: page title/description — shown in browser tabs and search engine results -->
@@ -68,7 +89,7 @@ import Layout from '../layouts/Layout.astro';
       >
       <div>
         <p class="time-label">Sunday morning service</p>
-        <p class="time-val">10:30 am</p>
+        <p class="time-val">{sundayMorningTime}</p>
       </div>
     </div>
     <div class="time-item">
@@ -85,7 +106,7 @@ import Layout from '../layouts/Layout.astro';
       >
       <div>
         <p class="time-label">Sunday evening prayer</p>
-        <p class="time-val">6:00 pm</p>
+        <p class="time-val">{sundayEveningTime}</p>
       </div>
     </div>
     <div class="time-item">

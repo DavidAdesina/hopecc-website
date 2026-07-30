@@ -1,0 +1,28 @@
+{
+  "images": [
+    {
+      "src": "/images/Church-Front.jpg",
+      "alt": "Hope Community Church lit up at night"
+    },
+    {
+      "src": "/images/Christmas.jpg",
+      "alt": "Christmas fair inside the church hall"
+    },
+    {
+      "src": "/images/Food.jpg",
+      "alt": "Homemade cakes and bakes at a church event"
+    },
+    {
+      "src": "/images/Children.jpg",
+      "alt": "Children playing video games at a church event"
+    },
+    {
+      "src": "/images/Snooker.jpg",
+      "alt": "Young person playing snooker at the church"
+    },
+    {
+      "src": "/images/Church-Back.jpg",
+      "alt": "Hope Community Church front entrance"
+    }
+  ]
+}

@@ -9,21 +9,22 @@
 // HOW TO MAKE COMMON CHANGES
 //   • Any text on the page       → find the matching "EDIT: ..." comment
 //     next to it and edit the words inside the HTML tags nearby
-//   • Stats (numbers)             → look for the .stat-number spans and
-//     change the number shown
+//   • Stats (numbers)             → edit src/data/mission-stats.json,
+//     "romania" section (three of these numbers also appear on
+//     mission.astro's overview card — this file keeps both in sync).
+//     Editable via Decap CMS at /admin.
 //   • Photos                      → change the src="/images/..." path to
 //     a different image's filename. All images live in the
 //     public/images/ folder.
 //   • Mick & Lorraine's contact
 //     details                     → search "EDIT: contact"
-//   • Prayer points                → search "EDIT: prayer" (in the navy
-//     prayer section)
-//   • The photo carousel           → this is the sliding set of 3 photos
-//     of the village. Swapping a photo for a different one, or adding/
-//     removing a photo altogether, is a simple edit — see "EDIT:"
-//     comments near the carousel's HTML. The little dots below the
-//     carousel are created automatically to match however many photos
-//     are there, so you don't need to touch them yourself.
+//   • Prayer points                → edit src/data/prayer-points.json,
+//     "romania" section. Editable via Decap CMS at /admin.
+//   • The photo carousel           → edit src/data/romania-carousel.json —
+//     add, remove, or reorder photos there. Editable via Decap CMS at
+//     /admin. The little dots below the carousel are created
+//     automatically to match however many photos are there, so you don't
+//     need to touch them yourself.
 //
 // This file has three parts, in this order:
 //   1. The HTML below   — the words and layout people see on the page,
@@ -34,6 +35,13 @@
 //      or <script> blocks for normal text/photo updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../../layouts/Layout.astro';
+import missionStats from '../../data/mission-stats.json';
+import prayerPoints from '../../data/prayer-points.json';
+import villagePhotosData from '../../data/romania-carousel.json';
+
+const romaniaStats = missionStats.romania;
+const romaniaPrayerPoints = prayerPoints.romania;
+const villagePhotos = villagePhotosData.photos;
 ---
 
 <Layout title="Romania Mission — Mick & Lorraine Smith | Hope Community Church">
@@ -78,29 +86,18 @@ import Layout from '../../layouts/Layout.astro';
   <section class="stats-band">
     <div class="container">
       <div class="stats-row">
-        <!-- EDIT: change each number as updates come in -->
-        <div class="stat-item">
-          <span class="stat-number">30+</span>
-          <span class="stat-label">Years of partnership</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-
-        <div class="stat-item">
-          <span class="stat-number">23</span>
-          <span class="stat-label">Children sponsored in school</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-
-        <div class="stat-item">
-          <span class="stat-number">7</span>
-          <span class="stat-label">Andronic children (the founding family)</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-
-        <div class="stat-item">
-          <span class="stat-number">1</span>
-          <span class="stat-label">New children's home — Casa Andrei</span>
-        </div>
+        <!-- Numbers come from src/data/mission-stats.json ("romania" section) -->
+        {
+          romaniaStats.map((stat, i) => (
+            <>
+              <div class="stat-item">
+                <span class="stat-number">{stat.value}</span>
+                <span class="stat-label">{stat.label}</span>
+              </div>
+              {i < romaniaStats.length - 1 && <div class="stat-divider" aria-hidden="true" />}
+            </>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -185,20 +182,16 @@ import Layout from '../../layouts/Layout.astro';
         <!-- Right: sliding village photo carousel -->
         <div class="village-carousel" aria-label="Photos of Satu-Nou village">
           <div class="carousel-track" id="villageTrack">
-            <!-- EDIT: Village_1.png, Village_2.png, Village_3.png — swap for updated photos -->
-            <div class="carousel-slide">
-              <img src="/images/Village_1.png" alt="Houses in Satu-Nou village" loading="lazy" />
-            </div>
-            <div class="carousel-slide">
-              <img
-                src="/images/Village_2.png"
-                alt="Village homes with wooden fencing"
-                loading="lazy"
-              />
-            </div>
-            <div class="carousel-slide">
-              <img src="/images/Village_3.png" alt="A home in Satu-Nou" loading="lazy" />
-            </div>
+            <!-- Photos come from src/data/romania-carousel.json — add, remove,
+                 or reorder entries there; this loop and the dot script below
+                 automatically match whatever's in the file. -->
+            {
+              villagePhotos.map((photo) => (
+                <div class="carousel-slide">
+                  <img src={photo.src} alt={photo.alt} loading="lazy" />
+                </div>
+              ))
+            }
           </div>
           <!-- Dot indicators — these are built automatically by the
                carousel script below, one dot per photo above. You don't
@@ -375,26 +368,9 @@ import Layout from '../../layouts/Layout.astro';
           <span class="section-eyebrow light">How to Pray</span>
           <h2 id="prayer-heading">Please Pray for Romania</h2>
 
-          <!-- EDIT: update prayer points as Mick & Lorraine share new requests -->
+          <!-- Prayer points come from src/data/prayer-points.json ("romania" section) -->
           <ul class="prayer-list">
-            <li>
-              For Simon &amp; Oana as they lead the church and serve the whole village community
-            </li>
-            <li>
-              For the 23 sponsored children — that education opens doors and changes their futures
-            </li>
-            <li>
-              For the completion of Casa Andrei and for wisdom in running a home for vulnerable
-              children
-            </li>
-            <li>For protection for children left at home while parents work away</li>
-            <li>For the annual dental mission team — for health, provision and continued impact</li>
-            <li>
-              For Mick, Lorraine and the team as they plan future visits and support from the UK
-            </li>
-            <li>
-              For the church in Satu-Nou to be a place of safety and hope for the whole village
-            </li>
+            {romaniaPrayerPoints.map((point) => <li>{point}</li>)}
           </ul>
         </div>
       </section>
@@ -1269,6 +1245,14 @@ import Layout from '../../layouts/Layout.astro';
     const total = slides.length;
     let current = 0;
     let timer;
+
+    // EDIT: SAFETY NET — do not remove.
+    // If every photo is removed from src/data/romania-carousel.json via the
+    // CMS, `total` is 0 here. Without this guard, the maths below
+    // (index % total) divides by zero on every slide change, and the
+    // auto-advance timer would run forever doing nothing useful. This just
+    // stops the script early and leaves an empty carousel area instead.
+    if (total === 0) return;
 
     // Build one dot per photo, in order, and remember them in a list
     // so the rest of the script can use them the same way as before.

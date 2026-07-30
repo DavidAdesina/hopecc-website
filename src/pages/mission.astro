@@ -13,7 +13,11 @@
 //   • Prayer/Presence/Provision
 //     value cards                → search "EDIT: value cards"
 //   • India or Romania summary
-//     card (text, stats, link)   → search "EDIT: India card" or
+//     card stats                 → edit src/data/mission-stats.json (shared
+//     with india.astro/romania.astro — one edit keeps all pages in sync).
+//     Editable via Decap CMS at /admin.
+//   • India or Romania summary
+//     card text/link             → search "EDIT: India card" or
 //     "EDIT: Romania card"
 //   • Add a brand-new country
 //     card                       → copy one whole
@@ -28,6 +32,18 @@
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
+import missionStats from '../data/mission-stats.json';
+
+// Same stats data that india.astro/romania.astro show in full — this card
+// only shows the ones flagged showOnOverview (fits three per card).
+// EDIT: SAFETY NET — do not remove the .slice(0, 3). The Decap CMS field for
+// "Show on overview" says "max 3 per country", but nothing in the CMS itself
+// enforces that — someone can tick a 4th box. Without this .slice, a 4th
+// (or 5th, 6th...) stat would still render, squeezing the card's layout.
+// This guarantees the card always shows at most three, no matter how many
+// are ticked.
+const indiaOverviewStats = missionStats.india.filter((s) => s.showOnOverview).slice(0, 3);
+const romaniaOverviewStats = missionStats.romania.filter((s) => s.showOnOverview).slice(0, 3);
 ---
 
 <Layout title="Mission | Hope Community Church">
@@ -138,20 +154,16 @@ import Layout from '../layouts/Layout.astro';
               with skills and dignity.
             </p>
 
-            <!-- Key stats — EDIT numbers as updates come in -->
+            <!-- Key stats — numbers come from src/data/mission-stats.json -->
             <div class="stats-row">
-              <div class="stat-block">
-                <span class="mission-stat">200+</span>
-                <span class="stat-label">Easter gathering</span>
-              </div>
-              <div class="stat-block">
-                <span class="mission-stat">95</span>
-                <span class="stat-label">Tailoring students</span>
-              </div>
-              <div class="stat-block">
-                <span class="mission-stat">12</span>
-                <span class="stat-label">Baptised believers</span>
-              </div>
+              {
+                indiaOverviewStats.map((stat) => (
+                  <div class="stat-block">
+                    <span class="mission-stat">{stat.value}</span>
+                    <span class="stat-label">{stat.label}</span>
+                  </div>
+                ))
+              }
             </div>
 
             <div class="card-highlights">
@@ -203,20 +215,16 @@ import Layout from '../layouts/Layout.astro';
               <strong>Casa Andrei</strong>.
             </p>
 
-            <!-- Key stats -->
+            <!-- Key stats — numbers come from src/data/mission-stats.json -->
             <div class="stats-row">
-              <div class="stat-block">
-                <span class="mission-stat">30+</span>
-                <span class="stat-label">Years of partnership</span>
-              </div>
-              <div class="stat-block">
-                <span class="mission-stat">23</span>
-                <span class="stat-label">Children sponsored</span>
-              </div>
-              <div class="stat-block">
-                <span class="mission-stat">1</span>
-                <span class="stat-label">Casa Andrei (in progress)</span>
-              </div>
+              {
+                romaniaOverviewStats.map((stat) => (
+                  <div class="stat-block">
+                    <span class="mission-stat">{stat.value}</span>
+                    <span class="stat-label">{stat.label}</span>
+                  </div>
+                ))
+              }
             </div>
 
             <div class="card-highlights">

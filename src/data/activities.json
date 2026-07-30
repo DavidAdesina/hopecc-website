@@ -1,0 +1,48 @@
+{
+  "activities": [
+    {
+      "id": "rocky-kids",
+      "title": "Rocky Kids",
+      "img": "/images/RockyKids.jpg",
+      "tag": "Children · Yrs 2–6",
+      "schedule": "Fridays in term time · 5:30–7:15pm",
+      "price": "£2 entry",
+      "description": "Games, crafts, team challenges, worship, and a tuck shop. A fantastic Friday night out for primary school children.",
+      "colour": "#9b2020",
+      "tagColour": "#9b2020"
+    },
+    {
+      "id": "fusion-youth",
+      "title": "Fusion Youth",
+      "img": "/images/FusionKids.jpg",
+      "tag": "Youth · Yr 7+",
+      "schedule": "First 3 Fridays monthly · 7:45–9:30pm",
+      "price": "£1.50 entry",
+      "description": "Tribal wars, team games, table games, hot chocolates, and a tuck shop. An amazing night out for secondary-age young people.",
+      "colour": "#1a3a1a",
+      "tagColour": "#2d6e2d"
+    },
+    {
+      "id": "dadz",
+      "title": "Dadz",
+      "img": "/images/Dadz.jpg",
+      "tag": "Families",
+      "schedule": "First Saturday monthly · 10am–12noon",
+      "price": "£5 per family",
+      "description": "Dads and kids — arts & crafts, video games, pool, snooker, table tennis, and a hot breakfast cob. A brilliant morning together.",
+      "colour": "#1a3556",
+      "tagColour": "#2c5f9e"
+    },
+    {
+      "id": "coffee-n-chat-activity",
+      "title": "Coffee N Chat",
+      "img": "/images/CoffeeNChat.jpg",
+      "tag": "Everyone Welcome",
+      "schedule": "Every Tuesday · 10:00am",
+      "price": "Free",
+      "description": "A relaxed morning drop-in for anyone in the community. Come for coffee, stay for the conversation.",
+      "colour": "#5b3a1a",
+      "tagColour": "#c07d3a"
+    }
+  ]
+}

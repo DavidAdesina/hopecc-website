@@ -95,12 +95,17 @@ hopecc-website/
 ├── tsconfig.json             TypeScript config (for editor tooling/type checks)
 │
 ├── public/                   Static files served as-is, unprocessed
+│   ├── admin/                  Decap CMS — config.yml (collections/fields)
+│   │                            and index.html (the /admin screen)
 │   ├── documents/             PDFs (e.g. the safeguarding policy)
 │   ├── images/                 All site photos, logos, and the OG share image
 │   ├── favicon.ico / favicon.svg
 │
 └── src/
     ├── assets/                 Astro-starter placeholder assets (unused)
+    ├── data/                    CMS-editable content as JSON — see
+    │                            "Content editing" section below for what
+    │                            each file holds
     ├── components/
     │   ├── Navbar.astro         Site header/navigation, used on every page
     │   ├── Footer.astro         Site footer, used on every page
@@ -197,24 +202,88 @@ utility classes on any page (see [Styling notes](#styling-notes)).
 canonical URLs and Open Graph tags in `Layout.astro`) depends on it — removing
 or leaving it blank throws `TypeError: Invalid URL` at build time.
 
+### `/admin` redirect (dev-server workaround)
+
+`astro.config.mjs` also has a `redirects` block:
+
+```js
+redirects: {
+  '/admin': '/admin/index.html',
+},
+```
+
+This exists because of a known, currently-open Astro dev-server bug
+([withastro/astro#14800](https://github.com/withastro/astro/issues/14800)):
+`index.html` files sitting in subfolders of `public/` (like
+`public/admin/index.html`, the Decap CMS screen) aren't served for the bare
+folder path — visiting `/admin` or `/admin/` 404s in `npm run dev`, and only
+the full `/admin/index.html` works. The `redirects` entry above fixes that
+for local dev by routing `/admin` through Astro's own router instead of
+relying on the buggy static-file serving.
+
+**⚠️ This fix doesn't carry over to the production build.** Running
+`astro build` skips creating the `/admin` redirect, because its output path
+collides with the real `public/admin/index.html` file — the real file wins,
+and the bare `/admin` route silently isn't created in `dist/`. So once this
+site is on S3/CloudFront (Phase 3), hitting `/admin` with no trailing slash
+or filename may still 404 unless CloudFront's origin/index-document config
+handles the directory-index resolution itself — worth checking as part of
+that setup rather than assuming this config alone covers it.
+
 ---
 
 ## Content editing today vs. the plan
 
-Right now, **all page text, images, and contact details are edited directly
-inside the `.astro` files** in `src/pages/`. Every editable spot is marked
-with an `EDIT:` comment — see `MAINTENANCE-GUIDE.md` for a non-technical
-walkthrough of how to find and use these.
+**As of Day 5, the "Core scope" content is CMS-editable via Decap CMS:**
+service times, activity cards, gallery photos, the Romania village carousel,
+mission stats (India/Romania), and prayer points. These now live as JSON
+files in `src/data/` (see below) instead of being hardcoded inside the
+`.astro` pages, and `public/admin/config.yml` defines the Decap CMS forms
+for editing them.
 
-There is currently **no content management system (CMS)** and **no automatic
-deployment** — changes made to files have to be committed and pushed to the
-repo by whoever has developer/git access, and (once Phase 3 is complete) a
-GitHub Actions pipeline will handle publishing them live.
+**Everything else** — hero text, page copy, contact details, form fields,
+the safeguarding PDF link, etc. — is still a direct code edit via the
+`EDIT:` comment convention. See `MAINTENANCE-GUIDE.md` for the
+non-technical walkthrough of both.
 
-**Decap CMS** is planned as the next step after this README, so that
-non-technical users can eventually edit approved fields (like service times,
-stats, and contact details) through a simple web form instead of editing code.
-That is not built yet.
+### ⚠️ Decap CMS login doesn't work on the live site yet
+
+`/admin` is configured, but **real GitHub login won't work until the OAuth
+proxy exists**. Decap needs something to exchange a GitHub OAuth code for
+an access token server-side, and the plan (see `config.yml`'s
+`backend.base_url`, currently a placeholder) is to run that on the Lambda +
+API Gateway setup already slated for **Phase 3 (Day 7+)**. Until that's
+deployed:
+
+- The CMS config can be tested locally with no OAuth needed — see the
+  "Testing Decap locally" comment at the top of `public/admin/config.yml`
+  (`npx decap-server` + `npm run dev`, then visit `localhost:4321/admin`).
+- On the live site, `/admin` will load but login will fail, since
+  `base_url` doesn't point anywhere real yet.
+- Once the Lambda OAuth proxy is deployed in Phase 3, update
+  `backend.base_url` in `config.yml` to point at it, and login will work.
+
+### The `src/data/` JSON files
+
+| File | Used by | What it holds |
+|------|---------|----------------|
+| `services.json` | `index.astro` (times strip) + `whats-on.astro` (Services section) | Service times — editing this once keeps both pages in sync (previously these were two separate hardcoded lists, a known source of drift) |
+| `activities.json` | `whats-on.astro` | Rocky Kids, Fusion Youth, Dadz, Coffee N Chat cards |
+| `gallery.json` | `whats-on.astro` | "Life at Hope" photo gallery |
+| `romania-carousel.json` | `mission/romania.astro` | The sliding village photo carousel |
+| `mission-stats.json` | `mission.astro` (overview cards) + `mission/india.astro` + `mission/romania.astro` | Headline numbers — same drift-prevention benefit as `services.json`. Each stat has a `showOnOverview` flag controlling whether it appears on the summary card |
+| `prayer-points.json` | `mission/india.astro` + `mission/romania.astro` | "How to Pray" lists |
+
+One small content fix made during this migration: the India "baptisms" stat
+had two different labels in the two places it appeared ("Baptised
+believers" on the overview card vs. "New baptisms" on the full page) — now
+unified to "New baptisms" everywhere, sourced from the same file. Same for
+two of the Romania stat labels (shortened to match between the overview
+card and the full page).
+
+**Not yet built:** the "Full scope" option (making every remaining
+`EDIT:`-marked field CMS-editable) was considered and explicitly not
+chosen for now — see Day 5 notes for the reasoning.
 
 ---
 
@@ -290,7 +359,7 @@ resolved (see below) — one remains outstanding by design:
 | 3d | mission.astro dead `.cta-section` CSS removed | ✅ Done |
 | 3e | romania.astro carousel dot-indicator dependency removed (dots now auto-generated from photo count) | ✅ Done |
 | 4 | Code formatting pass (Prettier + Astro plugin, watch-listen.astro scaffold left untouched — page under active development). Also fixed the Tailwind/Vite build bug and two other bugs found along the way (see Resolved, above) | ✅ Done |
-| 5 | Decap CMS setup (config, GitHub OAuth app) | Not started |
+| 5 | Decap CMS setup (config, GitHub OAuth app) | 🟡 In progress — config.yml + data extraction done, real login blocked on Phase 3 OAuth proxy (see Content editing section) |
 | 6 | CMS testing + maintainer instructions for `/admin` | Not started |
 | 7+ | AWS deployment (S3, CloudFront, Route 53, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | Not started |
 | Last | DNS cutover, launch, smoke test | Not started |

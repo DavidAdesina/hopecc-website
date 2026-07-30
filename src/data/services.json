@@ -1,0 +1,31 @@
+{
+  "services": [
+    {
+      "id": "sunday-morning",
+      "title": "Sunday Morning Service",
+      "time": "10:30 am · Every Sunday",
+      "shortTime": "10:30 am",
+      "description": "Sung worship, Bible teaching, and a warm welcome for all. Children's groups run during the service.",
+      "icon": "☀️",
+      "colour": "#4a90c4"
+    },
+    {
+      "id": "sunday-evening",
+      "title": "Sunday Evening Prayer",
+      "time": "6:00 pm · Every Sunday",
+      "shortTime": "6:00 pm",
+      "description": "A quieter gathering for prayer and reflection together as a church family.",
+      "icon": "🌙",
+      "colour": "#c9a84c"
+    },
+    {
+      "id": "coffee-n-chat",
+      "title": "Coffee N Chat",
+      "time": "10:00 am · Every Tuesday",
+      "shortTime": "10:00 am",
+      "description": "Drop in for a coffee, a chat, and great company. Everyone is welcome — no strings attached.",
+      "icon": "☕",
+      "colour": "#5ba08a"
+    }
+  ]
+}

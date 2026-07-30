@@ -7,14 +7,15 @@
 //   gallery.
 //
 // HOW TO MAKE COMMON CHANGES
-//   • Service times & descriptions → edit the regularServices list below
-//     (search "EDIT: service times")
+//   • Service times & descriptions → edit src/data/services.json (this same
+//     file also feeds the times strip on index.astro — one edit, both
+//     pages stay in sync). Editable via Decap CMS at /admin.
 //   • Activity cards (day, time,
-//     price, description, photo)   → edit the activities list below
-//     (search "EDIT: activity cards")
-//   • Gallery photos                → edit the galleryImages list below
-//     (search "EDIT: gallery images") — add or remove photos freely, the
-//     grid automatically arranges portrait, landscape and square photos
+//     price, description, photo)   → edit src/data/activities.json
+//     Editable via Decap CMS at /admin.
+//   • Gallery photos                → edit src/data/gallery.json — add or
+//     remove photos freely, the grid automatically arranges portrait,
+//     landscape and square photos. Editable via Decap CMS at /admin.
 //   • Calendar                      → the embedded calendar uses
 //     diary@hopecc.org.uk — no changes needed unless that email address
 //     changes (search "EDIT: calendar")
@@ -22,109 +23,27 @@
 //   • Bottom call-to-action text    → search "EDIT: cta text"
 //
 // This file has two parts, in this order:
-//   1. The lists below (regularServices, activities, galleryImages) plus
-//      the HTML further down — the words and layout people see on the
-//      page, broken into labelled sections (HERO, SERVICES, etc.)
+//   1. Data imported from src/data/*.json (regularServices, activities,
+//      galleryImages) plus the HTML further down — the words and layout
+//      people see on the page, broken into labelled sections (HERO,
+//      SERVICES, etc.)
 //   2. The <style> block near the end — colours, spacing and fonts.
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
 
-// EDIT: service times — each entry below is one row on the "Services" section
+// EDIT: service times, activity cards, and gallery images now live in
+// src/data/*.json — this is what Decap CMS edits. See:
+//   src/data/services.json    (also used by index.astro's service strip)
+//   src/data/activities.json
+//   src/data/gallery.json
+import regularServicesData from '../data/services.json';
+import activitiesData from '../data/activities.json';
+import galleryData from '../data/gallery.json';
 
-const regularServices = [
-  {
-    title: 'Sunday Morning Service',
-    time: '10:30 am · Every Sunday',
-    description:
-      "Sung worship, Bible teaching, and a warm welcome for all. Children's groups run during the service.",
-    icon: '☀️',
-    colour: '#4a90c4',
-  },
-  {
-    title: 'Sunday Evening Prayer',
-    time: '6:00 pm · Every Sunday',
-    description: 'A quieter gathering for prayer and reflection together as a church family.',
-    icon: '🌙',
-    colour: '#c9a84c',
-  },
-  {
-    title: 'Coffee N Chat',
-    time: '10:00 am · Every Tuesday',
-    description:
-      'Drop in for a coffee, a chat, and great company. Everyone is welcome — no strings attached.',
-    icon: '☕',
-    colour: '#5ba08a',
-  },
-];
-
-// ── EDIT: activity cards ─────────────────────────────────────────────────
-// Each activity card shows an image (a poster or photo), a title, key
-// details, and a short description. Update the text directly below; the
-// image files themselves live in the public/images/ folder — change the
-// `img` value to point at a different file to swap the photo.
-// ─────────────────────────────────────────────────────────────────────────
-const activities = [
-  {
-    title: 'Rocky Kids',
-    img: '/images/RockyKids.jpg',
-    tag: 'Children · Yrs 2–6',
-    schedule: 'Fridays in term time · 5:30–7:15pm',
-    price: '£2 entry',
-    description:
-      'Games, crafts, team challenges, worship, and a tuck shop. A fantastic Friday night out for primary school children.',
-    colour: '#9b2020',
-    tagColour: '#9b2020',
-  },
-  {
-    title: 'Fusion Youth',
-    img: '/images/FusionKids.jpg',
-    tag: 'Youth · Yr 7+',
-    schedule: 'First 3 Fridays monthly · 7:45–9:30pm',
-    price: '£1.50 entry',
-    description:
-      'Tribal wars, team games, table games, hot chocolates, and a tuck shop. An amazing night out for secondary-age young people.',
-    colour: '#1a3a1a',
-    tagColour: '#2d6e2d',
-  },
-  {
-    title: 'Dadz',
-    img: '/images/Dadz.jpg',
-    tag: 'Families',
-    schedule: 'First Saturday monthly · 10am–12noon',
-    price: '£5 per family',
-    description:
-      'Dads and kids — arts & crafts, video games, pool, snooker, table tennis, and a hot breakfast cob. A brilliant morning together.',
-    colour: '#1a3556',
-    tagColour: '#2c5f9e',
-  },
-  {
-    title: 'Coffee N Chat',
-    img: '/images/CoffeeNChat.jpg',
-    tag: 'Everyone Welcome',
-    schedule: 'Every Tuesday · 10:00am',
-    price: 'Free',
-    description:
-      'A relaxed morning drop-in for anyone in the community. Come for coffee, stay for the conversation.',
-    colour: '#5b3a1a',
-    tagColour: '#c07d3a',
-  },
-];
-
-// ── EDIT: gallery images ────────────────────────────────────────────────
-// These appear in a masonry grid — portrait, landscape, square photos are
-// all handled automatically. Add or remove images freely by adding or
-// removing lines below; each photo also needs a short alt description
-// (what's in the photo) for accessibility.
-// ─────────────────────────────────────────────────────────────────────────
-const galleryImages = [
-  { src: '/images/Church-Front.jpg', alt: 'Hope Community Church lit up at night' },
-  { src: '/images/Christmas.jpg', alt: 'Christmas fair inside the church hall' },
-  { src: '/images/Food.jpg', alt: 'Homemade cakes and bakes at a church event' },
-  { src: '/images/Children.jpg', alt: 'Children playing video games at a church event' },
-  { src: '/images/Snooker.jpg', alt: 'Young person playing snooker at the church' },
-  { src: '/images/Church-Back.jpg', alt: 'Hope Community Church front entrance' },
-];
+const regularServices = regularServicesData.services;
+const activities = activitiesData.activities;
+const galleryImages = galleryData.images;
 ---
 
 <!-- EDIT: page title/description — shown in browser tabs and search engine results -->
@@ -167,7 +86,7 @@ const galleryImages = [
   <!-- ════════════════════════════════════════════════
      SERVICES
      EDIT: service times — the section heading/intro below, and the
-     regularServices list near the top of this file for the cards
+     src/data/services.json (also editable via Decap CMS) for the cards
 ════════════════════════════════════════════════ -->
   <section class="wo-section wo-services-section" id="services">
     <div class="wo-container">
@@ -226,7 +145,7 @@ const galleryImages = [
   <!-- ════════════════════════════════════════════════
      ACTIVITIES
      EDIT: activity cards — the section heading/intro below, and the
-     activities list near the top of this file for the cards themselves
+     src/data/activities.json (also editable via Decap CMS) for the cards themselves
 ════════════════════════════════════════════════ -->
   <section class="wo-section wo-activities-section" id="activities">
     <div class="wo-container">
@@ -383,7 +302,7 @@ const galleryImages = [
   <!-- ════════════════════════════════════════════════
      GALLERY — masonry grid, handles all image sizes
      EDIT: gallery images — the section heading/intro below, and the
-     galleryImages list near the top of this file for the photos themselves
+     src/data/gallery.json (also editable via Decap CMS) for the photos themselves
 ════════════════════════════════════════════════ -->
   <section class="wo-section wo-gallery-section" id="gallery">
     <div class="wo-container">

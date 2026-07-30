@@ -1,0 +1,16 @@
+{
+  "photos": [
+    {
+      "src": "/images/Village_1.png",
+      "alt": "Houses in Satu-Nou village"
+    },
+    {
+      "src": "/images/Village_2.png",
+      "alt": "Village homes with wooden fencing"
+    },
+    {
+      "src": "/images/Village_3.png",
+      "alt": "A home in Satu-Nou"
+    }
+  ]
+}

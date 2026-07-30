@@ -1,0 +1,26 @@
+<!doctype html>
+<!--
+  Decap CMS admin screen — this is what maintainers open at /admin to edit
+  the church website's content without touching code.
+
+  IMPORTANT (see README.md "Decap CMS" section for full detail):
+  This screen only loads the CMS UI. Actually logging in and saving changes
+  requires GitHub OAuth, which is provided by the Lambda-based OAuth proxy
+  planned for Phase 3 (Day 7+). Until that's deployed, this page is
+  configured but not fully usable on the live site — see config.yml's
+  `backend.base_url` for the placeholder that needs updating once the
+  proxy exists.
+
+  For local testing before Phase 3, see the "Testing Decap locally" note
+  in config.yml.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager — Hope Community Church</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  </body>
+</html>

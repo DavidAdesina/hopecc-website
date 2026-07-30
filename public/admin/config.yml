@@ -1,0 +1,221 @@
+# Decap CMS config — Hope Community Church website
+# ─────────────────────────────────────────────────────────────────────────
+# SCOPE (agreed Day 5): "Core" — only the frequently-changing content is
+# editable here: service times, activity cards, gallery/carousel photos,
+# mission stats, and prayer points. Everything else (hero text, contact
+# details, page copy, form fields, etc.) stays a direct code edit via the
+# EDIT: comment convention — see MAINTENANCE-GUIDE.md.
+#
+# HOW THIS MAPS TO THE SITE:
+# Each collection below edits one file in src/data/*.json. Those files are
+# imported directly by the .astro pages (see each file's own comments for
+# which pages read it). Editing here and editing the JSON file by hand are
+# the same thing — Decap just gives non-technical users a form instead of
+# raw JSON.
+#
+# OAUTH STATUS (important — see README.md "Decap CMS" section):
+# `backend.base_url` below is a placeholder. Real GitHub login on the live
+# /admin screen requires the Lambda + API Gateway OAuth proxy planned for
+# Phase 3 (Day 7+) — it does not exist yet. Update base_url once that's
+# deployed. Until then, this config can be validated structurally and
+# tested locally (see "Testing Decap locally" below), but won't support
+# real login on the live site.
+#
+# TESTING DECAP LOCALLY (works today, no OAuth needed):
+#   1. npm install decap-server --save-dev
+#   2. In one terminal: npx decap-server
+#   3. In another: npm run dev
+#   4. Visit http://localhost:4321/admin — Decap detects the local proxy
+#      server and reads/writes directly to your local git working copy
+#      instead of going through GitHub OAuth. Good way to sanity-check the
+#      field layout below before Phase 3 lands.
+# ─────────────────────────────────────────────────────────────────────────
+
+backend:
+  name: github
+  repo: DavidAdesina/hopecc-website
+  branch: main
+  # PLACEHOLDER — replace with the deployed OAuth proxy's URL once the
+  # Phase 3 Lambda + API Gateway setup is live (see note above).
+  base_url: https://REPLACE-WITH-OAUTH-PROXY-URL
+  auth_endpoint: auth
+
+# Local testing only — Decap ignores this in production if a real
+# `local_backend` server isn't running, so it's safe to leave in.
+local_backend: true
+
+# NOT ENABLED — worth a decision before launch:
+# `publish_mode: editorial_workflow` would make every CMS save a draft that
+# you (or Ian) review and merge before it goes live, instead of publishing
+# straight to `main`. That's the strongest protection against a CMS mistake
+# reaching the live site, at the cost of an extra manual "publish" step for
+# every edit. Left off for now — uncomment below to turn it on:
+# publish_mode: editorial_workflow
+
+# NOTE on the `min: 1` settings added throughout this file below: Decap has
+# had long-standing, still-open bugs where `min`/`required` on list widgets
+# don't always block a save that violates them (e.g. decaporg/decap-cms#5381,
+# #4733). Treat these as a deterrent, not a guarantee — the site code itself
+# (services.json's homepage lookup, the mission overview cap, the carousel
+# script) has also been made to fail gracefully rather than crash if a list
+# ever does end up empty.
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: services
+    label: 'Service Times'
+    description: 'Shown on the homepage strip and the What''s On page. Editing the time here updates both pages at once. IMPORTANT: please don''t delete "Sunday Morning Service" or "Sunday Evening Prayer" entirely — the homepage looks specifically for those two. Edit their times freely, just don''t remove the cards.'
+    files:
+      - name: services
+        label: 'Regular Services'
+        file: src/data/services.json
+        fields:
+          - label: 'Services'
+            name: 'services'
+            widget: list
+            summary: '{{title}} — {{time}}'
+            min: 1
+            fields:
+              # Hidden on purpose: the homepage strip (index.astro) looks up
+              # "Sunday Morning Service" and "Sunday Evening Prayer" by
+              # matching this exact id ("sunday-morning" / "sunday-evening").
+              # A visible, editable text box here was too easy for someone
+              # to innocently retype — hiding it removes that risk entirely.
+              # (index.astro also has a fallback now, so even a mismatch
+              # here can no longer break the build — this is belt & braces.)
+              - { label: 'Internal ID', name: 'id', widget: hidden, default: 'service' }
+              - { label: 'Title', name: 'title', widget: string }
+              - {
+                  label: 'Full time (e.g. "10:30 am · Every Sunday") — shown on the What''s On page',
+                  name: 'time',
+                  widget: string,
+                }
+              - {
+                  label: 'Short time (e.g. "10:30 am") — shown on the homepage strip',
+                  name: 'shortTime',
+                  widget: string,
+                }
+              - { label: 'Description', name: 'description', widget: text }
+              - { label: 'Icon (single emoji)', name: 'icon', widget: string }
+              - { label: 'Accent colour', name: 'colour', widget: color, default: '#4a90c4' }
+
+  - name: activities
+    label: 'Activity Cards'
+    description: 'Rocky Kids, Fusion Youth, Dadz, Coffee N Chat — shown on the What''s On page.'
+    files:
+      - name: activities
+        label: 'Activities'
+        file: src/data/activities.json
+        fields:
+          - label: 'Activities'
+            name: 'activities'
+            widget: list
+            summary: '{{title}}'
+            min: 1
+            fields:
+              # Hidden for consistency with Services above. Nothing in the
+              # code currently looks activities up by id, but hiding it
+              # means no one has to guess whether it's safe to touch.
+              - { label: 'Internal ID', name: 'id', widget: hidden, default: 'activity' }
+              - { label: 'Title', name: 'title', widget: string }
+              - { label: 'Photo', name: 'img', widget: image }
+              - { label: 'Tag (short label on the photo)', name: 'tag', widget: string }
+              - { label: 'Schedule', name: 'schedule', widget: string }
+              - { label: 'Price', name: 'price', widget: string }
+              - { label: 'Description', name: 'description', widget: text }
+              - { label: 'Card accent colour', name: 'colour', widget: color, default: '#1a3556' }
+              - { label: 'Tag accent colour', name: 'tagColour', widget: color, default: '#2c5f9e' }
+
+  - name: gallery
+    label: 'Life at Hope Gallery'
+    description: 'The photo gallery on the What''s On page. Add or remove entries freely — the layout adjusts automatically.'
+    files:
+      - name: gallery
+        label: 'Gallery Photos'
+        file: src/data/gallery.json
+        fields:
+          - label: 'Photos'
+            name: 'images'
+            widget: list
+            summary: '{{alt}}'
+            min: 1
+            fields:
+              - { label: 'Photo', name: 'src', widget: image }
+              - { label: 'Alt text (describe what''s in the photo)', name: 'alt', widget: string }
+
+  - name: romania_carousel
+    label: 'Romania Village Carousel'
+    description: 'The sliding set of village photos on the Romania mission page. Dots below the photos update automatically to match however many are here.'
+    files:
+      - name: romania_carousel
+        label: 'Village Photos'
+        file: src/data/romania-carousel.json
+        fields:
+          - label: 'Photos'
+            name: 'photos'
+            widget: list
+            summary: '{{alt}}'
+            min: 1
+            fields:
+              - { label: 'Photo', name: 'src', widget: image }
+              - { label: 'Alt text (describe what''s in the photo)', name: 'alt', widget: string }
+
+  - name: mission_stats
+    label: 'Mission Stats'
+    description: 'Headline numbers for India and Romania. Each entry with "Show on overview card" checked also appears on the main Mission page — the rest only show on the country''s own full page.'
+    files:
+      - name: mission_stats
+        label: 'India & Romania Stats'
+        file: src/data/mission-stats.json
+        fields:
+          - label: 'India'
+            name: 'india'
+            widget: list
+            summary: '{{value}} — {{label}}'
+            min: 1
+            fields:
+              - { label: 'Internal ID', name: 'id', widget: hidden, default: 'stat' }
+              - { label: 'Number (e.g. "200+" or "12")', name: 'value', widget: string }
+              - { label: 'Label', name: 'label', widget: string }
+              - {
+                  label: 'Show on the Mission overview card (automatically capped at 3 per country — extra ticks are simply ignored)',
+                  name: 'showOnOverview',
+                  widget: boolean,
+                  default: false,
+                }
+          - label: 'Romania'
+            name: 'romania'
+            widget: list
+            summary: '{{value}} — {{label}}'
+            min: 1
+            fields:
+              - { label: 'Internal ID', name: 'id', widget: hidden, default: 'stat' }
+              - { label: 'Number (e.g. "30+" or "23")', name: 'value', widget: string }
+              - { label: 'Label', name: 'label', widget: string }
+              - {
+                  label: 'Show on the Mission overview card (automatically capped at 3 per country — extra ticks are simply ignored)',
+                  name: 'showOnOverview',
+                  widget: boolean,
+                  default: false,
+                }
+
+  - name: prayer_points
+    label: 'Prayer Points'
+    description: 'The "How to Pray" lists on the India and Romania mission pages.'
+    files:
+      - name: prayer_points
+        label: 'India & Romania Prayer Points'
+        file: src/data/prayer-points.json
+        fields:
+          - label: 'India — for Prabha & Mary'
+            name: 'india'
+            widget: list
+            min: 1
+            field: { label: 'Prayer point', name: 'point', widget: string }
+          - label: 'Romania — for Mick & Lorraine'
+            name: 'romania'
+            widget: list
+            min: 1
+            field: { label: 'Prayer point', name: 'point', widget: string }

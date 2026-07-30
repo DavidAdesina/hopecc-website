@@ -10,6 +10,27 @@ just ask whoever currently looks after the website's technical side for help.
 
 ---
 
+## A proper "edit this website" screen is coming
+
+Six of the most-changed things on the site — **service times, activity
+cards, gallery photos, the Romania photo carousel, mission stats, and
+prayer points** — are being set up with a proper point-and-click editing
+screen (Decap CMS, at `/admin`), so eventually you won't need this guide at
+all for those six things.
+
+**It's not switched on yet** — the technical setup (a secure login system)
+is still being built. Until then, those six things have moved into their
+own small files (see below) which you edit the same simple way as
+everything else in this guide — open, find, change, save.
+
+**A small note for whoever tests this locally:** when trying the editing
+screen on your own computer, always go to `/admin` (not `/admin/index.html`
+or anything longer) — a small fix has been added so that address works
+properly. If it ever stops working, ask your technical volunteer to check
+the "`/admin` redirect" note in `README.md`.
+
+---
+
 ## Before you start: one important thing
 
 Right now, changing a file **doesn't update the live website by itself**. A
@@ -65,24 +86,19 @@ words), leave it alone and ask for help.**
 
 ### 1. Service times
 
-Service times currently appear in **two separate places**, and both need to
-be updated together if a time changes:
+Service times used to live in two separate places that could drift out of
+sync. They've now been combined into **one file**:
 
-- **`src/pages/index.astro`** (the homepage) — look for the "SERVICE TIMES
-  STRIP" section near the top of the file. Times like `10:30 am` and
-  `6:00 pm` are written directly in the text.
-- **`src/pages/whats-on.astro`** — look for the `regularServices` list near
-  the top of the file. Each service has a `title`, a `time`, and a
-  `description` you can edit.
-
-⚠️ **These two places aren't linked to each other** — updating one won't
-automatically update the other, so double-check both if a service time
-changes.
+- **`src/data/services.json`** — open it, find the service you want (e.g.
+  `"Sunday Morning Service"`), and edit its `"time"` value (the fuller
+  version shown on the What's On page) and `"shortTime"` value (the short
+  version shown on the homepage strip). Both values need updating if the
+  time changes, but they're now right next to each other in one file
+  instead of split across two page files.
 
 ### 2. Activities (Rocky Kids, Fusion Youth, Dadz, Coffee N Chat, etc.)
 
-In **`src/pages/whats-on.astro`**, look for the `activities` list near the
-top of the file. Each activity card has:
+In **`src/data/activities.json`**, each activity card has:
 - `title` — the name of the activity
 - `img` — the photo shown (see "Swapping photos" below)
 - `tag` — the short label shown on the photo (e.g. "Children · Yrs 2–6")
@@ -106,25 +122,24 @@ Almost every photo on the site is referenced by a path like
 4. If you gave it a new filename, search for the old filename (e.g. search
    `Church-Front.jpg`) in the relevant page file and update the path there too.
 
-**Adding a brand new photo to the "Life at Hope" gallery** (on
-`whats-on.astro`): find the `galleryImages` list near the top of the file
-and add a new line in the same format as the others — no resizing needed,
-the gallery adjusts automatically to any photo shape.
+**Adding a brand new photo to the "Life at Hope" gallery**: find
+**`src/data/gallery.json`** and add a new line in the same format as the
+others — no resizing needed, the gallery adjusts automatically to any photo
+shape.
 
 ### 4. The Romania page's sliding photo carousel
 
-On **`src/pages/mission/romania.astro`**, the "Satu-Nou village" section has
-a small set of photos that slide automatically. To add, remove, or swap a
-photo:
+The carousel photos live in **`src/data/romania-carousel.json`**. To add,
+remove, or swap a photo:
 
-1. Search for `EDIT:` near the carousel — it'll point you to the photo
-   filenames (e.g. `Village_1.png`, `Village_2.png`, `Village_3.png`).
-2. To **swap** a photo, replace the file in `public/images/` (same filename)
-   or update the filename in the file to match a new one — same as any
-   other photo (see "Photos" above).
-3. To **add or remove** a photo, copy or delete one whole
-   `<div class="carousel-slide">...</div>` block, including the image
-   filename inside it.
+1. Open the file — you'll see a short list of photo filenames (e.g.
+   `Village_1.png`, `Village_2.png`, `Village_3.png`) with a description
+   for each.
+2. To **swap** a photo, replace the file in `public/images/` (same
+   filename) or update the filename in the JSON to match a new one — same
+   as any other photo (see "Photos" above).
+3. To **add or remove** a photo, copy or delete one whole `{ "src": ...,
+   "alt": ... }` entry, including the closing comma if needed.
 
 You **don't** need to add or remove anything else. The little gold dots
 below the photos are created automatically to match however many photos are
@@ -133,24 +148,20 @@ there — one dot per photo, no matter how many you add or take away.
 ### 5. Numbers and stats (mission pages)
 
 The India and Romania mission pages show headline numbers (like "200+ Easter
-gathering" or "23 children sponsored"). These numbers currently appear in
-**two places each** that need to be kept in sync:
-
-- The short summary version on **`src/pages/mission.astro`** (the "Our
-  Mission Fields" cards) — search for `mission-stat`.
-- The full version on the country's own page — **`src/pages/mission/india.astro`**
-  or **`src/pages/mission/romania.astro`** — search for `stat-number`.
-
-⚠️ If a number changes (e.g. more sponsored children, a new baptism count),
-update it in **both** the summary card and the full country page, or the
-two pages will show different figures.
+gathering" or "23 children sponsored"). These now live in **one shared
+file**, **`src/data/mission-stats.json`**, under an `"india"` list and a
+`"romania"` list. Each number has a `"value"`, a `"label"`, and a
+`"showOnOverview"` true/false — the ones marked `true` also appear on the
+Mission page's summary cards (up to three per country), so **updating a
+number here keeps the summary card and the full country page in sync
+automatically** — no more updating two places by hand.
 
 ### 6. Prayer points
 
-On the India and Romania pages (`src/pages/mission/india.astro` and
-`src/pages/mission/romania.astro`), search for `EDIT: prayer` or look for the
-navy-blue "How to Pray" section. Each prayer point is one line in a list —
-add, remove, or reword lines freely.
+Prayer points for both India and Romania now live in one file,
+**`src/data/prayer-points.json`**, under an `"india"` list and a
+`"romania"` list. Each entry is one line of text — add, remove, or reword
+lines freely.
 
 ### 7. Contact details (phone, email, address)
 
@@ -216,13 +227,13 @@ delete it in future; it doesn't affect anything.
 
 | What you want to change              | File(s) to open                                              |
 |---------------------------------------|----------------------------------------------------------------|
-| Service times                         | `index.astro` **and** `whats-on.astro`                        |
-| Activity cards (Rocky Kids, etc.)     | `whats-on.astro`                                               |
-| Gallery photos                        | `whats-on.astro`                                                |
+| Service times                         | `src/data/services.json` — one file, feeds both the homepage and What's On |
+| Activity cards (Rocky Kids, etc.)     | `src/data/activities.json`                                     |
+| Gallery photos                        | `src/data/gallery.json`                                         |
 | Any photo on any page                 | Find the page, swap the file in `public/images/`               |
-| Romania photo carousel                | `mission/romania.astro` — add/remove a `carousel-slide` block; dots update themselves |
-| Mission stats/numbers                 | `mission.astro` **and** the relevant `mission/india.astro` or `mission/romania.astro` |
-| Prayer points                         | `mission/india.astro` or `mission/romania.astro`               |
+| Romania photo carousel                | `src/data/romania-carousel.json` — add/remove a photo entry; dots update themselves |
+| Mission stats/numbers                 | `src/data/mission-stats.json` — one file, feeds both the summary card and the full page |
+| Prayer points                         | `src/data/prayer-points.json`                                   |
 | Phone/email/address                   | `Footer.astro`, `contact.astro`, `safeguarding.astro`, `privacy-policy.astro` |
 | Safeguarding PDF                      | `safeguarding.astro` (and add the new file to `public/documents/`) |
 | Facebook/YouTube links                | `Footer.astro`, `contact.astro`                                 |
