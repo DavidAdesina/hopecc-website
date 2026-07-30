@@ -12,16 +12,17 @@ developers setting up the project or working on the code itself.
 
 ## Tech stack
 
-- **[Astro](https://astro.build) 6** — the framework the site is built with.
+- **[Astro](https://astro.build) 7** — the framework the site is built with.
   Pages are `.astro` files that mix HTML with a small amount of JavaScript.
   Astro outputs plain, fast HTML/CSS with very little JavaScript sent to
   visitors' browsers.
 - **[Tailwind CSS](https://tailwindcss.com) v4** — utility CSS framework,
-  wired in via the official PostCSS plugin (`@tailwindcss/postcss`, see
-  [Tailwind/Vite build fix](#tailwind--vite-build-fix-important) below for
-  why it's PostCSS and not the Vite plugin). Most pages on this site
-  currently use hand-written CSS in `<style>` blocks rather than Tailwind
-  utility classes (see [Styling notes](#styling-notes) below for why).
+  wired in via the official Vite plugin (`@tailwindcss/vite`, see
+  [Tailwind / Vite build fix](#tailwind--vite-build-fix-important) below for
+  the back-and-forth on why it's the Vite plugin again and not PostCSS).
+  Most pages on this site currently use hand-written CSS in `<style>` blocks
+  rather than Tailwind utility classes (see [Styling notes](#styling-notes)
+  below for why).
 - **[Prettier](https://prettier.io)**, with the official
   [`prettier-plugin-astro`](https://github.com/withastro/prettier-plugin-astro) —
   handles code formatting (indentation, quotes, trailing commas, line
@@ -34,8 +35,8 @@ developers setting up the project or working on the code itself.
   `Layout.astro` (Navbar + Footer), so navigation only has to be maintained
   in one place.
 
-As of the last dependency check, the project resolves to **Astro 6.4.8** and
-**Tailwind CSS 4.3.3**. `package.json` uses caret ranges (`^6.3.5`, `^4.3.0`),
+As of the last dependency check, the project resolves to **Astro 7.1.6** and
+**Tailwind CSS 4.3.3**. `package.json` uses caret ranges (`^7.1.5`, `^4.3.0`),
 so exact installed versions may move slightly as patches are released —
 run `npm outdated` to check.
 
@@ -84,9 +85,9 @@ There is no test suite configured yet. Prettier is configured for formatting
 
 ```
 hopecc-website/
-├── astro.config.mjs        Astro's main config file — site URL
-├── postcss.config.mjs       Registers the Tailwind PostCSS plugin (see
-│                            Tailwind / Vite build fix above)
+├── astro.config.mjs        Astro's main config file — site URL, and the
+│                            Tailwind Vite plugin (see Tailwind / Vite build
+│                            fix below)
 ├── tailwind.config.mjs      Tailwind v4 config (see note below — most brand
 │                            tokens actually live in global.css, not here)
 ├── .prettierrc.json          Prettier formatting config (Astro plugin)
@@ -165,12 +166,15 @@ hopecc-website/
 
 ## Tailwind / Vite build fix (important)
 
-**As of this update, `@tailwindcss/vite` no longer works with this project.**
-This isn't specific to this site — it's a known, currently-open upstream
-incompatibility between `@tailwindcss/vite` and the Rolldown-based Vite that
-Astro 6 bundles by default. Running a plain `npm install` on the previous
-`package.json` would build successfully today but fail the moment any
-dependency patch-updates, with an error like:
+This project has flip-flopped between the two official ways of wiring
+Tailwind v4 into Astro — the Vite plugin and the PostCSS plugin — because
+of two *separate*, unrelated upstream bugs in Astro's Rolldown-based Vite.
+As of now, **it's back on the Vite plugin (`@tailwindcss/vite`)**, which is
+the current working setup. The history, in case a future dependency update
+resurfaces either issue:
+
+**Bug #1 (hit first) — `@tailwindcss/vite` + Rolldown, missing `tsconfigPaths` field.**
+`npm run build` would fail intermittently with:
 
 ```
 [@tailwindcss/vite:generate:build] Missing field `tsconfigPaths` on
@@ -179,20 +183,54 @@ BindingViteResolvePluginConfig.resolveOptions
 
 (Tracked upstream: [vitejs/vite#22322](https://github.com/vitejs/vite/issues/22322),
 [withastro/astro#16542](https://github.com/withastro/astro/issues/16542).)
+**Workaround at the time:** switched from the Vite plugin to the PostCSS
+plugin (`@tailwindcss/postcss`), which sidestepped this bug entirely.
 
-**The fix:** switched Tailwind from the Vite plugin to the PostCSS plugin,
-which doesn't have this issue.
+**Bug #2 (hit after switching to PostCSS) — Rolldown's CSS `@import`
+resolver.** With the PostCSS plugin in place, `npm run build` started
+failing instead with:
 
-- `astro.config.mjs` no longer imports or registers `@tailwindcss/vite`.
-- A new `postcss.config.mjs` registers `@tailwindcss/postcss` instead.
-- `package.json` now depends on `@tailwindcss/postcss` instead of
-  `@tailwindcss/vite`.
+```
+[postcss] ENOENT: no such file or directory, open '<project-root>/tailwindcss'
+```
+
+This one is a bug in how Rolldown's bundled `postcss-import` resolves the
+bare `@import "tailwindcss";` in `global.css` — it was trying to open a
+literal file named `tailwindcss` next to `package.json` instead of
+resolving the npm package. Reproduced with a real `astro build` in a clean
+sandbox; confirmed via a deliberately-broken `postcss.config.mjs` that the
+config file itself *was* being loaded correctly, so the fault was further
+downstream in Vite/Rolldown's own CSS-import handling, not a misconfiguration.
+Pinning `vite` back to `8.0.16` via an override didn't help — the bug is
+present there too, so it isn't a narrow version regression. This is a known,
+already-traced issue specific to the **PostCSS** code path
+([vitejs/vite#22766](https://github.com/vitejs/vite/pull/22766) fixed the
+equivalent bug for the Vite-plugin path, not this one).
+
+**Current fix:** since Bug #1 (the original reason for leaving the Vite
+plugin) has since been fixed upstream, and Bug #2 (the PostCSS path) hasn't,
+the project switched back to `@tailwindcss/vite`:
+
+- `astro.config.mjs` imports `@tailwindcss/vite` and registers it under
+  `vite.plugins`.
+- `postcss.config.mjs` has been deleted — no longer needed, and leaving it
+  in place risked both code paths fighting over the same `@import`.
+- `package.json` depends on `@tailwindcss/vite` instead of
+  `@tailwindcss/postcss`.
 
 Verified with a completely clean install (`rm -rf node_modules
-package-lock.json && npm install && npm run build`) — all 10 pages build
-successfully. No visual or behavioural change; this only affects how
-Tailwind is wired into the build, and the site doesn't yet use Tailwind
-utility classes on any page (see [Styling notes](#styling-notes)).
+package-lock.json && npm install && npm run build`) — build succeeds, and
+the generated CSS was checked to contain real compiled Tailwind utility
+output (not just an empty pass-through), confirming Tailwind is actually
+running, not silently skipped. No visual or behavioural change; this only
+affects how Tailwind is wired into the build, and the site doesn't yet use
+Tailwind utility classes on any page (see [Styling notes](#styling-notes)).
+
+**If this breaks again on a future dependency update:** check which of the
+two bugs above has resurfaced (the error message will tell you — `tsconfigPaths`
+missing field vs. `ENOENT ... tailwindcss`) before assuming the other plugin
+is automatically the fix; they are not the same bug and don't necessarily
+get fixed on the same timeline.
 
 ---
 
