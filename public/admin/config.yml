@@ -121,6 +121,20 @@ collections:
               - { label: 'Internal ID', name: 'id', widget: hidden, default: 'activity' }
               - { label: 'Title', name: 'title', widget: string }
               - { label: 'Photo', name: 'img', widget: image }
+              - {
+                  label: 'Photo position (which part of the photo to keep in view — the card crops photos to fit, so use this if an important part is getting cut off)',
+                  name: 'focalPoint',
+                  widget: select,
+                  default: 'center top',
+                  options:
+                    [
+                      { label: 'Keep the top in view', value: 'center top' },
+                      { label: 'Keep the middle in view', value: 'center center' },
+                      { label: 'Keep the bottom in view', value: 'center bottom' },
+                      { label: 'Keep the left side in view', value: 'left center' },
+                      { label: 'Keep the right side in view', value: 'right center' },
+                    ],
+                }
               - { label: 'Tag (short label on the photo)', name: 'tag', widget: string }
               - { label: 'Schedule', name: 'schedule', widget: string }
               - { label: 'Price', name: 'price', widget: string }
@@ -161,6 +175,20 @@ collections:
             fields:
               - { label: 'Photo', name: 'src', widget: image }
               - { label: 'Alt text (describe what''s in the photo)', name: 'alt', widget: string }
+              - {
+                  label: 'Photo position (which part of the photo to keep in view — the carousel crops photos to fit, so use this if an important part is getting cut off)',
+                  name: 'focalPoint',
+                  widget: select,
+                  default: 'center center',
+                  options:
+                    [
+                      { label: 'Keep the top in view', value: 'center top' },
+                      { label: 'Keep the middle in view', value: 'center center' },
+                      { label: 'Keep the bottom in view', value: 'center bottom' },
+                      { label: 'Keep the left side in view', value: 'left center' },
+                      { label: 'Keep the right side in view', value: 'right center' },
+                    ],
+                }
 
   - name: mission_stats
     label: 'Mission Stats'

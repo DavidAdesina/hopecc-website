@@ -101,6 +101,8 @@ sync. They've now been combined into **one file**:
 In **`src/data/activities.json`**, each activity card has:
 - `title` — the name of the activity
 - `img` — the photo shown (see "Swapping photos" below)
+- `focalPoint` — which part of the photo to keep visible (see "Photos getting
+  cropped oddly?" below)
 - `tag` — the short label shown on the photo (e.g. "Children · Yrs 2–6")
 - `schedule` — when it runs
 - `price` — entry cost
@@ -108,6 +110,47 @@ In **`src/data/activities.json`**, each activity card has:
 
 To add a brand new activity card, copy one whole block (from `{` to `}`,
 including the commas) and change the details inside.
+
+*Tip: landscape photos work best here — see "Photos getting cropped oddly?"
+just below for the ideal shape and size.*
+
+### Photos getting cropped oddly?
+
+The activity cards and the Romania photo carousel show photos inside a
+fixed-size box, so the site automatically trims the edges off any photo
+that doesn't perfectly match that shape — a bit like when a photo gets
+cropped to fit a square frame on social media.
+
+If an important part of the photo (a face, a sign, whatever matters) is
+getting cut off, you don't need to resize or edit the photo yourself.
+Instead, use the **"Photo position"** option next to that photo:
+- In `src/data/activities.json` or `src/data/romania-carousel.json`, this
+  is the `focalPoint` value.
+- In the `/admin` editing screen, it's a dropdown labelled "Photo position"
+  right under the photo — just pick "Keep the top in view", "Keep the
+  bottom in view", etc., save, and check the page again.
+
+This won't fix every case perfectly (it nudges the crop, it doesn't let
+you zoom or drag like some apps do), but for most photos it's enough. If a
+photo still doesn't look right after trying a few options, the simplest
+fix is choosing a different photo that's already closer to a square or
+landscape shape.
+
+**Best photo shape and size to use in the first place**, so cropping is
+rarely an issue:
+
+- **Shape:** Landscape (wider than tall) — like a phone photo taken
+  holding the phone sideways, not upright. Both the activity card boxes
+  and the Romania carousel are wider than they are tall, so a landscape
+  photo survives the crop far better than a portrait one.
+- **Size:** At least **1200 × 800 pixels**. Most modern phone photos are
+  already bigger than this — only worry if it's a very old or
+  already-cropped image.
+- **Main subject:** Try to keep faces or the key detail roughly in the
+  **upper two-thirds** of the photo, not right at the very bottom edge.
+- **Avoid:** Upright/portrait photos (like a vertical phone selfie) — these
+  lose the most to cropping and are the ones most likely to need the
+  "Photo position" dropdown above.
 
 ### 3. Photos (swapping an existing image)
 
@@ -144,6 +187,10 @@ remove, or swap a photo:
 You **don't** need to add or remove anything else. The little gold dots
 below the photos are created automatically to match however many photos are
 there — one dot per photo, no matter how many you add or take away.
+
+*Tip: landscape photos work best here too — see "Photos getting cropped
+oddly?" above for the ideal shape and size, and the "Photo position"
+dropdown if a photo's important part gets cut off.*
 
 ### 5. Numbers and stats (mission pages)
 

@@ -1,14 +1,54 @@
 {
   "india": [
-    { "id": "india-easter", "value": "200+", "label": "Easter gathering", "showOnOverview": true },
-    { "id": "india-tailoring", "value": "95", "label": "Tailoring students", "showOnOverview": true },
-    { "id": "india-baptisms", "value": "12", "label": "New baptisms", "showOnOverview": true },
-    { "id": "india-family", "value": "7", "label": "Children in the family", "showOnOverview": false }
+    {
+      "id": "india-easter",
+      "value": "200+",
+      "label": "Easter gathering",
+      "showOnOverview": true
+    },
+    {
+      "id": "india-tailoring",
+      "value": "95",
+      "label": "Tailoring students",
+      "showOnOverview": true
+    },
+    {
+      "id": "india-baptisms",
+      "value": "12",
+      "label": "New baptisms",
+      "showOnOverview": true
+    },
+    {
+      "id": "india-family",
+      "value": "7",
+      "label": "Children in the family",
+      "showOnOverview": false
+    }
   ],
   "romania": [
-    { "id": "romania-years", "value": "30+", "label": "Years of partnership", "showOnOverview": true },
-    { "id": "romania-sponsored", "value": "23", "label": "Children sponsored", "showOnOverview": true },
-    { "id": "romania-andronic", "value": "7", "label": "Andronic children (the founding family)", "showOnOverview": false },
-    { "id": "romania-casa-andrei", "value": "1", "label": "Casa Andrei (in progress)", "showOnOverview": true }
+    {
+      "id": "romania-years",
+      "value": "30+",
+      "label": "Years of partnership",
+      "showOnOverview": true
+    },
+    {
+      "id": "romania-sponsored",
+      "value": "23",
+      "label": "Children sponsored",
+      "showOnOverview": true
+    },
+    {
+      "id": "romania-andronic",
+      "value": "7",
+      "label": "Andronic children (the founding family)",
+      "showOnOverview": false
+    },
+    {
+      "id": "romania-casa-andrei",
+      "value": "1",
+      "label": "Casa Andrei (in progress)",
+      "showOnOverview": true
+    }
   ]
 }

@@ -188,7 +188,12 @@ const villagePhotos = villagePhotosData.photos;
             {
               villagePhotos.map((photo) => (
                 <div class="carousel-slide">
-                  <img src={photo.src} alt={photo.alt} loading="lazy" />
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    style={`object-position: ${photo.focalPoint || 'center center'};`}
+                  />
                 </div>
               ))
             }
