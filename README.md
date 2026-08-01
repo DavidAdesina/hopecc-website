@@ -301,6 +301,32 @@ deployed:
 - Once the Lambda OAuth proxy is deployed in Phase 3, update
   `backend.base_url` in `config.yml` to point at it, and login will work.
 
+### `/admin` script pinning (Day 6b hardening pass)
+
+`public/admin/index.html` loads Decap CMS from unpkg. It used to reference
+`decap-cms@^3.0.0`, which let unpkg serve whatever the newest matching
+release was on every page load, with no check that the file hadn't
+changed. It's now pinned to an exact version with a Subresource Integrity
+(SRI) hash, so the browser won't run the script if the bytes it receives
+don't match what was verified. Since this script will be handling
+GitHub-auth credentials with push access to `main` once the OAuth proxy
+is live, this was worth locking down before that ships rather than after.
+
+This means the script **no longer auto-updates**. To bump the Decap
+version in future: `npm install decap-cms@<new-version>` from the npm
+registry, compute the sha384 hash of the resulting
+`node_modules/decap-cms/dist/decap-cms.js`, and update both the version
+number and the `integrity` attribute in `public/admin/index.html`
+together — never hand-edit or guess the hash.
+
+One caveat worth knowing: `dist/decap-cms.js` is webpack code-split and
+dynamically loads further chunk files from unpkg at runtime as different
+CMS features are used. The SRI hash only covers the entry file the
+`<script>` tag points at — it doesn't extend to those chunks. Fully
+closing that gap would mean self-hosting the whole `dist/` folder instead
+of pulling from unpkg; not needed now, but worth remembering if the
+threat model here ever tightens further.
+
 ### The `src/data/` JSON files
 
 | File | Used by | What it holds |
@@ -400,6 +426,7 @@ resolved (see below) — one remains outstanding by design:
 | 5 | Decap CMS setup (config, GitHub OAuth app) | ✅ Done — config.yml + data extraction complete. Real login still blocked on the Phase 3 OAuth proxy (see Content editing section) |
 | 6 | CMS testing + maintainer instructions for `/admin` | ✅ Done — hands-on testing complete, all findings resolved |
 | 6b | Final pre-AWS audit (security/performance sweep before Phase 3) | ✅ Done — dead `/admin` redirect comment corrected, `noindex` added to the CMS admin screen, this status table updated |
+| 6c | Admin panel hardening — Decap CDN script pinned to an exact version with an SRI hash (was an unpinned `^3.0.0` range) | ✅ Done — see "`/admin` script pinning" in Content editing section |
 | 7+ | AWS deployment (S3, CloudFront, Route 53, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | Not started |
 | Last | DNS cutover, launch, smoke test | Not started |
 

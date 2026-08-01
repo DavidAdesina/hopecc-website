@@ -13,6 +13,18 @@
 
   For local testing before Phase 3, see the "Testing Decap locally" note
   in config.yml.
+
+  SCRIPT PINNING (added Day 6b hardening pass — see MAINTENANCE-GUIDE.md):
+  This used to load decap-cms@^3.0.0, which let unpkg serve whatever the
+  newest matching release was on every page load — no version control and
+  no check that the file hadn't been tampered with in transit or on
+  unpkg's end. It's now pinned to an exact version (3.15.1) with a
+  Subresource Integrity hash, so the browser refuses to run the script if
+  the bytes it receives don't match exactly what was verified below.
+
+  This will NOT auto-update anymore — that's the point, but it means
+  someone has to deliberately bump both the version number and the hash
+  periodically. See MAINTENANCE-GUIDE.md for how.
 -->
 <html lang="en">
   <head>
@@ -22,6 +34,10 @@
     <title>Content Manager — Hope Community Church</title>
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script
+      src="https://unpkg.com/decap-cms@3.15.1/dist/decap-cms.js"
+      integrity="sha384-in6eHztHveqQ7uMZ1fDaKlDmacQLFuLH2wWrFTiymyuS8zQ5bixwL8U3AeRi8h/L"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
