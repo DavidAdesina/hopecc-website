@@ -397,8 +397,9 @@ resolved (see below) — one remains outstanding by design:
 | 3d | mission.astro dead `.cta-section` CSS removed | ✅ Done |
 | 3e | romania.astro carousel dot-indicator dependency removed (dots now auto-generated from photo count) | ✅ Done |
 | 4 | Code formatting pass (Prettier + Astro plugin, watch-listen.astro scaffold left untouched — page under active development). Also fixed the Tailwind/Vite build bug and two other bugs found along the way (see Resolved, above) | ✅ Done |
-| 5 | Decap CMS setup (config, GitHub OAuth app) | 🟡 In progress — config.yml + data extraction done, real login blocked on Phase 3 OAuth proxy (see Content editing section) |
-| 6 | CMS testing + maintainer instructions for `/admin` | Not started |
+| 5 | Decap CMS setup (config, GitHub OAuth app) | ✅ Done — config.yml + data extraction complete. Real login still blocked on the Phase 3 OAuth proxy (see Content editing section) |
+| 6 | CMS testing + maintainer instructions for `/admin` | ✅ Done — hands-on testing complete, all findings resolved |
+| 6b | Final pre-AWS audit (security/performance sweep before Phase 3) | ✅ Done — dead `/admin` redirect comment corrected, `noindex` added to the CMS admin screen, this status table updated |
 | 7+ | AWS deployment (S3, CloudFront, Route 53, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | Not started |
 | Last | DNS cutover, launch, smoke test | Not started |
 
