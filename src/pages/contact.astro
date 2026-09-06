@@ -247,6 +247,17 @@ import Layout from '../layouts/Layout.astro';
             ></textarea>
           </div>
 
+          <!-- Honeypot: invisible to real visitors and left blank by them.
+               Bots that auto-fill every field they find often fill this one
+               in too, which the backend uses to silently discard the
+               submission without sending an email. aria-hidden and
+               tabindex="-1" keep it out of the way for screen readers and
+               keyboard navigation. -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
           <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
 
           <div class="toast" id="toast"></div>
@@ -607,6 +618,18 @@ import Layout from '../layouts/Layout.astro';
     margin-bottom: 1.1rem;
   }
 
+  /* Honeypot field (see the form markup below for why this exists).
+     Positioned off-screen rather than display:none or visibility:hidden --
+     some bots specifically check for and skip those, since they're the
+     most common way sites hide honeypots. */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
   .form-row label {
     display: block;
     font-size: 0.75rem;
@@ -834,6 +857,7 @@ import Layout from '../layouts/Layout.astro';
       phone: (form.elements.namedItem('phone') as HTMLInputElement).value.trim(),
       subject: (form.elements.namedItem('subject') as HTMLInputElement).value.trim(),
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
+      website: (form.elements.namedItem('website') as HTMLInputElement).value.trim(),
     };
 
     if (!data.fname || !data.email || !data.message) {
