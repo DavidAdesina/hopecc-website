@@ -93,6 +93,11 @@ resource "aws_cloudfront_distribution" "site" {
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
     cache_policy_id        = data.aws_cloudfront_cache_policy.caching_optimized.id
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_clean_urls.arn
+    }
   }
 
   # Anything under /api/ goes to API Gateway instead of S3. This is what
@@ -151,4 +156,64 @@ resource "aws_cloudfront_distribution" "site" {
   tags = {
     Name = "Site CDN"
   }
+}
+
+# Fixes a real, confirmed problem: this bucket has no S3 "static website
+# hosting" mode, so there's no built-in resolution of a directory path to
+# its index.html. CloudFront's own default_root_object only covers the
+# distribution's literal root ("/"), not subdirectories -- so every other
+# page (e.g. "/admin", "/contact/") requests a literal S3 object key that
+# doesn't exist, and gets a masked 403 instead of a real 404.
+#
+# This runs on every viewer request. A path that already ends in "/" gets
+# "index.html" appended before reaching S3 (a silent rewrite -- safe,
+# since the browser's address bar already reflects a directory). A path
+# with no trailing slash and no file extension gets a real 301 redirect
+# to the same path plus "/" instead, so the address bar updates too --
+# needed because some pages (Decap CMS's admin screen) fetch further
+# resources relative to what the browser thinks its own location is.
+resource "aws_cloudfront_function" "rewrite_clean_urls" {
+  name    = "${var.project_name}-rewrite-clean-urls"
+  runtime = "cloudfront-js-2.0"
+  comment = "Rewrites directory-style paths to their real index.html object key"
+  publish = true
+
+  code = <<-EOT
+    function handler(event) {
+      var request = event.request;
+      var uri = request.uri;
+
+      if (uri.endsWith('/')) {
+        // Already a directory-style URL -- safe to serve its index.html
+        // directly. The browser's address bar already ends in "/", so
+        // any relative links/fetches on the page still resolve correctly.
+        request.uri += 'index.html';
+        return request;
+      }
+
+      if (!uri.includes('.')) {
+        // No trailing slash and no file extension -- a directory path
+        // requested without its slash (e.g. "/admin", "/contact"). This
+        // must be a real redirect, not a silent rewrite: some pages
+        // (Decap CMS's admin screen, notably) fetch further resources
+        // using paths relative to what the browser's address bar shows.
+        // Silently serving the directory's index.html under the
+        // slash-less URL leaves the browser believing "admin" is a
+        // file, so a relative fetch for "config.yml" resolves to the
+        // site root instead of "/admin/config.yml" -- exactly the 403
+        // seen when this was first tested. Redirecting fixes the
+        // address bar first, so relative requests made afterward
+        // resolve correctly.
+        return {
+          statusCode: 301,
+          statusDescription: 'Moved Permanently',
+          headers: {
+            location: { value: uri + '/' }
+          }
+        };
+      }
+
+      return request;
+    }
+  EOT
 }
