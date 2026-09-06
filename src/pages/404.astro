@@ -1,0 +1,137 @@
+---
+// src/pages/404.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   Astro automatically builds this into dist/404.html. CloudFront's
+//   custom_error_response (see terraform/cloudfront.tf) serves this file
+//   whenever S3 returns a 403 for a missing object -- without it, a
+//   mistyped URL or dead link shows a raw AWS XML error instead of a
+//   real "page not found" page.
+//
+// Reuses the same hero-photo style as contact.astro (dark overlay over
+// church-building.jpeg, gold-highlighted heading, gold underline) so it
+// looks like part of the site rather than a generic error page.
+// ─────────────────────────────────────────────────────────────────────────
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Page Not Found"
+  description="Sorry, we couldn't find that page. Head back to the Hope Community Church homepage."
+>
+  <div class="page-wrapper">
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+
+    <header class="page-heading">
+      <p class="not-found-code">404</p>
+      <h1>Page Not <span>Found</span></h1>
+      <p id="pageSubtitle">Sorry, we couldn't find the page you were looking for.</p>
+      <div class="gold-rule"></div>
+      <a href="/" class="home-button">Back to Home</a>
+    </header>
+  </div>
+</Layout>
+
+<style>
+  :root {
+    --navy: #0d1f3c;
+    --gold: #c9a84c;
+    --white: #ffffff;
+  }
+
+  /* ── Hero background — same pattern as contact.astro ── */
+  .page-wrapper {
+    min-height: calc(100vh - 300px);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bg-image {
+    position: fixed;
+    inset: 0;
+    background: url('/images/church-building.jpeg') center center / cover no-repeat;
+    z-index: -2;
+  }
+
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+      160deg,
+      rgba(13, 31, 60, 0.82) 0%,
+      rgba(13, 31, 60, 0.7) 40%,
+      rgba(74, 144, 196, 0.55) 100%
+    );
+    z-index: -1;
+  }
+
+  .page-heading {
+    position: relative;
+    text-align: center;
+    padding: 3.5rem 1.5rem 4rem;
+  }
+
+  .not-found-code {
+    font-size: clamp(3.5rem, 12vw, 7rem);
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .page-heading h1 {
+    margin-top: 0.5rem;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+
+  .page-heading h1 span {
+    color: var(--gold);
+  }
+
+  .page-heading p#pageSubtitle {
+    margin-top: 0.75rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 32rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .gold-rule {
+    width: 64px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 2px;
+    margin: 1.25rem auto 0;
+  }
+
+  .home-button {
+    display: inline-block;
+    margin-top: 2rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    border-radius: 6px;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+
+  .home-button:hover {
+    background: #b8943d;
+    color: var(--white);
+  }
+</style>
