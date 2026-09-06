@@ -14,12 +14,12 @@
 # raw JSON.
 #
 # OAUTH STATUS (important — see README.md "Decap CMS" section):
-# `backend.base_url` below is a placeholder. Real GitHub login on the live
-# /admin screen requires the Lambda + API Gateway OAuth proxy planned for
-# Phase 3 (Day 7+) — it does not exist yet. Update base_url once that's
-# deployed. Until then, this config can be validated structurally and
-# tested locally (see "Testing Decap locally" below), but won't support
-# real login on the live site.
+# `backend.base_url` now points at the Phase 3 Lambda + API Gateway OAuth
+# proxy (Session 3). As of this edit, the Terraform for that proxy has
+# been written but not yet applied — hold off pushing this file to main
+# until `terraform apply` has succeeded AND /auth has been confirmed to
+# redirect to GitHub correctly, so /admin doesn't briefly point at a URL
+# that 404s. Once confirmed working, this note can be removed.
 #
 # TESTING DECAP LOCALLY (works today, no OAuth needed):
 #   1. npm install decap-server --save-dev
@@ -35,9 +35,7 @@ backend:
   name: github
   repo: DavidAdesina/hopecc-website
   branch: main
-  # PLACEHOLDER — replace with the deployed OAuth proxy's URL once the
-  # Phase 3 Lambda + API Gateway setup is live (see note above).
-  base_url: https://REPLACE-WITH-OAUTH-PROXY-URL
+  base_url: https://b5emulwcc6.execute-api.eu-west-2.amazonaws.com
   auth_endpoint: auth
 
 # Local testing only — Decap ignores this in production if a real
