@@ -37,3 +37,8 @@ output "contact_form_api_url" {
   description = "Direct URL to test the contact form endpoint, before CloudFront routing exists"
   value       = "${aws_apigatewayv2_api.contact_form.api_endpoint}/api/contact"
 }
+
+output "decap_oauth_base_url" {
+  description = "base_url value for config.yml's backend section (Decap CMS OAuth) -- should read https://b5emulwcc6.execute-api.eu-west-2.amazonaws.com"
+  value       = aws_apigatewayv2_api.contact_form.api_endpoint
+}

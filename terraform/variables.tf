@@ -33,3 +33,15 @@ variable "contact_form_email" {
   type        = string
   default     = "info@hopecc.org.uk"
 }
+
+variable "github_oauth_client_id" {
+  description = "Client ID for the GitHub OAuth App used by Decap CMS's admin login. Not a secret -- safe to commit."
+  type        = string
+  default     = "Ov23likzw2fEJGYN4uYn"
+}
+
+variable "github_oauth_client_secret_parameter_name" {
+  description = "Name of the SSM Parameter Store SecureString holding the GitHub OAuth App's client secret. Create this manually via the AWS CLI before applying. Terraform only ever references this NAME, never the secret value itself."
+  type        = string
+  default     = "/hopecc-website/decap-oauth/github-client-secret"
+}
