@@ -869,9 +869,10 @@ import Layout from '../layouts/Layout.astro';
     btn.textContent = 'Sending…';
 
     try {
-      // NOTE: this points at a placeholder endpoint. It will start working
-      // once the real backend is connected as part of the AWS deployment
-      // phase of this project — no change needed here before then.
+      // Live contact-form endpoint: API Gateway + Lambda, deployed via
+      // Terraform (see terraform/lambda.tf and terraform/api-gateway.tf).
+      // CloudFront routes /api/* to it once the live domain is cut over;
+      // reachable directly via the CloudFront domain in the meantime.
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -886,14 +887,15 @@ import Layout from '../layouts/Layout.astro';
         throw new Error('Server error');
       }
     } catch {
-      // Fallback while the real backend isn't connected yet: open the
-      // visitor's own email app instead, pre-filled with their message.
+      // Fallback for any failure (network issue, server error, etc.):
+      // open the visitor's own email app instead, pre-filled with their
+      // message, so a bad moment for the API doesn't cost a real enquiry.
       const subject = encodeURIComponent(data.subject || 'Website enquiry');
       const body = encodeURIComponent(
         `Name: ${data.fname} ${data.lname}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n${data.message}`,
       );
       window.location.href = `mailto:info@hopecc.org.uk?subject=${subject}&body=${body}`;
-      showToast('Opening your email app — API not yet connected (Phase 3).', 'error');
+      showToast('Opening your email app instead — something went wrong sending your message.', 'error');
     } finally {
       btn.disabled = false;
       btn.textContent = 'Send Message';
