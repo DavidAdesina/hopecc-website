@@ -42,3 +42,8 @@ output "decap_oauth_base_url" {
   description = "base_url value for config.yml's backend section (Decap CMS OAuth) -- should read https://b5emulwcc6.execute-api.eu-west-2.amazonaws.com"
   value       = aws_apigatewayv2_api.contact_form.api_endpoint
 }
+
+output "github_actions_deploy_role_arn" {
+  description = "Role ARN for the GitHub Actions workflow's role-to-assume input (OIDC deploy auth)"
+  value       = aws_iam_role.github_actions_deploy.arn
+}

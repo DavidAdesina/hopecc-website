@@ -45,3 +45,9 @@ variable "github_oauth_client_secret_parameter_name" {
   type        = string
   default     = "/hopecc-website/decap-oauth/github-client-secret"
 }
+
+variable "github_repo" {
+  description = "GitHub \"owner/repo\" this project lives in. Used to scope the GitHub Actions OIDC trust policy so only workflows running in this exact repo can assume the deploy role."
+  type        = string
+  default     = "DavidAdesina/hopecc-website"
+}
