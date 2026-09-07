@@ -40,13 +40,19 @@ As of the last dependency check, the project resolves to **Astro 7.1.6** and
 so exact installed versions may move slightly as patches are released —
 run `npm outdated` to check.
 
-**Planned but not yet built (Phase 3):**
-- AWS hosting — S3 (storage) + CloudFront (CDN) + Route 53 (DNS) + ACM
-  (SSL certificate)
-- AWS Lambda + API Gateway — backend for the contact form
-- GitHub Actions — automatic deployment when code is pushed to `main`
-- Decap CMS — a web-based editing screen so non-technical users can edit
-  content without touching code directly (see [Content editing](#content-editing-today-vs-the-plan))
+**Live, in addition to the above (see [Deployment & infrastructure](#deployment--infrastructure)
+for the full picture):**
+- **AWS hosting** — S3 (private bucket) + CloudFront (CDN, TLS, routing) +
+  ACM (certificate). DNS itself hasn't been cut over to point at this yet —
+  the site is fully live and tested on CloudFront's own domain in the
+  meantime.
+- **AWS Lambda + API Gateway** — one HTTP API, two Lambda functions: the
+  contact form (sends via SES) and Decap CMS's GitHub OAuth login proxy.
+- **GitHub Actions** — automatic deployment on every push to `main`
+  (build → sync to S3 → invalidate CloudFront), authenticated via OIDC
+  with no long-lived AWS keys stored anywhere.
+- **Decap CMS** — real GitHub login confirmed working end-to-end on the
+  live (CloudFront) domain, not just local dev.
 
 ---
 
@@ -95,6 +101,19 @@ hopecc-website/
 ├── package.json             Dependencies and npm scripts
 ├── tsconfig.json             TypeScript config (for editor tooling/type checks)
 │
+├── .github/
+│   └── workflows/
+│       └── deploy.yml         CI/CD — builds and deploys to AWS on every
+│                                push to main. See "Deployment &
+│                                infrastructure" below.
+│
+├── terraform/                 All AWS infrastructure as code — see
+│   │                            "Deployment & infrastructure" below for
+│   │                            what each file does and how to run it.
+│   └── lambda/
+│       ├── contact-form/       Source for the contact form Lambda
+│       └── decap-oauth/        Source for Decap CMS's OAuth login Lambda
+│
 ├── public/                   Static files served as-is, unprocessed
 │   ├── admin/                  Decap CMS — config.yml (collections/fields)
 │   │                            and index.html (the /admin screen)
@@ -126,7 +145,10 @@ hopecc-website/
     │   ├── contact.astro           Contact page (also handles room hire mode)
     │   ├── room-hire.astro         Redirects to contact.astro?enquiry=room-hire
     │   ├── safeguarding.astro       Safeguarding policy page
-    │   └── privacy-policy.astro     Privacy policy page
+    │   ├── privacy-policy.astro     Privacy policy page
+    │   └── 404.astro                Custom "page not found" page — served by
+    │                                 CloudFront whenever S3 can't find a
+    │                                 requested file (see Deployment section)
     └── styles/
         └── global.css            Tailwind entry point (see note below)
 ```
@@ -262,11 +284,180 @@ relying on the buggy static-file serving.
 **⚠️ This fix doesn't carry over to the production build.** Running
 `astro build` skips creating the `/admin` redirect, because its output path
 collides with the real `public/admin/index.html` file — the real file wins,
-and the bare `/admin` route silently isn't created in `dist/`. So once this
-site is on S3/CloudFront (Phase 3), hitting `/admin` with no trailing slash
-or filename may still 404 unless CloudFront's origin/index-document config
-handles the directory-index resolution itself — worth checking as part of
-that setup rather than assuming this config alone covers it.
+and the bare `/admin` route silently isn't created in `dist/`. On S3 +
+CloudFront, this turned out to be a real, confirmed problem — not just a
+theoretical one — and not only for `/admin`: **every** directory-style
+page on the site (e.g. `/mission/india`, `/contact/`) hit the same S3/403
+issue, since S3 has no built-in "serve this folder's index.html" behaviour
+without its own website-hosting mode (incompatible with the private-bucket
+setup used here). It's now fixed by a CloudFront Function — see
+[Deployment & infrastructure](#deployment--infrastructure) below for how.
+
+---
+
+## Deployment & infrastructure
+
+The site is built as static files (`astro build` → `dist/`) and served from
+AWS: **S3** holds the built files, **CloudFront** serves them over HTTPS
+with a custom domain, and **GitHub Actions** deploys automatically on every
+push to `main`. Two small **Lambda** functions handle the contact form and
+Decap CMS's login. Everything is defined in Terraform, in `terraform/`.
+
+**Current status:** all of this is live and tested on CloudFront's own
+domain. `hopecc.org.uk`'s DNS hasn't been pointed at it yet — that's a
+deliberate last step, done only once everything's been proven working
+first. Until then, the live public site is still on its previous host.
+
+### Architecture, at a glance
+
+```
+Visitor's browser
+      │
+      ▼
+CloudFront (CDN + HTTPS + custom domain)
+      │
+      ├── default path (/, /whats-on, /admin, ...) ──▶ S3 (private bucket, the built site)
+      │
+      └── /api/*  ──▶ API Gateway (HTTP API) ──┬──▶ Lambda: contact form ──▶ SES ──▶ info@hopecc.org.uk
+                                                 └──▶ Lambda: Decap OAuth  ──▶ GitHub (login for /admin)
+
+git push to main ──▶ GitHub Actions ──▶ npm run build ──▶ aws s3 sync ──▶ CloudFront cache invalidation
+                     (authenticates to AWS via OIDC — no stored AWS keys)
+```
+
+### The Terraform
+
+Everything below lives in `terraform/` as one flat set of `.tf` files (no
+modules/workspaces — this project is small enough that the extra structure
+would just be overhead). **Nobody but the person applying it has AWS
+credentials configured** — changes are written here, reviewed, then applied
+by hand, one resource group at a time, with the plan output checked before
+every apply. There's no remote state backend either (state is local);
+worth moving to an S3 backend if a second person ever needs to run
+`terraform apply`.
+
+| File | What it defines |
+|------|------------------|
+| `versions.tf` | Pins the Terraform CLI and AWS/archive provider versions |
+| `providers.tf` | The AWS provider (`eu-west-2`) plus an aliased `us-east-1` one, required only because CloudFront certificates must be requested there |
+| `variables.tf` | Every configurable value — domain name, budget threshold, GitHub repo, etc. |
+| `outputs.tf` | Values printed after `apply`: ACM's DNS validation records, CloudFront's own domain, the contact form's test URL, and the GitHub Actions role ARN |
+| `s3.tf` | The private site bucket, fully public-access-blocked, encrypted at rest, readable only by this CloudFront distribution |
+| `acm.tf` | The TLS certificate for `hopecc.org.uk` + `www`, validated via DNS records added by hand in NetNerd (DNS isn't on Route 53) |
+| `cloudfront.tf` | The CDN distribution itself: both origins, the `/api/*` routing, the clean-URL fix, and the custom 404 page mapping — see below |
+| `iam.tf` | The two brothers' read-only + sandbox IAM users, and the "must have MFA" enforcement policy |
+| `sandbox.tf` | A separate, low-stakes S3 bucket the brothers can freely read/write, with a 30-day auto-expiry |
+| `billing.tf` | An AWS Budget ($/month cap — AWS Budgets always runs in USD, regardless of GBP billing — three warning tiers, emailed to three addresses) |
+| `ses.tf` | The verified email identity (`info@hopecc.org.uk`) the contact form sends from |
+| `lambda.tf` | The contact form Lambda, its IAM role, and its narrow SES-send permission |
+| `api-gateway.tf` | The one HTTP API and its `POST /api/contact` route |
+| `decap-oauth.tf` | The Decap CMS OAuth proxy Lambda, its `GET /auth` and `GET /callback` routes, and its narrow SSM-read permission |
+| `github-actions-oidc.tf` | The GitHub OIDC trust relationship and the deploy role's permissions (see CI/CD below) |
+
+**AWS resources this creates** (account `249994635027`, region `eu-west-2`
+unless noted) — these are identifiers, not secrets, so they're fine to have
+here for reference:
+
+| Resource | Name / ID |
+|----------|-----------|
+| Site bucket | `hopecc-website-249994635027` |
+| Sandbox bucket | `hopecc-website-sandbox-249994635027` |
+| CloudFront distribution | `E26BTS9MBN5LNH` (`d3jmbi4qqbxnbe.cloudfront.net`) |
+| CloudFront OAC | `E2Q0CFO958IOWX` |
+| ACM certificate | `us-east-1`, covers `hopecc.org.uk` + `www.hopecc.org.uk` |
+| HTTP API | `b5emulwcc6` — serves both the contact form and Decap OAuth |
+| Lambda functions | `hopecc-website-contact-form`, `hopecc-website-decap-oauth` (both `nodejs22.x`) |
+| GitHub OIDC deploy role | `hopecc-website-github-actions-deploy` |
+| AWS Budget | `hopecc-website-monthly-budget` ($10/month, 3 tiers) |
+
+### Clean URLs (the CloudFront Function)
+
+A private S3 bucket with CloudFront has no equivalent of S3's own
+"website hosting" mode, so there's no automatic resolution of a folder
+path (`/admin`, `/contact/`) to its `index.html`. Without a fix, visiting
+almost any page directly (not just via an in-site link) returned a masked
+403. `cloudfront.tf`'s `aws_cloudfront_function.rewrite_clean_urls` fixes
+this on every request, with one important distinction:
+
+- A path that **already ends in `/`** gets `index.html` silently appended —
+  safe, since the browser's address bar already shows a directory.
+- A path **missing its trailing slash** (`/admin`, not `/admin/`) gets a
+  real `301` redirect to the same path *plus* a slash, rather than a
+  silent rewrite. This matters specifically for Decap CMS: its admin
+  screen fetches `config.yml` using a path *relative to the browser's
+  address bar*, so silently serving `/admin`'s content without updating
+  the address bar broke that fetch. Redirecting fixes the address bar
+  first, so the relative fetch resolves correctly afterwards.
+
+### The custom 404 page
+
+S3 returns a **403**, not a 404, for a missing object — it can't
+distinguish "this doesn't exist" from "you're not allowed to know if it
+exists" without leaking bucket contents, so it defaults to the more
+restrictive answer. `cloudfront.tf`'s `custom_error_response` maps that
+403 to a real 404 response, served from `/404.html` (built from
+`src/pages/404.astro`, styled to match the rest of the site rather than
+showing a generic error page).
+
+### The contact form & Decap CMS login
+
+Both are small Lambda functions behind the same API Gateway HTTP API,
+reached through CloudFront's `/api/*` routing so the browser never leaves
+the site's own domain (no CORS involved):
+
+- **Contact form** (`POST /api/contact`) — validates the submission,
+  sends it via SES to `info@hopecc.org.uk`. If the request fails for any
+  reason, `contact.astro`'s form falls back to opening the visitor's own
+  email app, pre-filled with their message, so a bad moment for the API
+  never costs a real enquiry.
+- **Decap OAuth proxy** (`GET /auth`, `GET /callback`) — stands in for
+  the OAuth exchange Netlify would normally provide, so `/admin`'s GitHub
+  login works from a plain S3 + CloudFront site. The GitHub OAuth App's
+  client ID is a public identifier (safe to commit; see `variables.tf`);
+  its client **secret** lives only in SSM Parameter Store
+  (`/hopecc-website/decap-oauth/github-client-secret`, `SecureString`) and
+  is never written to Terraform state or this repo. Confirmed working
+  end-to-end on the live CloudFront domain, not just local dev.
+
+### CI/CD
+
+`.github/workflows/deploy.yml` runs on every push to `main`:
+
+1. Check out the repo, set up Node 22, pin `npm@12` (see the `allowScripts`
+   note below), `npm ci`, `npm run build`.
+2. Authenticate to AWS via **OIDC** — GitHub issues a short-lived signed
+   token; `github-actions-oidc.tf`'s trust policy only accepts one scoped
+   specifically to this exact repo and the `main` branch. No AWS access
+   keys are stored as a GitHub secret at all.
+3. `aws s3 sync dist/ s3://hopecc-website-249994635027 --delete`
+4. `aws cloudfront create-invalidation` on the one distribution, so
+   changes appear immediately rather than waiting for cached copies to
+   expire.
+
+The deploy role's permissions are scoped to exactly those two actions on
+exactly this bucket and this distribution — nothing broader.
+
+**Rollback:** `git revert` the commit, push, let the pipeline redeploy.
+Deliberately simple — no S3 versioning or "keep last N builds" scheme, both
+because it needs zero extra infrastructure and because it's easy to explain
+to a future non-technical maintainer.
+
+**`allowScripts` gotcha:** npm 12 blocks dependency install scripts unless
+the package.json's `allowScripts` lists the *exact resolved* version from
+`package-lock.json` (not just the package name). If a dependency with a
+native build step (`sharp`, `esbuild`) is ever bumped, double check
+`allowScripts` still matches the lockfile's resolved version — a stale pin
+here fails silently at `npm ci` time in CI, not at `npm install` time
+locally.
+
+### A couple of stale comments, not yet cleaned up
+
+Two comments in the Terraform/config that were accurate when written are
+now out of date (nothing broken — just worth a tidy-up commit sometime):
+`public/admin/config.yml`'s header still says to hold off pushing until
+OAuth is confirmed working (it has been, since Session 4); `cloudfront.tf`'s
+`custom_error_response` comment still says to check whether `404.astro`
+exists yet (it does, added the same session).
 
 ---
 
@@ -284,22 +475,20 @@ the safeguarding PDF link, etc. — is still a direct code edit via the
 `EDIT:` comment convention. See `MAINTENANCE-GUIDE.md` for the
 non-technical walkthrough of both.
 
-### ⚠️ Decap CMS login doesn't work on the live site yet
+### ✅ Decap CMS login works on the live site
 
-`/admin` is configured, but **real GitHub login won't work until the OAuth
-proxy exists**. Decap needs something to exchange a GitHub OAuth code for
-an access token server-side, and the plan (see `config.yml`'s
-`backend.base_url`, currently a placeholder) is to run that on the Lambda +
-API Gateway setup already slated for **Phase 3 (Day 7+)**. Until that's
-deployed:
+`/admin` is fully wired up: real GitHub login, confirmed working end-to-end
+on the live CloudFront domain (not just local dev). The OAuth proxy that
+makes this possible — a small Lambda behind API Gateway, since a plain S3 +
+CloudFront site has nothing like Netlify's built-in OAuth support — is
+covered in [Deployment & infrastructure](#deployment--infrastructure)
+above. `config.yml`'s `backend.base_url` points at it already.
 
-- The CMS config can be tested locally with no OAuth needed — see the
-  "Testing Decap locally" comment at the top of `public/admin/config.yml`
-  (`npx decap-server` + `npm run dev`, then visit `localhost:4321/admin`).
-- On the live site, `/admin` will load but login will fail, since
-  `base_url` doesn't point anywhere real yet.
-- Once the Lambda OAuth proxy is deployed in Phase 3, update
-  `backend.base_url` in `config.yml` to point at it, and login will work.
+The CMS config can still be tested fully offline with no AWS/GitHub
+involved at all — see the "Testing Decap locally" comment at the top of
+`public/admin/config.yml` (`npx decap-server` + `npm run dev`, then visit
+`localhost:4321/admin`). Handy for trying out a new field layout before
+touching the live config.
 
 ### `/admin` script pinning (Day 6b hardening pass)
 
@@ -308,9 +497,10 @@ deployed:
 release was on every page load, with no check that the file hadn't
 changed. It's now pinned to an exact version with a Subresource Integrity
 (SRI) hash, so the browser won't run the script if the bytes it receives
-don't match what was verified. Since this script will be handling
-GitHub-auth credentials with push access to `main` once the OAuth proxy
-is live, this was worth locking down before that ships rather than after.
+don't match what was verified. Since this script handles GitHub-auth
+credentials with push access to `main` (the OAuth proxy has been live
+since Session 4), this was worth locking down before that shipped rather
+than after.
 
 This means the script **no longer auto-updates**. To bump the Decap
 version in future: `npm install decap-cms@<new-version>` from the npm
@@ -423,12 +613,26 @@ resolved (see below) — one remains outstanding by design:
 | 3d | mission.astro dead `.cta-section` CSS removed | ✅ Done |
 | 3e | romania.astro carousel dot-indicator dependency removed (dots now auto-generated from photo count) | ✅ Done |
 | 4 | Code formatting pass (Prettier + Astro plugin, watch-listen.astro scaffold left untouched — page under active development). Also fixed the Tailwind/Vite build bug and two other bugs found along the way (see Resolved, above) | ✅ Done |
-| 5 | Decap CMS setup (config, GitHub OAuth app) | ✅ Done — config.yml + data extraction complete. Real login still blocked on the Phase 3 OAuth proxy (see Content editing section) |
+| 5 | Decap CMS setup (config, GitHub OAuth app) | ✅ Done — config.yml + data extraction complete. Real login went live in the AWS deployment phase below (Session 3) |
 | 6 | CMS testing + maintainer instructions for `/admin` | ✅ Done — hands-on testing complete, all findings resolved |
 | 6b | Final pre-AWS audit (security/performance sweep before Phase 3) | ✅ Done — dead `/admin` redirect comment corrected, `noindex` added to the CMS admin screen, this status table updated |
 | 6c | Admin panel hardening — Decap CDN script pinned to an exact version with an SRI hash (was an unpinned `^3.0.0` range) | ✅ Done — see "`/admin` script pinning" in Content editing section |
-| 7+ | AWS deployment (S3, CloudFront, Route 53, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | Not started |
-| Last | DNS cutover, launch, smoke test | Not started |
+| 7+ | AWS deployment (S3, CloudFront, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | ✅ Done — see the AWS deployment table below |
+| Last | DNS cutover, launch, wind-down + ownership handover | In progress — see below |
+
+**AWS deployment (this ran as its own set of sessions, tracked separately
+since it's infrastructure work rather than code):**
+
+| Session | Task | Status |
+|---------|------|--------|
+| 1 | AWS foundations + static hosting (S3, CloudFront, ACM, IAM, budget) | ✅ Done |
+| 2 | Contact form backend (Lambda, API Gateway, SES) | ✅ Done |
+| 3 | Decap OAuth proxy + `/admin` routing | ✅ Done — real GitHub login confirmed working end-to-end on the live CloudFront domain |
+| 4 | CI/CD, rollback strategy, package-manager confirmation | ✅ Done — also caught and fixed two bugs (clean URLs, missing 404 page) and one commit gap (`config.yml`'s `base_url`) that would otherwise have surfaced during DNS cutover |
+| 5 | DNS cutover, launch, wind-down + ownership handover to Ian | In progress — DNS hasn't been pointed at CloudFront yet; this is the last planned step |
+
+See [Deployment & infrastructure](#deployment--infrastructure) above for
+what all of this actually built.
 
 ---
 

@@ -10,41 +10,43 @@ just ask whoever currently looks after the website's technical side for help.
 
 ---
 
-## A proper "edit this website" screen is coming
+## There's a proper "edit this website" screen — it's switched on
 
 Six of the most-changed things on the site — **service times, activity
 cards, gallery photos, the Romania photo carousel, mission stats, and
-prayer points** — are being set up with a proper point-and-click editing
-screen (Decap CMS, at `/admin`), so eventually you won't need this guide at
-all for those six things.
+prayer points** — now have a proper point-and-click editing screen (Decap
+CMS), so you don't need this guide at all for those six things.
 
-**It's not switched on yet** — the technical setup (a secure login system)
-is still being built. Until then, those six things have moved into their
-own small files (see below) which you edit the same simple way as
-everything else in this guide — open, find, change, save.
+**To use it:** go to the website's address with `/admin` on the end (e.g.
+`hopecc.org.uk/admin`), and log in with GitHub when asked. Pick the section
+you want, make your change in the form, and press **Publish** — the live
+website updates itself automatically, usually within a minute or two. There
+is no separate "save" step and nothing to pass along to anyone afterwards.
 
-**A small note for whoever tests this locally:** when trying the editing
-screen on your own computer, always go to `/admin` (not `/admin/index.html`
-or anything longer) — a small fix has been added so that address works
-properly. If it ever stops working, ask your technical volunteer to check
-the "`/admin` redirect" note in `README.md`.
+If you don't have a login for this yet, ask whoever looks after the
+website's technical side to set one up for you — until then, those six
+things can still be edited the old way, using their own small files (see
+below), the same simple way as everything else in this guide.
 
 ---
 
 ## Before you start: one important thing
 
-Right now, changing a file **doesn't update the live website by itself**. A
-developer or technical volunteer still needs to take the changed file and
-publish it. So the process today is:
+If you're using the `/admin` editing screen described just above, publishing
+is automatic — skip straight to the rest of this guide.
+
+For anything this guide asks you to edit as a file directly (most things
+below), changing the file **still doesn't update the live website by
+itself** — someone with access to the website's code needs to take your
+change and send it live. So the process today is:
 
 1. Open the file and make your change (following this guide).
 2. Save the file.
-3. Pass it to whoever manages the website's code, so they can publish it.
+3. Pass it to whoever manages the website's code.
 
-This will get simpler in future — there's a plan to add a proper "edit this
-website" screen (a bit like editing a Word document in a browser) that will
-skip steps 2 and 3. Until then, this guide shows you what to change and
-where, and someone technical will take care of getting it live.
+The good news: getting it live from there is now quick and automatic on
+their end too — once they add your change, the website updates itself
+within about a minute, with no manual publishing step for them either.
 
 ---
 
