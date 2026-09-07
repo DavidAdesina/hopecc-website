@@ -1,0 +1,1157 @@
+---
+// src/components/HeroAtmosphere.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   All the moving light on the homepage hero lives in this one file:
+//
+//     • two huge, slow "breathing" veils of colour (the room feels alive)
+//     • soft pools of light around the flame and the window
+//     • rays of evening light falling from an arched church window on the
+//       right, reaching across the hero toward the words
+//     • floating dust, rising embers and soft out-of-focus lights,
+//       drawn on a <canvas> (a live drawing surface browsers provide)
+//     • the church's flame (from HeroFlame.astro), large and faint on the
+//       left on computers — phones show a small one above the heading
+//       instead, which index.astro places
+//     • a gentle darkening at the edges (a "vignette") so eyes settle on
+//       the words, and a whisper of film grain over everything
+//
+//   It's interactive, but politely: moving the mouse stirs the dust and
+//   parallax-shifts the light (never the words); clicking or tapping the
+//   sky releases a small burst of golden light. Visitors who ask their
+//   device for reduced motion get a still, calm, finished-looking scene.
+//
+//   IMPORTANT: everything here is decoration. It sits behind the words,
+//   ignores the mouse for clicking purposes (links/buttons work exactly as
+//   before), is hidden from screen readers, pauses when the page is
+//   hidden or scrolled away, and deliberately uses NO added libraries —
+//   it's just the same HTML/CSS/JavaScript the rest of the site is made of.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Turn a whole layer on/off      → search "EDIT: layers on/off"
+//   • More/fewer floating lights     → search "EDIT: dials"
+//   • Calmer or livelier motion      → search "EDIT: speed" (bigger
+//     seconds = slower) — and see HeroFlame.astro for the flame itself
+//   • Remove the WHOLE effect        → delete the <HeroAtmosphere /> line
+//     in index.astro (one line — the page goes back to a plain hero)
+//
+// This file has three parts, in this order:
+//   1. The HTML below    — the layers of light, back-to-front
+//   2. The <style> block — colours, sizes and the slow ambient motion
+//   3. The <script> block — the floating lights, and the mouse/tap magic.
+//      Its settings are all at the top in one labelled block.
+// ─────────────────────────────────────────────────────────────────────────
+import HeroFlame from './HeroFlame.astro';
+---
+
+<!-- Layer 1 · the breathing veils of colour (furthest back) -->
+<div class="fx fx-fade" data-layer="auroraVeils" aria-hidden="true">
+  <div class="veil veil-warm" data-p="26" data-s="0.3"></div>
+  <div class="veil veil-cool" data-p="22" data-s="0.26"></div>
+</div>
+
+<!-- Layer 2 · pools of light around each side -->
+<div class="fx fx-fade" data-layer="lightPools" aria-hidden="true">
+  <div class="glow glow-flame" data-p="18" data-s="0.22"></div>
+  <div class="glow glow-window" data-p="18" data-s="0.22"></div>
+</div>
+
+<!-- Layer 3 · rays from the window + the pool where the light lands -->
+<div class="fx fx-fade" data-layer="godRays" aria-hidden="true">
+  <div class="rays par" data-p="14" data-s="0.16">
+    <div class="ray"></div>
+    <div class="ray"></div>
+    <div class="ray"></div>
+    <div class="ray"></div>
+  </div>
+  <div class="floor-pool"></div>
+</div>
+
+<!-- Layer 4 · the floating lights (dust, embers, bokeh) — drawn by the script -->
+<canvas class="fx fx-fade" data-layer="particles" id="atmosphere-canvas" aria-hidden="true"
+></canvas>
+
+<!-- Layer 5 · the flame (left) and the window (right) — computers only;
+     phones hide these and index.astro shows a small flame above the
+     heading instead -->
+<div class="fx fx-fade" aria-hidden="true">
+  <div class="feature flame-wrap par" data-layer="flame" data-p="10" data-s="0.14">
+    <!-- three tiny glints slowly orbiting the flame -->
+    <div class="orbit"><span class="glint g1"></span><span class="glint g2"></span></div>
+    <div class="orbit o2"><span class="glint g3"></span></div>
+    <!-- rings of warmth that bloom outward every few seconds -->
+    <div class="warmth"></div>
+    <div class="warmth w2"></div>
+    <HeroFlame />
+  </div>
+
+  <div class="feature window-wrap par" data-layer="window" data-p="8" data-s="0.11">
+    <div class="window-beam"></div>
+    <svg class="window-svg" viewBox="0 0 220 440" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <!-- the glass, lit by evening light that slowly shifts side to side -->
+      <g class="lit-a">
+        <path
+          d="M46 436 V230 C46 188 60 168 75 168 C90 168 104 188 104 230 V436 Z"
+          fill="#4a90c4"
+          opacity="0.07"></path>
+        <circle cx="110" cy="106" r="27" fill="#a8cce8" opacity="0.09"></circle>
+      </g>
+      <g class="lit-b">
+        <path
+          d="M116 436 V230 C116 188 130 168 145 168 C160 168 174 188 174 230 V436 Z"
+          fill="#c9a84c"
+          opacity="0.07"></path>
+        <path
+          d="M34 156 C34 74 68 40 110 40 C152 40 186 74 186 156 L186 168 L34 168 Z"
+          fill="#f0dfa0"
+          opacity="0.05"></path>
+      </g>
+      <!-- the stone tracery: outer arch, inner arch, twin lancets, rose circle -->
+      <path
+        d="M14 436 V150 C14 60 58 18 110 18 C162 18 206 60 206 150 V436"
+        stroke="#c9a84c"
+        stroke-width="2.5"
+        opacity="0.45"></path>
+      <path
+        d="M34 436 V156 C34 74 68 40 110 40 C152 40 186 74 186 156 V436"
+        stroke="#c9a84c"
+        stroke-width="1.5"
+        opacity="0.3"></path>
+      <path
+        d="M46 436 V230 C46 188 60 168 75 168 C90 168 104 188 104 230 V436"
+        stroke="#c9a84c"
+        stroke-width="1.5"
+        opacity="0.26"></path>
+      <path
+        d="M116 436 V230 C116 188 130 168 145 168 C160 168 174 188 174 230 V436"
+        stroke="#c9a84c"
+        stroke-width="1.5"
+        opacity="0.26"></path>
+      <circle cx="110" cy="106" r="27" stroke="#c9a84c" stroke-width="1.5" opacity="0.3"></circle>
+      <circle cx="110" cy="106" r="14" stroke="#a8cce8" stroke-width="1.2" opacity="0.28"></circle>
+    </svg>
+  </div>
+</div>
+
+<!-- Layer 6 · the framing: edge-darkening, grain, cursor light, hint -->
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" data-layer="grain" aria-hidden="true"></div>
+<div class="cursor-light" data-layer="cursorLight" id="atmosphere-cursor-light" aria-hidden="true">
+</div>
+<p class="hint" data-layer="hint" id="atmosphere-hint" aria-hidden="true">
+  <span class="hint-desktop">✦ &nbsp;move your cursor · click for light</span>
+  <span class="hint-touch">✦ &nbsp;tap the sky</span>
+</p>
+
+<style>
+  /* Every layer: stretched over the whole hero, unclickable, behind the
+     words (index.astro gives .hero-inner a higher stacking order). */
+  .fx {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* The atmosphere fades up AFTER the words have landed (see index.astro's
+     text entrance) so the page opens on the message, not the decoration. */
+  .fx-fade {
+    opacity: 0;
+    animation: fx-in 1.6s ease-out 0.7s forwards;
+  }
+  @keyframes fx-in {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* The parallax hook: the script writes --dx / --dy into these, and this
+     one transform line moves the layer. --bx / --by are each layer's own
+     resting position. */
+  .par {
+    transform: translate(var(--bx, 0), var(--by, 0)) translate3d(var(--dx, 0px), var(--dy, 0px), 0);
+  }
+
+  /* ── Layer 1 · breathing veils ─────────────────────────────────────── */
+  .veil {
+    position: absolute;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .veil-warm {
+    left: -25%;
+    top: -35%;
+    width: 95vw;
+    height: 95vw;
+    max-width: 1200px;
+    max-height: 1200px;
+    background: radial-gradient(
+      circle at 50% 55%,
+      rgba(201, 168, 76, 0.1),
+      rgba(201, 168, 76, 0.03) 45%,
+      transparent 68%
+    );
+    /* EDIT: speed — 46s is one full breath of this veil */
+    animation: veil-a 46s ease-in-out infinite alternate;
+  }
+  .veil-cool {
+    right: -30%;
+    top: -15%;
+    width: 100vw;
+    height: 100vw;
+    max-width: 1300px;
+    max-height: 1300px;
+    background: radial-gradient(
+      circle at 45% 45%,
+      rgba(74, 144, 196, 0.1),
+      rgba(168, 204, 232, 0.03) 45%,
+      transparent 68%
+    );
+    animation: veil-b 58s ease-in-out infinite alternate;
+  }
+  @keyframes veil-a {
+    from {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(6vw, 5vh) scale(1.12);
+    }
+  }
+  @keyframes veil-b {
+    from {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(0, 0) scale(1.08);
+    }
+    to {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(-5vw, 6vh) scale(0.96);
+    }
+  }
+
+  /* ── Layer 2 · pools of light ──────────────────────────────────────── */
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  .glow-flame {
+    left: -4%;
+    top: 8%;
+    width: 44vw;
+    height: 44vw;
+    max-width: 620px;
+    max-height: 620px;
+    background: radial-gradient(
+      circle at 45% 58%,
+      rgba(201, 168, 76, 0.17),
+      rgba(201, 168, 76, 0.05) 45%,
+      transparent 66%
+    );
+    animation: pool-a 21s ease-in-out infinite alternate;
+  }
+  .glow-window {
+    right: -6%;
+    top: 2%;
+    width: 42vw;
+    height: 42vw;
+    max-width: 580px;
+    max-height: 580px;
+    background: radial-gradient(
+      circle at 55% 38%,
+      rgba(74, 144, 196, 0.16),
+      rgba(168, 204, 232, 0.05) 45%,
+      transparent 66%
+    );
+    animation: pool-b 26s ease-in-out infinite alternate;
+  }
+  @keyframes pool-a {
+    from {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(3vw, 3.5vh) scale(1.07);
+    }
+  }
+  @keyframes pool-b {
+    from {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(0, 0) scale(1.05);
+    }
+    to {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(-2.5vw, 4vh) scale(0.97);
+    }
+  }
+
+  /* ── Layer 3 · rays of evening light ───────────────────────────────── */
+  .rays {
+    position: absolute;
+    right: 4%;
+    top: -4%;
+    width: 46%;
+    height: 130%;
+  }
+  .ray {
+    position: absolute;
+    top: 0;
+    right: 12%;
+    width: 120px;
+    height: 120%;
+    transform-origin: top right;
+    background: linear-gradient(
+      188deg,
+      rgba(240, 223, 160, 0.13),
+      rgba(240, 223, 160, 0.05) 45%,
+      transparent 72%
+    );
+    /* EDIT: speed — 11s is one slow brighten-and-fade of each ray */
+    animation: ray-breathe 11s ease-in-out infinite;
+  }
+  .ray:nth-child(1) {
+    transform: rotate(16deg);
+    width: 150px;
+  }
+  .ray:nth-child(2) {
+    transform: rotate(26deg);
+    width: 95px;
+    animation-delay: -3.5s;
+    opacity: 0.8;
+  }
+  .ray:nth-child(3) {
+    transform: rotate(35deg);
+    width: 130px;
+    animation-delay: -7s;
+  }
+  .ray:nth-child(4) {
+    transform: rotate(45deg);
+    width: 70px;
+    animation-delay: -5s;
+    opacity: 0.7;
+  }
+  @keyframes ray-breathe {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  /* where the window light lands on the "floor" */
+  .floor-pool {
+    position: absolute;
+    left: 32%;
+    bottom: -6%;
+    width: 42%;
+    height: 22%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(240, 223, 160, 0.1),
+      rgba(240, 223, 160, 0.03) 55%,
+      transparent 75%
+    );
+    animation: ray-breathe 11s ease-in-out -2s infinite;
+  }
+
+  /* ── Layer 4 · the canvas the script draws on ──────────────────────── */
+  #atmosphere-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Layer 5 · the flame (left) and window (right) ─────────────────── */
+  .feature {
+    position: absolute;
+    will-change: transform;
+  }
+  .flame-wrap {
+    left: clamp(1%, 6vw, 10%);
+    top: 50%;
+    width: clamp(210px, 21vw, 310px);
+    --bx: 0;
+    --by: -52%;
+  }
+  .orbit {
+    position: absolute;
+    inset: 6%;
+    animation: orbit-spin 26s linear infinite;
+  }
+  .orbit.o2 {
+    inset: -2%;
+    animation-duration: 34s;
+    animation-direction: reverse;
+  }
+  @keyframes orbit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .glint {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f0dfa0;
+    box-shadow: 0 0 8px 2px rgba(240, 223, 160, 0.5);
+    opacity: 0.7;
+  }
+  .glint.g1 {
+    top: 12%;
+    left: 50%;
+  }
+  .glint.g2 {
+    top: 62%;
+    left: 4%;
+    width: 3px;
+    height: 3px;
+    opacity: 0.5;
+  }
+  .glint.g3 {
+    top: 74%;
+    right: 6%;
+    width: 3px;
+    height: 3px;
+    opacity: 0.55;
+  }
+  .warmth {
+    position: absolute;
+    left: 50%;
+    top: 62%;
+    width: 70%;
+    aspect-ratio: 1;
+    margin-left: -35%;
+    margin-top: -35%;
+    border: 1px solid rgba(240, 223, 160, 0.35);
+    border-radius: 50%;
+    opacity: 0;
+    animation: warmth-bloom 7s ease-out infinite;
+  }
+  .warmth.w2 {
+    animation-delay: 3.5s;
+  }
+  @keyframes warmth-bloom {
+    0% {
+      opacity: 0;
+      transform: scale(0.35);
+    }
+    8% {
+      opacity: 0.55;
+    }
+    46% {
+      opacity: 0;
+      transform: scale(1.65);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.65);
+    }
+  }
+
+  .window-wrap {
+    right: clamp(1%, 6vw, 10%);
+    top: 49%;
+    width: clamp(190px, 18vw, 270px);
+    --bx: 0;
+    --by: -53%;
+  }
+  .window-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  /* the light behind the glass slowly favours one side, then the other */
+  .lit-a {
+    animation: lit-a 13s ease-in-out infinite;
+  }
+  .lit-b {
+    animation: lit-b 13s ease-in-out infinite;
+  }
+  @keyframes lit-a {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+  @keyframes lit-b {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  .window-beam {
+    position: absolute;
+    top: 10%;
+    right: 30%;
+    width: 220%;
+    height: 150%;
+    transform-origin: top right;
+    transform: rotate(26deg);
+    background: linear-gradient(
+      192deg,
+      rgba(240, 223, 160, 0.16) 0%,
+      rgba(240, 223, 160, 0.08) 36%,
+      rgba(168, 204, 232, 0.04) 62%,
+      transparent 80%
+    );
+    animation: ray-breathe 9s ease-in-out -1.5s infinite;
+  }
+
+  /* ── Layer 6 · framing ─────────────────────────────────────────────── */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: radial-gradient(
+      120% 90% at 50% 45%,
+      transparent 55%,
+      rgba(6, 14, 28, 0.55) 100%
+    );
+  }
+  .grain {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+    animation: grain-shift 0.7s steps(6) infinite;
+  }
+  @keyframes grain-shift {
+    0% {
+      background-position: 0 0;
+    }
+    25% {
+      background-position: -46px 22px;
+    }
+    50% {
+      background-position: 34px -38px;
+    }
+    75% {
+      background-position: -20px -14px;
+    }
+    100% {
+      background-position: 12px 40px;
+    }
+  }
+
+  .cursor-light {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    margin: -90px 0 0 -90px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240, 223, 160, 0.09), transparent 65%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s;
+    z-index: 4;
+  }
+  .cursor-light.lit {
+    opacity: 1;
+  }
+
+  .hint {
+    position: absolute;
+    z-index: 9;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    color: rgba(232, 242, 249, 0.5);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: hint-in 1s ease 3s both;
+    transition: opacity 0.8s;
+  }
+  .hint.gone {
+    opacity: 0 !important;
+  }
+  @keyframes hint-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .hint-desktop {
+    display: inline;
+  }
+  .hint-touch {
+    display: none;
+  }
+  @media (pointer: coarse) {
+    .hint-desktop {
+      display: none;
+    }
+    .hint-touch {
+      display: inline;
+    }
+  }
+
+  /* ── Phones (and narrow windows): the sides bow out ────────────────── */
+  @media (max-width: 940px) {
+    .flame-wrap,
+    .window-wrap,
+    .rays,
+    .floor-pool {
+      display: none;
+    }
+    .glow-flame {
+      left: -35%;
+      top: -12%;
+      width: 110vw;
+      height: 110vw;
+    }
+    .glow-window {
+      right: -35%;
+      top: 45%;
+      width: 100vw;
+      height: 100vw;
+    }
+    .cursor-light {
+      display: none;
+    }
+  }
+
+  /* ── Reduced motion: everything still, everything visible ──────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .fx-fade,
+    .veil,
+    .glow,
+    .ray,
+    .floor-pool,
+    .orbit,
+    .warmth,
+    .lit-a,
+    .lit-b,
+    .window-beam,
+    .hint {
+      animation: none;
+    }
+    .fx-fade {
+      opacity: 1;
+    }
+    .warmth {
+      display: none;
+    }
+    .grain {
+      display: none;
+    }
+  }
+</style>
+
+<!-- One tiny global style: the tap-ripple ring is created by the script
+     while the page runs, so it can't use this component's scoped styles.
+     The long "hero-tap-light" name is deliberate, to avoid ever clashing
+     with any other style on the site. -->
+<style is:global>
+  .hero-tap-light {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(240, 223, 160, 0.8);
+    box-shadow: 0 0 18px 4px rgba(240, 223, 160, 0.25);
+    pointer-events: none;
+    z-index: 9;
+    animation: hero-tap-light-grow 0.95s ease-out forwards;
+  }
+  @keyframes hero-tap-light-grow {
+    from {
+      opacity: 0.9;
+      transform: scale(0.4);
+    }
+    to {
+      opacity: 0;
+      transform: scale(6);
+    }
+  }
+</style>
+
+<script>
+  // ───────────────────────────────────────────────────────────────────────
+  // The floating lights, and the mouse/tap magic.
+  //
+  // Plain-English overview of how this works:
+  //   • A <canvas> is a rectangle the browser lets us draw on, many times a
+  //     second. We keep a list of little "particles" (each one is just a few
+  //     numbers: where it is, where it's drifting, how big, how bright).
+  //   • Around 60 times a second we move each particle a tiny step and
+  //     redraw them all. That's the whole illusion.
+  //   • Each particle is drawn as a pre-made "sprite" (a tiny glowing dot
+  //     picture we prepare once at the start) — drawing a ready-made
+  //     picture is much cheaper for phones than drawing a glow from
+  //     scratch every frame. That's the main reason this stays smooth on
+  //     older phones.
+  //   • Politeness rules: it pauses whenever the tab is hidden or the hero
+  //     is scrolled off screen, and never runs at all for visitors whose
+  //     device asks for reduced motion.
+  // ───────────────────────────────────────────────────────────────────────
+
+  // EDIT: dials — all the numbers you'd ever want to tweak, in one place.
+  const SETTINGS = {
+    // How many of each floating light on computers…
+    dustCount: 26, // faint dust, everywhere
+    emberCount: 20, // warm embers rising off the flame
+    moteCount: 16, // dust hanging in the window light
+    bokehCount: 4, // big, soft out-of-focus lights (adds depth)
+    // …and on phones (fewer, to keep older phones smooth):
+    phoneDustCount: 14,
+    phoneEmberCount: 8,
+    // The tap/click burst:
+    tapBurstSize: 18, // how many sparks per click (phones use ~2/3 of this)
+    // How strongly the mouse pushes nearby dust (0 = not at all):
+    mousePushStrength: 90,
+  };
+
+  // EDIT: layers on/off — set any of these to false to remove that layer.
+  const LAYERS = {
+    auroraVeils: true, // the huge breathing colour veils
+    lightPools: true, // soft pools of light left and right
+    godRays: true, // rays from the window
+    particles: true, // ALL floating lights (the canvas)
+    flame: true, // the big flame on the left (computers)
+    window: true, // the arched window on the right (computers)
+    grain: true, // the film-grain texture
+    cursorLight: true, // the faint light that follows the mouse
+    hint: true, // the "move your cursor / tap the sky" whisper
+    tapSparkles: true, // the burst of light on click/tap
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+  // The hero section this component lives inside. If a future page ever
+  // uses this component without a .hero around it, we simply do nothing.
+  const hero = document.querySelector('.hero');
+  const canvas = document.getElementById('atmosphere-canvas');
+
+  if (hero && canvas) {
+    // Remove any layers switched off in LAYERS above.
+    for (const name of Object.keys(LAYERS)) {
+      if (!LAYERS[name]) {
+        for (const el of hero.querySelectorAll('[data-layer="' + name + '"]')) {
+          el.remove();
+        }
+      }
+    }
+
+    const ctx = canvas.getContext('2d');
+    const hint = document.getElementById('atmosphere-hint');
+    const cursorLight = document.getElementById('atmosphere-cursor-light');
+
+    // ── Pre-made glowing-dot pictures (sprites) ─────────────────────────
+    function makeSprite(r, g, b, softDisc) {
+      const s = document.createElement('canvas');
+      s.width = s.height = 64;
+      const c = s.getContext('2d');
+      const grad = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+      if (softDisc) {
+        // a soft blurry disc — used for the big out-of-focus lights
+        grad.addColorStop(0, 'rgba(' + r + ',' + g + ',' + b + ',0.4)');
+        grad.addColorStop(0.65, 'rgba(' + r + ',' + g + ',' + b + ',0.16)');
+        grad.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+      } else {
+        // a bright core with a glow — used for dust, embers and sparks
+        grad.addColorStop(0, 'rgba(255,255,255,0.95)');
+        grad.addColorStop(0.18, 'rgba(' + r + ',' + g + ',' + b + ',0.85)');
+        grad.addColorStop(0.45, 'rgba(' + r + ',' + g + ',' + b + ',0.28)');
+        grad.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+      }
+      c.fillStyle = grad;
+      c.fillRect(0, 0, 64, 64);
+      return s;
+    }
+    // The site's own palette: gold, pale gold, soft blue.
+    const SPR = {
+      gold: makeSprite(201, 168, 76, false),
+      pale: makeSprite(240, 223, 160, false),
+      blue: makeSprite(168, 204, 232, false),
+      bokehGold: makeSprite(201, 168, 76, true),
+      bokehBlue: makeSprite(120, 165, 205, true),
+    };
+
+    // ── The particle list ───────────────────────────────────────────────
+    let W = 0;
+    let H = 0;
+    let isNarrow = false;
+    let particles = [];
+    let running = false;
+    let inView = true;
+    let lastT = 0;
+
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function resize() {
+      const rect = hero.getBoundingClientRect();
+      // Cap the pixel density: full Retina resolution isn't visible for a
+      // soft glow, and capping it roughly halves the work older phones do.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      W = Math.max(1, Math.round(rect.width));
+      H = Math.max(1, Math.round(rect.height));
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      isNarrow = W < 940;
+      buildParticles();
+    }
+
+    function makeParticle(kind, anyAge) {
+      // A particle is just a bundle of numbers. x/y = position,
+      // vx/vy = drift speed, z = pretend depth (0 far … 1 near),
+      // t/life = its age and lifespan, maxA = its peak brightness.
+      const p = { kind };
+      p.life = rand(8, 16);
+      p.t = anyAge ? rand(0, p.life) : 0;
+      p.drag = 1;
+
+      if (kind === 'dust') {
+        p.x = rand(0, 1) * W;
+        p.y = rand(0.03, 0.97) * H;
+        p.z = rand(0.1, 0.5);
+        p.vx = rand(-2, 2);
+        p.vy = -rand(2, 8);
+        p.size = rand(4, 9);
+        p.maxA = rand(0.1, 0.28);
+        p.spr = pick([SPR.pale, SPR.blue, SPR.gold]);
+      } else if (kind === 'ember') {
+        // Born near the flame: bottom-left on computers; phones show the
+        // small flame at the top-centre, so embers are born there instead.
+        if (isNarrow) {
+          p.x = rand(0.32, 0.68) * W;
+          p.y = rand(0.02, 0.3) * H;
+        } else {
+          p.x = rand(0.05, 0.27) * W;
+          p.y = rand(0.35, 0.96) * H;
+        }
+        p.z = rand(0.4, 0.85);
+        p.vx = rand(-4, 4);
+        p.vy = -rand(12, 30);
+        p.size = rand(5, 11);
+        p.maxA = rand(0.3, 0.75);
+        p.spr = pick([SPR.gold, SPR.gold, SPR.pale]);
+        p.life = rand(6, 11);
+        if (anyAge) p.t = rand(0, p.life);
+      } else if (kind === 'mote') {
+        // Dust hanging in the window's light, drifting gently along it.
+        p.x = rand(0.62, 0.95) * W;
+        p.y = rand(0.06, 0.85) * H;
+        p.z = rand(0.3, 0.7);
+        p.vx = -rand(1, 6);
+        p.vy = rand(-3, 5);
+        p.size = rand(3.5, 7);
+        p.maxA = rand(0.2, 0.55);
+        p.spr = pick([SPR.pale, SPR.gold, SPR.blue]);
+      } else if (kind === 'bokeh') {
+        // The occasional big, soft, out-of-focus light drifting past in
+        // the foreground — the thing that makes the scene feel deep.
+        p.x = rand(0, 1) * W;
+        p.y = rand(0.1, 0.9) * H;
+        p.z = 1;
+        p.vx = rand(-3, 3);
+        p.vy = rand(-4, 1);
+        p.size = rand(46, 110);
+        p.maxA = rand(0.05, 0.1);
+        p.spr = pick([SPR.bokehGold, SPR.bokehBlue]);
+        p.life = rand(18, 30);
+        if (anyAge) p.t = rand(0, p.life);
+      } else {
+        // 'spark' — born from a click or tap; position/speed set by the
+        // burst code below. Sparks slow down (drag) and settle (gravity).
+        p.z = rand(0.6, 1);
+        p.size = rand(4, 9);
+        p.maxA = rand(0.5, 0.9);
+        p.spr = pick([SPR.gold, SPR.pale]);
+        p.life = rand(1.1, 2.1);
+        p.drag = 0.965;
+      }
+      // Every particle also sways a little from side to side, like dust
+      // in still air, so nothing ever travels in a dead-straight line.
+      p.swayAmp = rand(4, 16);
+      p.swayFreq = rand(0.12, 0.4);
+      p.phase = rand(0, Math.PI * 2);
+      return p;
+    }
+
+    function buildParticles() {
+      particles = [];
+      const plan = isNarrow
+        ? [
+            ['dust', SETTINGS.phoneDustCount],
+            ['ember', SETTINGS.phoneEmberCount],
+          ]
+        : [
+            ['dust', SETTINGS.dustCount],
+            ['ember', SETTINGS.emberCount],
+            ['mote', SETTINGS.moteCount],
+            ['bokeh', SETTINGS.bokehCount],
+          ];
+      for (const [kind, count] of plan) {
+        for (let i = 0; i < count; i++) particles.push(makeParticle(kind, true));
+      }
+    }
+
+    function spawnBurst(x, y, n) {
+      for (let i = 0; i < n; i++) {
+        const p = makeParticle('spark', false);
+        const ang = rand(-Math.PI, 0) * 0.9 - 0.16; // fan, aimed upward
+        const spd = rand(35, 130);
+        p.x = x + rand(-4, 4);
+        p.y = y + rand(-4, 4);
+        p.vx = Math.cos(ang) * spd;
+        p.vy = Math.sin(ang) * spd - 15;
+        particles.push(p);
+      }
+      // Keep the total bounded — if lots of taps pile up, quietly drop the
+      // oldest SPARKS only (never the ambient dust, which recycles itself).
+      const cap = isNarrow ? 60 : 130;
+      let i = 0;
+      while (particles.length > cap && i < particles.length) {
+        if (particles[i].kind === 'spark') particles.splice(i, 1);
+        else i++;
+      }
+    }
+
+    // ── Mouse / touch state (positions are relative to the hero) ───────
+    let mx = -9999;
+    let my = -9999;
+    let pmx = -9999;
+    let pmy = -9999;
+    let pointerActive = false;
+
+    function heroPoint(e) {
+      const r = hero.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top, r };
+    }
+
+    // ── The heartbeat: move everything a tiny step, then redraw ────────
+    function step(now) {
+      if (!running) return;
+      // dt = seconds since the last frame (capped, so a phone waking from
+      // a stutter doesn't teleport every particle).
+      const dt = Math.min((now - lastT) / 1000, 0.05);
+      lastT = now;
+
+      ctx.clearRect(0, 0, W, H);
+      const stirX = pointerActive ? mx - pmx : 0;
+      const stirY = pointerActive ? my - pmy : 0;
+      pmx = mx;
+      pmy = my;
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.t += dt;
+        const gone = p.t >= p.life || p.y < -30 || p.y > H + 40 || p.x < -40 || p.x > W + 40;
+        if (gone) {
+          // Sparks die for good; everything else is reborn somewhere new.
+          if (p.kind === 'spark') particles.splice(i, 1);
+          else particles[i] = makeParticle(p.kind, false);
+          continue;
+        }
+
+        // The mouse gently pushes and stirs nearby lights (not the big
+        // bokeh ones — those are "too far in front" to be touched).
+        if (pointerActive && p.kind !== 'bokeh' && SETTINGS.mousePushStrength > 0) {
+          const dx = p.x - mx;
+          const dy = p.y - my;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 19600 && d2 > 1) {
+            // within 140px of the cursor
+            const d = Math.sqrt(d2);
+            const f = (1 - d / 140) * SETTINGS.mousePushStrength * dt;
+            p.vx += (dx / d) * f + stirX * 6 * dt;
+            p.vy += (dy / d) * f + stirY * 6 * dt;
+          }
+        }
+
+        p.vx *= p.drag;
+        p.vy *= p.drag;
+        if (p.kind === 'spark') p.vy += 18 * dt; // sparks gently settle
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.x += Math.sin(p.t * p.swayFreq * Math.PI * 2 + p.phase) * p.swayAmp * dt;
+        // After being pushed, ambient lights drift back toward calm.
+        if (p.kind !== 'spark') p.vx += (0 - p.vx) * 0.4 * dt;
+
+        // Brightness rises then falls over its life (so nothing pops
+        // in or out); size grows with pretend depth (nearer = bigger).
+        const a = Math.sin(Math.PI * Math.min(p.t / p.life, 1)) * p.maxA;
+        const s = p.size * (0.55 + p.z * 1.5);
+        ctx.globalAlpha = a;
+        ctx.drawImage(p.spr, p.x - s / 2, p.y - s / 2, s, s);
+      }
+      ctx.globalAlpha = 1;
+
+      easeParallax(dt);
+      requestAnimationFrame(step);
+    }
+
+    function start() {
+      if (running || reduceMotion || !inView) return;
+      running = true;
+      lastT = performance.now();
+      requestAnimationFrame(step);
+    }
+    function stop() {
+      running = false;
+    }
+
+    // Politeness: pause when the tab is hidden or the hero scrolls away.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        (entries) => {
+          inView = entries[0].isIntersecting;
+          if (inView) start();
+          else stop();
+        },
+        { threshold: 0.02 }
+      ).observe(hero);
+    }
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
+    });
+
+    // ── Parallax: the light shifts with the mouse; the words never do ──
+    let tx = 0; // where the mouse is asking the layers to lean toward…
+    let ty = 0;
+    let cx = 0; // …and where they've actually eased to so far
+    let cy = 0;
+    let scrollP = 0; // 0 → 1 as the hero scrolls away (adds depth on exit)
+    let lightX = 0;
+    let lightY = 0;
+    let lightInit = false;
+
+    const parEls = [];
+    for (const el of hero.querySelectorAll('[data-p]')) {
+      parEls.push({
+        el,
+        p: parseFloat(el.getAttribute('data-p')) || 0,
+        s: parseFloat(el.getAttribute('data-s')) || 0,
+      });
+    }
+
+    function easeParallax(dt) {
+      const k = Math.min(dt * 4.5, 1);
+      cx += (tx - cx) * k;
+      cy += (ty - cy) * k;
+      for (const o of parEls) {
+        o.el.style.setProperty('--dx', (-cx * o.p).toFixed(2) + 'px');
+        o.el.style.setProperty('--dy', (-cy * o.p + scrollP * 300 * o.s).toFixed(2) + 'px');
+      }
+      if (finePointer && pointerActive && cursorLight) {
+        lightX += (mx - lightX) * Math.min(dt * 6, 1);
+        lightY += (my - lightY) * Math.min(dt * 6, 1);
+        cursorLight.style.transform =
+          'translate(' + lightX.toFixed(1) + 'px,' + lightY.toFixed(1) + 'px)';
+      }
+    }
+
+    hero.addEventListener(
+      'pointermove',
+      (e) => {
+        const pt = heroPoint(e);
+        mx = pt.x;
+        my = pt.y;
+        pointerActive = true;
+        if (finePointer) {
+          if (!lightInit) {
+            // First time in: place the cursor light exactly at the cursor
+            // (otherwise it would visibly glide in from a corner).
+            lightX = mx;
+            lightY = my;
+            lightInit = true;
+          }
+          if (cursorLight) cursorLight.classList.add('lit');
+          tx = (pt.x / pt.r.width - 0.5) * 2; // -1 (left edge) … 1 (right)
+          ty = (pt.y / pt.r.height - 0.5) * 2;
+        }
+      },
+      { passive: true }
+    );
+
+    hero.addEventListener('pointerleave', () => {
+      pointerActive = false;
+      mx = -9999;
+      my = -9999;
+      tx = 0;
+      ty = 0;
+      if (cursorLight) cursorLight.classList.remove('lit');
+    });
+
+    // ── A small moment of light wherever they touch ────────────────────
+    if (LAYERS.tapSparkles) {
+      hero.addEventListener('pointerdown', (e) => {
+        if (reduceMotion) return;
+        // Links and buttons keep behaving like links and buttons.
+        if (e.target.closest && e.target.closest('a, button')) return;
+        const pt = heroPoint(e);
+        spawnBurst(pt.x, pt.y, isNarrow ? 12 : SETTINGS.tapBurstSize);
+        const ring = document.createElement('div');
+        ring.className = 'hero-tap-light';
+        ring.style.left = pt.x + 'px';
+        ring.style.top = pt.y + 'px';
+        hero.appendChild(ring);
+        ring.addEventListener('animationend', () => ring.remove());
+        if (hint) hint.classList.add('gone');
+      });
+    }
+
+    // ── Embers lift off the gold button on hover (computers only) ──────
+    const cta = hero.querySelector('.hero-btns .btn-gold');
+    let lastCtaBurst = 0;
+    if (cta && finePointer && !reduceMotion && LAYERS.tapSparkles) {
+      cta.addEventListener('mouseenter', () => {
+        const now = performance.now();
+        if (now - lastCtaBurst < 1400) return; // at most once every 1.4s
+        lastCtaBurst = now;
+        const hr = hero.getBoundingClientRect();
+        const br = cta.getBoundingClientRect();
+        for (let i = 0; i < 6; i++) {
+          spawnBurst(br.left - hr.left + rand(6, br.width - 6), br.top - hr.top + 2, 1);
+        }
+      });
+    }
+
+    // ── Scroll depth: layers separate slightly as you scroll away ──────
+    let scrollTicking = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+          const r = hero.getBoundingClientRect();
+          scrollP = Math.min(Math.max(-r.top / Math.max(r.height, 1), 0), 1);
+          scrollTicking = false;
+        });
+      },
+      { passive: true }
+    );
+
+    // ── Go ─────────────────────────────────────────────────────────────
+    resize();
+    if (!reduceMotion) {
+      start();
+    } else {
+      // Reduced motion: no drawing at all — the CSS layers alone already
+      // look complete and still.
+      ctx.clearRect(0, 0, W, H);
+      if (hint) hint.classList.add('gone');
+    }
+  }
+</script>

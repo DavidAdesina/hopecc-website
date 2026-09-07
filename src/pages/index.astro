@@ -15,6 +15,11 @@
 //   • "Who we are" text           → search "EDIT: welcome text"
 //   • The three info cards        → search "EDIT: info cards"
 //   • Room hire banner text       → search "EDIT: room hire banner"
+//   • The hero's moving light      → that all lives in
+//     src/components/HeroAtmosphere.astro (the scene + its on/off
+//     switches and dials) and src/components/HeroFlame.astro (the
+//     flame itself — also the ONE file to update when the new logo
+//     arrives from Ian)
 //
 // This file has two parts, in this order:
 //   1. The HTML below   — the words and layout people see on the page,
@@ -23,6 +28,11 @@
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
+// The hero's moving light: HeroAtmosphere is the whole scene, HeroFlame is
+// just the flame (phones show a small one above the heading). Removing the
+// effect = delete these two imports and the two places they're used below.
+import HeroAtmosphere from '../components/HeroAtmosphere.astro';
+import HeroFlame from '../components/HeroFlame.astro';
 import servicesData from '../data/services.json';
 const services = servicesData.services;
 
@@ -54,9 +64,27 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
        EDIT: hero text — the heading and text below
   ============================================================ -->
   <section class="hero">
+    <!-- All the moving light on the hero (dust, embers, the arched window,
+         and — on computers — the big flame on the left). Pure decoration:
+         delete this one line and the hero goes back to plain navy. All its
+         dials and on/off switches are inside the component itself. -->
+    <HeroAtmosphere />
+
     <div class="hero-inner">
+      <!-- On phones only: a small living flame above the heading (computers
+           hide this and show the big one on the left instead). -->
+      <div class="hero-flame-mobile" aria-hidden="true">
+        <HeroFlame />
+      </div>
+
       <p class="eyebrow">Welcome to Hope Community Church · Hinckley</p>
-      <h1>A place to <em>belong,</em><br />grow and serve</h1>
+      <!-- The two <span class="hero-line"> wrappers replaced the old <br />
+           so each line of the heading can rise in on page load. Edit the
+           words exactly as before — just leave the spans around them. -->
+      <h1>
+        <span class="hero-line">A place to <em>belong,</em></span>
+        <span class="hero-line">grow and serve</span>
+      </h1>
       <p class="hero-sub">
         We're a warm, friendly church family in Hinckley, Leicestershire. Everyone is welcome —
         wherever you're starting from.
@@ -330,15 +358,33 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
 
   /* ---- Hero ---- */
   .hero {
-    background: var(--navy-mid);
+    /* position/overflow let the atmosphere live inside the hero and be
+       trimmed neatly at its edges; the layered background turns the flat
+       navy into a softly lit room. The words and spacing are unchanged. */
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(130% 100% at 50% -10%, var(--navy-mid) 30%, var(--navy) 78%),
+      var(--navy);
     color: #fff;
     padding: 88px 28px 96px;
     text-align: center;
+    /* Give the light some room on big screens: the hero grows toward
+       filling the window (minus roughly the menu bar + times strip).
+       The first line is a fallback for older browsers. */
+    min-height: max(540px, calc(100vh - 152px));
+    min-height: max(540px, calc(100svh - 152px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .hero-inner {
     max-width: 680px;
     margin: 0 auto;
+    /* keeps the words stacked above every layer of light */
+    position: relative;
+    z-index: 8;
   }
 
   .eyebrow {
@@ -348,6 +394,21 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 18px;
+    /* on page load: fades in while the letters draw together */
+    animation: eyebrow-in 1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  @keyframes eyebrow-in {
+    from {
+      opacity: 0;
+      letter-spacing: 0.5em;
+      filter: blur(3px);
+    }
+    to {
+      opacity: 1;
+      letter-spacing: 0.22em;
+      filter: blur(0);
+    }
   }
 
   .hero h1 {
@@ -358,9 +419,60 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     margin-bottom: 20px;
   }
 
+  /* Each heading line rises in and sharpens on page load, one after the
+     other — then everything holds still. */
+  .hero h1 .hero-line {
+    display: block;
+    animation: hero-line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .hero h1 .hero-line + .hero-line {
+    animation-delay: 0.16s;
+  }
+
+  @keyframes hero-line-in {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+      filter: blur(7px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
   .hero h1 em {
     font-style: normal;
     color: var(--blue-light);
+    /* One pass of light travels through this word shortly after the page
+       opens, then it settles back to the normal blue. The gradient is
+       painted "through" the letters themselves. */
+    background: linear-gradient(
+      100deg,
+      var(--blue-light) 0%,
+      var(--blue-light) 40%,
+      #ffffff 50%,
+      var(--gold-light) 54%,
+      var(--blue-light) 64%,
+      var(--blue-light) 100%
+    );
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: belong-shimmer 2.4s ease-in-out 2.1s 1 both;
+  }
+
+  @keyframes belong-shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: 0% 0;
+    }
   }
 
   .hero-sub {
@@ -369,6 +481,7 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     max-width: 440px;
     margin: 0 auto 38px;
     line-height: 1.75;
+    animation: hero-line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.34s both;
   }
 
   .hero-btns {
@@ -376,6 +489,61 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
+    animation: hero-line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.5s both;
+  }
+
+  /* In the hero only, the gold button also lifts and glows on hover
+     (its colours and behaviour everywhere else are untouched). */
+  .hero-btns .btn-gold {
+    transition:
+      background 0.15s,
+      transform 0.2s,
+      box-shadow 0.3s;
+  }
+
+  .hero-btns .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(201, 168, 76, 0.4);
+  }
+
+  /* The small phone flame: hidden on computers, shown on narrow screens
+     (the atmosphere's big flame is hidden on phones at the same width). */
+  .hero-flame-mobile {
+    display: none;
+  }
+
+  @media (max-width: 940px) {
+    .hero-flame-mobile {
+      display: block;
+      width: 92px;
+      margin: 0 auto 14px;
+      /* a touch brighter than the big faint one on computers */
+      --flame-strength: 1.3;
+      animation: hero-line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    .hero {
+      min-height: max(600px, calc(100vh - 210px));
+      min-height: max(600px, calc(100svh - 210px));
+    }
+  }
+
+  /* For anyone whose device asks for reduced motion: no entrances, no
+     shimmer — the finished page simply appears, complete and still. */
+  @media (prefers-reduced-motion: reduce) {
+    .eyebrow,
+    .hero h1 .hero-line,
+    .hero-sub,
+    .hero-btns,
+    .hero-flame-mobile {
+      animation: none;
+    }
+
+    .hero h1 em {
+      background: none;
+      -webkit-text-fill-color: currentColor;
+      animation: none;
+    }
   }
 
   .btn-gold {

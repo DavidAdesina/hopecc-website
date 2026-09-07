@@ -1,0 +1,182 @@
+---
+// src/components/HeroFlame.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   This is the gently "living" version of the church's flame logo that
+//   appears on the homepage hero — big and faint on the left on computers,
+//   small and centred above the heading on phones.
+//
+//   The flame artwork here is traced from the real logo file
+//   (public/images/logo-white.svg), so it IS the church's own flame — just
+//   drawn in three layers so each layer can sway and breathe on its own,
+//   which is what makes it look alive.
+//
+//   This one file is used in BOTH places (desktop and phone), so the flame
+//   only ever needs updating here — change it once, it changes everywhere.
+//
+// WHEN THE NEW LOGO ARRIVES (from Ian)
+//   The flame shape lives in the two <path> lines and one <ellipse> line
+//   marked "EDIT: flame artwork" below. To swap in a new logo's flame:
+//     1. Open the new logo file (it will be a .svg file) in any text editor.
+//     2. Find its flame <path d="..."> line and copy the whole d="..." part.
+//     3. Paste it over BOTH d="..." values below (they're the same shape —
+//        the second one is just drawn smaller by the transform line above it).
+//     4. If the new flame is a different size, the viewBox="0 0 43 60" on
+//        the <svg> line may need adjusting to match the new logo's numbers.
+//     5. Check the homepage — if the flame looks squashed or off-centre,
+//        ask the technical volunteer to fine-tune steps 3–4.
+//   (Also remember the navbar uses public/images/logo-white.svg directly —
+//   replacing that file updates the menu bar's logo separately.)
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Make the flame stronger/fainter → where this component is USED, set
+//     the --flame-strength number (1 = normal, 1.5 = brighter, 0.5 = fainter)
+//   • Make it sway more/less          → search "EDIT: sway"
+//   • Make it flicker faster/slower   → search "EDIT: flicker speed"
+//
+// This file has two parts, in this order:
+//   1. The SVG below     — the flame drawing itself, in three layers
+//   2. The <style> block — the glow behind it and the sway/flicker motion
+// ─────────────────────────────────────────────────────────────────────────
+---
+
+<div class="hope-flame">
+  <!-- The soft glow behind the flame -->
+  <div class="flame-halo"></div>
+
+  <svg class="flame-svg" viewBox="0 0 43 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Layer 1 — the full flame, faintest, swaying slowest -->
+    <!-- EDIT: flame artwork — this d="..." is the flame from logo-white.svg -->
+    <g class="flame-outer">
+      <path
+        fill="#c9a84c"
+        d="M14 56 C6 44 3 31 8 20 C10 31 16 29 16 20 C16 11 22 4 22 0 C28 10 31 22 26 33 C30 27 32 18 29 10 C37 20 40 34 35 45 C32 52 23 58 14 56Z"
+      ></path>
+    </g>
+
+    <!-- Layer 2 — the same flame drawn smaller inside layer 1, swaying on its
+         own timing. The transform line shrinks it toward the flame's base —
+         don't edit the transform numbers, only the d="..." when swapping logos. -->
+    <!-- EDIT: flame artwork — same shape as above, paste the same new d="..." here too -->
+    <g class="flame-mid">
+      <g transform="translate(4.73 12.76) scale(0.78)">
+        <path
+          fill="#c9a84c"
+          d="M14 56 C6 44 3 31 8 20 C10 31 16 29 16 20 C16 11 22 4 22 0 C28 10 31 22 26 33 C30 27 32 18 29 10 C37 20 40 34 35 45 C32 52 23 58 14 56Z"
+        ></path>
+      </g>
+    </g>
+
+    <!-- Layer 3 — the bright heart of the flame (the pale oval from the logo) -->
+    <g class="flame-inner">
+      <ellipse cx="22" cy="40" rx="5" ry="7" fill="#f5d78e"></ellipse>
+    </g>
+  </svg>
+</div>
+
+<style>
+  /* The component fills whatever width its parent gives it —
+     the size is decided where it's used, not here. */
+  .hope-flame {
+    position: relative;
+    width: 100%;
+    /* --flame-strength lets each place that uses the flame make it
+       brighter or fainter without touching this file (1 = normal). */
+    --flame-strength: 1;
+  }
+
+  .flame-halo {
+    position: absolute;
+    inset: -40%;
+    background: radial-gradient(
+      circle at 50% 62%,
+      rgba(201, 168, 76, calc(0.3 * var(--flame-strength))),
+      rgba(201, 168, 76, calc(0.09 * var(--flame-strength))) 42%,
+      transparent 64%
+    );
+    border-radius: 50%;
+    animation: halo-breathe 6.5s ease-in-out infinite;
+  }
+
+  @keyframes halo-breathe {
+    0%,
+    100% {
+      opacity: 0.72;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+  }
+
+  .flame-svg {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Each layer pivots from the flame's base, like a real candle flame.
+     They share the same two motions (sway + breathe) but run them at
+     different speeds, which is what stops it looking mechanical. */
+  .flame-outer,
+  .flame-mid,
+  .flame-inner {
+    transform-box: fill-box;
+    transform-origin: 50% 96%;
+  }
+
+  .flame-outer {
+    opacity: calc(0.17 * var(--flame-strength));
+    /* EDIT: sway / EDIT: flicker speed — the two time values below
+       (bigger seconds = slower and calmer) */
+    animation:
+      flame-sway 5.4s ease-in-out infinite alternate,
+      flame-breathe 3.1s ease-in-out infinite;
+  }
+
+  .flame-mid {
+    opacity: calc(0.22 * var(--flame-strength));
+    animation:
+      flame-sway 7.6s ease-in-out -2.4s infinite alternate,
+      flame-breathe 2.3s ease-in-out -0.7s infinite;
+  }
+
+  .flame-inner {
+    opacity: calc(0.4 * var(--flame-strength));
+    animation:
+      flame-sway 4.4s ease-in-out -1.1s infinite alternate,
+      flame-breathe 1.7s ease-in-out -0.3s infinite;
+  }
+
+  /* EDIT: sway — the 2.4deg below is how far it leans (smaller = calmer) */
+  @keyframes flame-sway {
+    from {
+      rotate: -2.4deg;
+    }
+    to {
+      rotate: 2.4deg;
+    }
+  }
+
+  @keyframes flame-breathe {
+    0%,
+    100% {
+      scale: 1 1;
+    }
+    50% {
+      scale: 1.015 1.035;
+    }
+  }
+
+  /* For anyone whose device asks for reduced motion: hold still. */
+  @media (prefers-reduced-motion: reduce) {
+    .flame-halo,
+    .flame-outer,
+    .flame-mid,
+    .flame-inner {
+      animation: none;
+    }
+  }
+</style>
