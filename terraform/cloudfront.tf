@@ -204,11 +204,27 @@ resource "aws_cloudfront_function" "rewrite_clean_urls" {
         // seen when this was first tested. Redirecting fixes the
         // address bar first, so relative requests made afterward
         // resolve correctly.
+        //
+        // Any query string (e.g. "/contact?enquiry=room-hire") must be
+        // carried over onto the redirect target -- CloudFront otherwise
+        // drops it silently, which is what broke the Room Hire link.
+        var qs = [];
+        for (var key in request.querystring) {
+          if (request.querystring[key].multiValue) {
+            request.querystring[key].multiValue.forEach(function (mv) {
+              qs.push(key + '=' + mv.value);
+            });
+          } else {
+            qs.push(key + '=' + request.querystring[key].value);
+          }
+        }
+        var newLocation = uri + '/' + (qs.length ? '?' + qs.join('&') : '');
+
         return {
           statusCode: 301,
           statusDescription: 'Moved Permanently',
           headers: {
-            location: { value: uri + '/' }
+            location: { value: newLocation }
           }
         };
       }
