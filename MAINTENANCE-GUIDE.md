@@ -250,6 +250,23 @@ The list of things someone needs to include in a room hire enquiry lives in
 **`src/pages/contact.astro`**. Search for `EDIT: Room hire checklist` — each
 bullet point is one `checklist-item` block you can edit, add to, or remove.
 
+### 11. The Bible verse on the Contact page
+
+Under the "Contact Details" heading on the Contact page there's a short
+verse (currently *"Call to me and I will answer you" — Jeremiah 33:3*). To
+change the wording or reference, or remove it altogether, search
+`EDIT: verse line` in **`src/pages/contact.astro`** and edit the sentence
+there — it's ordinary text, safe to change like anything else in this guide.
+
+### 12. Mission page wing labels (India / Romania)
+
+The two tall "wing" panels on the Mission page each show a country name, a
+place name, and a "Read their story →" link (currently *India / Lonavala,
+Maharashtra* and *Romania / Satu-Nou, Bacău County*). To change any of this
+wording, search `EDIT: wing text` in
+**`src/components/MissionAtmosphere.astro`** — there are two spots, one per
+country, right next to each other in the file.
+
 ---
 
 ## A note on the "Watch & Listen" page
@@ -272,6 +289,37 @@ delete it in future; it doesn't affect anything.
 
 ---
 
+## A note on the site's "cinematic" effects
+
+Four parts of the site now have moving, glowing, atmosphere-style visual
+treatments: the **homepage hero** (a night-sky-and-candlelight scene behind
+the welcome text), the **Mission page hero** (a turning globe with two
+"wing" panels for India and Romania), the **Contact page**'s six contact
+options (they light up like little glowing windows), and the **menu bar**
+at the top of every page (a gold glow on hover/tap). These are **design
+effects, not content** — nothing here needs regular updating, and none of
+the usual page content (words, photos, numbers) moved or changed because
+of them.
+
+A few things worth knowing:
+
+- Anyone with "reduce motion" turned on in their phone or computer's
+  accessibility settings automatically sees a calm, still version of all
+  four — nothing flickers or drifts for them.
+- These effects live in CSS and JavaScript — the "code-like" parts this
+  guide already tells you to leave alone — inside
+  `src/components/HeroAtmosphere.astro` and `HeroFlame.astro` (homepage),
+  `src/components/MissionAtmosphere.astro` (Mission page),
+  `src/pages/contact.astro` (Contact page), and `src/components/Navbar.astro`
+  (menu bar). Each file has its own "EDIT:" notes explaining what every
+  effect does and how to turn it off, but they're written for a technical
+  volunteer, not for a Ctrl+F-and-change edit.
+- **Two exceptions** are genuinely ordinary text sitting inside these
+  otherwise decorative files: the Bible verse on the Contact page (see
+  "11." above) and the Mission page's wing wording (see "12." above).
+
+---
+
 ## Quick reference: "I want to change..."
 
 | What you want to change              | File(s) to open                                              |
@@ -287,6 +335,8 @@ delete it in future; it doesn't affect anything.
 | Safeguarding PDF                      | `safeguarding.astro` (and add the new file to `public/documents/`) |
 | Facebook/YouTube links                | `Footer.astro`, `contact.astro`                                 |
 | Room hire checklist                   | `contact.astro`                                                 |
+| Contact page's Bible verse             | `contact.astro` — search `EDIT: verse line`                    |
+| Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
 
 ---
 

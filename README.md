@@ -129,6 +129,13 @@ hopecc-website/
     ├── components/
     │   ├── Navbar.astro         Site header/navigation, used on every page
     │   ├── Footer.astro         Site footer, used on every page
+    │   ├── HeroAtmosphere.astro Homepage hero's animated night-sky/candlelight
+    │   │                        scene — see "Cinematic effects" below
+    │   ├── HeroFlame.astro      The church's flame logo, animated; used inside
+    │   │                        HeroAtmosphere.astro and reused in the homepage's
+    │   │                        mobile layout
+    │   ├── MissionAtmosphere.astro  Mission page hero's night-sky/globe/wings
+    │   │                        scene — see "Cinematic effects" below
     │   └── Welcome.astro        Unused Astro-starter boilerplate — see below
     ├── layouts/
     │   └── Layout.astro         Shared page shell (Navbar + Footer + <head>
@@ -183,6 +190,45 @@ hopecc-website/
   | Gold        | `#c9a84c`  |
   | Cream       | `#f7f9fc`  |
   | Font        | Nunito, weight 800 for headings |
+
+- **Decorative motion:** four parts of the site (homepage hero, Mission page
+  hero, Contact page, navbar) carry gold "glow"/kindle-style CSS+JS
+  animation — see [Cinematic effects](#cinematic-effects) below for what
+  each does and which files they live in.
+- **Worth knowing:** `EDIT:` comments in those files now cover two
+  different audiences — plain content values (numbers, words, a line of
+  verse, two wing labels) meant for `MAINTENANCE-GUIDE.md`'s non-technical
+  readers, and CSS/JS design toggles meant for a technical volunteer. The
+  guide's own "if it looks technical, leave it" rule already protects
+  non-technical editors from the wrong ones, so this hasn't caused a real
+  problem — but if it ever does, a future tidy-up could split them into two
+  distinct marker prefixes (e.g. `EDIT:` vs. `DEV EDIT:`).
+
+---
+
+## Cinematic effects
+
+Four parts of the site have a layered "night sky and candlelight" visual
+treatment, all built the same way: plain CSS `@keyframes`/`<style>` blocks
+and small amounts of vanilla JavaScript, no added libraries, decoration
+hidden from screen readers (`aria-hidden`), a calm static fallback under
+`@media (prefers-reduced-motion: reduce)`, and each with its own in-file
+`EDIT:` notes for turning individual layers on/off or dialling the motion
+up or down.
+
+| Where | File(s) | What it is |
+|-------|---------|------------|
+| Homepage hero | `src/components/HeroAtmosphere.astro` + `HeroFlame.astro`, used in `index.astro` | Breathing colour veils, soft light pools, god-rays falling from an arched window, a `<canvas>` of floating dust/embers, the animated flame logo, mouse-parallax across the layers and a click-to-release burst of light |
+| Mission page hero | `src/components/MissionAtmosphere.astro`, used in `mission.astro` | A twinkling star field and a slowly turning globe, two arcs of light "sending" outward from Hinckley to India and Romania, two 3D "wing" panels (each a real link to that country's page) that lean toward the cursor on hover, drifting petals/snow/dust |
+| Contact page | `src/pages/contact.astro`'s contact-details card | The six contact options ("candlelit windows") kindle on hover, tap, or scroll-into-view, plus a mouse-tracked candlelight glow across the card |
+| Navbar | `src/components/Navbar.astro` | Links glow gold on hover/tap/focus, the Contact Us button pulses like a beacon, mobile menu items light up one-by-one as the menu opens, a mouse-tracked glow across the desktop bar |
+
+The homepage and Mission page treatments already existed by the time this
+section was written. The Contact page and navbar were added afterward, at
+the client's request, during the final pre-DNS review pass — see `7a`/`7b`
+in the Pre-launch plan table below, including how those two were verified.
+Removing any one of the four is a single-line change in each case; every
+component's own header comment says exactly which line to delete.
 
 ---
 
@@ -618,6 +664,8 @@ resolved (see below) — one remains outstanding by design:
 | 6b | Final pre-AWS audit (security/performance sweep before Phase 3) | ✅ Done — dead `/admin` redirect comment corrected, `noindex` added to the CMS admin screen, this status table updated |
 | 6c | Admin panel hardening — Decap CDN script pinned to an exact version with an SRI hash (was an unpinned `^3.0.0` range) | ✅ Done — see "`/admin` script pinning" in Content editing section |
 | 7+ | AWS deployment (S3, CloudFront, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | ✅ Done — see the AWS deployment table below |
+| 7a | Cinematic "candlelit windows" glow treatment added to the Contact page's contact-details card (client-requested, during final pre-DNS review) | ✅ Done |
+| 7b | Matching glow theme extended to `Navbar.astro` (client-requested) | ✅ Done |
 | Last | DNS cutover, launch, wind-down + ownership handover | In progress — see below |
 
 **AWS deployment (this ran as its own set of sessions, tracked separately
