@@ -28,9 +28,25 @@
 //   1. The list below     — the menu links (edit this for content changes)
 //   2. The HTML/markup    — turns the list into the desktop + mobile menus
 //   3. The <style> block  — colours, spacing, the dropdown animation
-//   4. The <script> block at the very bottom — makes the hamburger
-//      button open/close the phone menu. You shouldn't need to touch
-//      the markup, <style>, or <script> for normal updates.
+//   4. The FIRST <script> block — makes the hamburger button open/close
+//      the phone menu. You shouldn't need to touch the markup, <style>,
+//      or this script for normal updates.
+//
+// THE GLOW ("candlelit windows" theme, matching the Contact page)
+//   The menu bar now has the same warm, church-window glow as the
+//   Contact page's contact-details card:
+//     • a slow gold gleam drifting along the bottom edge of the bar
+//     • a soft "halo" breathing gently behind the logo
+//     • menu links light up gold when you hover, tap, or tab to them
+//     • the gold "Contact Us" button pulses slowly, like a beacon
+//     • on phones, the menu items light up one-by-one as the menu opens
+//     • on computers, a warm candlelight glow follows your mouse
+//       across the bar (this last one lives in the SECOND <script>
+//       block at the very bottom — delete that block to turn it off;
+//       the menu itself keeps working fine either way)
+//   Everyone who has "reduce motion" turned on in their device settings
+//   instead sees a still, softly-lit bar — nothing moves or flickers.
+//   To turn any single effect off, search for its "EDIT:" comment below.
 // ─────────────────────────────────────────────────────────────────────────
 
 // EDIT: menu links — this single list feeds BOTH the desktop and mobile menus
@@ -56,6 +72,8 @@ const navLinks = [
 <header class="navbar">
   <div class="navbar-inner">
     <a href="/" class="navbar-logo">
+      {/* EDIT: logo halo — delete this span to remove the soft glow behind the logo */}
+      <span class="logo-halo" aria-hidden="true"></span>
       <img src="/images/logo-white.svg" alt="Hope Community Church" class="h-16 w-auto" />
     </a>
 
@@ -122,17 +140,26 @@ const navLinks = [
   <!-- Any dropdown sub-links (e.g. Mission's India/Romania) render indented, one level below their parent link -->
   <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
     {
-      navLinks.map((link) => (
-        <Fragment>
-          <a href={link.href}>{link.label}</a>
-          {link.dropdown &&
-            link.dropdown.map((sub) => (
-              <a href={sub.href} class="mobile-sub-link">
-                ↳ {sub.label}
-              </a>
-            ))}
-        </Fragment>
-      ))
+      /* EDIT: mobile kindle-in — the "i" counter below just numbers the links
+         in order (0, 1, 2…) so the CSS can light them up top-to-bottom when
+         the menu opens. It has no effect on which links appear or where they
+         link to — that's still entirely controlled by "navLinks" above. */
+      (() => {
+        let i = 0;
+        return navLinks.map((link) => (
+          <Fragment>
+            <a href={link.href} style={`--i:${i++}`}>
+              {link.label}
+            </a>
+            {link.dropdown &&
+              link.dropdown.map((sub) => (
+                <a href={sub.href} class="mobile-sub-link" style={`--i:${i++}`}>
+                  ↳ {sub.label}
+                </a>
+              ))}
+          </Fragment>
+        ));
+      })()
     }
   </nav>
 </header>
@@ -148,7 +175,31 @@ const navLinks = [
     font-family: 'Nunito', 'Century Gothic', sans-serif;
   }
 
+  /* EDIT: ember rail — a slow gold gleam drifting along the bottom edge.
+     Delete this whole rule to go back to a plain gold line. */
+  .navbar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #f0dfa0, transparent);
+    background-size: 220px 100%;
+    background-repeat: no-repeat;
+    background-position: -220px 0;
+    animation: rail-glide 9s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes rail-glide {
+    to {
+      background-position: calc(100% + 220px) 0;
+    }
+  }
+
   .navbar-inner {
+    position: relative;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 28px;
@@ -158,15 +209,69 @@ const navLinks = [
     justify-content: space-between;
   }
 
+  /* EDIT: mouse-following candlelight — the actual glow colour/size lives
+     here; the position (--mx/--my) is set by the second <script> block
+     at the bottom of this file, and only on computers with a mouse. */
+  .navbar-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      240px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(201, 168, 76, 0.18),
+      transparent 70%
+    );
+    transition: opacity 0.35s ease;
+  }
+
+  .navbar-inner.is-glowing::before {
+    opacity: 1;
+  }
+
   .navbar-logo {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: 1px;
     text-decoration: none;
   }
 
+  /* EDIT: logo halo — a gentle breathing glow behind the logo mark */
+  .logo-halo {
+    position: absolute;
+    inset: -60% -35%;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at 50% 55%,
+      rgba(201, 168, 76, 0.35),
+      rgba(201, 168, 76, 0.1) 45%,
+      transparent 70%
+    );
+    animation: logo-breathe 6.5s ease-in-out infinite;
+  }
+
+  @keyframes logo-breathe {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+  }
+
   /* ─── Desktop links ───────────────────────────────── */
   .navbar-links {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     gap: 2px;
@@ -174,6 +279,7 @@ const navLinks = [
 
   .navbar-links > a,
   .nav-dropdown-trigger {
+    position: relative;
     font-weight: 700;
     font-size: 12.5px;
     letter-spacing: 0.06em;
@@ -184,31 +290,130 @@ const navLinks = [
     border-radius: 4px;
     transition:
       color 0.15s,
-      background 0.15s;
+      background 0.15s,
+      box-shadow 0.15s,
+      text-shadow 0.15s;
     display: inline-flex;
     align-items: center;
     gap: 5px;
   }
 
+  /* EDIT: link kindle — the warm glow a link gets on hover, tap or
+     keyboard focus. box-shadow/text-shadow do the "lighting up". */
   .navbar-links > a:hover,
+  .navbar-links > a:focus-visible,
   .navbar-links > a[aria-current='page'],
   .nav-dropdown-wrapper:hover .nav-dropdown-trigger,
   .nav-dropdown-wrapper:focus-within .nav-dropdown-trigger {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(201, 168, 76, 0.16);
+    box-shadow: 0 0 14px rgba(201, 168, 76, 0.35);
+    text-shadow: 0 0 10px rgba(240, 223, 160, 0.65);
   }
 
+  .navbar-links > a:active,
+  .nav-dropdown-trigger:active {
+    background: rgba(201, 168, 76, 0.26);
+  }
+
+  /* The "wick" — a thin gold underline that grows from the centre out */
+  .navbar-links > a:not(.navbar-cta)::after,
+  .nav-dropdown-trigger::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 3px;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #f0dfa0, transparent);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: width 0.25s ease;
+    pointer-events: none;
+  }
+
+  .navbar-links > a:not(.navbar-cta):hover::after,
+  .navbar-links > a:not(.navbar-cta):focus-visible::after,
+  .navbar-links > a:not(.navbar-cta)[aria-current='page']::after,
+  .nav-dropdown-wrapper:hover .nav-dropdown-trigger::after,
+  .nav-dropdown-wrapper:focus-within .nav-dropdown-trigger::after {
+    width: calc(100% - 18px);
+  }
+
+  /* A single small ember, catching light as the link kindles */
+  .navbar-links > a:not(.navbar-cta)::before,
+  .nav-dropdown-trigger::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #f5d78e;
+    box-shadow: 0 0 4px rgba(245, 215, 142, 0.9);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .navbar-links > a:not(.navbar-cta):hover::before,
+  .navbar-links > a:not(.navbar-cta):focus-visible::before,
+  .nav-dropdown-wrapper:hover .nav-dropdown-trigger::before,
+  .nav-dropdown-wrapper:focus-within .nav-dropdown-trigger::before {
+    animation: ember-spark-rise 0.9s ease-out;
+  }
+
+  @keyframes ember-spark-rise {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 0) scale(0.6);
+    }
+    25% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -14px) scale(1);
+    }
+  }
+
+  /* EDIT: beacon pulse — remove the "animation" line below to make the
+     Contact Us button glow only on hover instead of pulsing gently. */
   .navbar-links a.navbar-cta {
     background: #c9a84c;
     color: #0d1f3c;
     font-weight: 800;
     padding: 8px 16px;
     margin-left: 6px;
+    animation: beacon-pulse 3.6s ease-in-out infinite;
   }
 
-  .navbar-links a.navbar-cta:hover {
+  .navbar-links a.navbar-cta:hover,
+  .navbar-links a.navbar-cta:focus-visible {
     background: #b8943d;
     color: #ffffff;
+    animation-name: beacon-pulse-bright;
+    animation-duration: 1.3s;
+  }
+
+  @keyframes beacon-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 rgba(201, 168, 76, 0);
+    }
+    50% {
+      box-shadow: 0 0 16px rgba(201, 168, 76, 0.55);
+    }
+  }
+
+  @keyframes beacon-pulse-bright {
+    0%,
+    100% {
+      box-shadow: 0 0 10px rgba(201, 168, 76, 0.45);
+    }
+    50% {
+      box-shadow: 0 0 22px rgba(201, 168, 76, 0.85);
+    }
   }
 
   /* ─── Dropdown wrapper ────────────────────────────── */
@@ -250,12 +455,16 @@ const navLinks = [
       visibility 0.18s;
   }
 
-  /* Show on hover OR keyboard focus-within */
+  /* Show on hover OR keyboard focus-within — EDIT: dropdown glow is the
+     added "0 0 22px gold" half of the box-shadow line below */
   .nav-dropdown-wrapper:hover .nav-dropdown,
   .nav-dropdown-wrapper:focus-within .nav-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    box-shadow:
+      0 8px 28px rgba(0, 0, 0, 0.4),
+      0 0 22px rgba(201, 168, 76, 0.35);
   }
 
   .nav-dropdown a {
@@ -274,9 +483,15 @@ const navLinks = [
       background 0.15s;
   }
 
-  .nav-dropdown a:hover {
+  .nav-dropdown a:hover,
+  .nav-dropdown a:focus-visible {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(201, 168, 76, 0.14);
+    text-shadow: 0 0 8px rgba(240, 223, 160, 0.55);
+  }
+
+  .nav-dropdown a:active {
+    background: rgba(201, 168, 76, 0.24);
   }
 
   .dropdown-flag {
@@ -284,8 +499,10 @@ const navLinks = [
     line-height: 1;
   }
 
-  /* ─── Hamburger button ────────────────────────────── */
+  /* ─── Hamburger button ("lantern") ────────────────── */
   .navbar-toggle {
+    position: relative;
+    z-index: 1;
     display: none;
     flex-direction: column;
     gap: 5px;
@@ -293,6 +510,25 @@ const navLinks = [
     border: none;
     cursor: pointer;
     padding: 4px;
+  }
+
+  /* EDIT: lantern glow — the soft ring around the hamburger button */
+  .navbar-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 168, 76, 0.4), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+
+  .navbar-toggle:hover::before,
+  .navbar-toggle:focus-visible::before,
+  .navbar-toggle[aria-expanded='true']::before {
+    opacity: 1;
   }
 
   .navbar-toggle span {
@@ -303,7 +539,14 @@ const navLinks = [
     border-radius: 2px;
     transition:
       transform 0.2s,
-      opacity 0.2s;
+      opacity 0.2s,
+      background 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .navbar-toggle[aria-expanded='true'] span {
+    background: #f0dfa0;
+    box-shadow: 0 0 6px rgba(240, 223, 160, 0.8);
   }
 
   .navbar-toggle[aria-expanded='true'] span:nth-child(1) {
@@ -337,14 +580,49 @@ const navLinks = [
     color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
     padding: 13px 28px;
+    opacity: 0;
+    transform: translateY(-6px);
     transition:
       color 0.15s,
       background 0.15s;
   }
 
-  .mobile-menu a:hover {
+  /* EDIT: mobile kindle-in — items light up top-to-bottom as the menu
+     opens, using the --i number each link was given further up. The
+     "both" fill mode matters: it's what keeps a link visible once its
+     turn to light up has finished. */
+  .mobile-menu:not([hidden]) a {
+    animation-name: mobile-kindle;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-delay: calc(var(--i, 0) * 45ms);
+    animation-fill-mode: both;
+  }
+
+  @keyframes mobile-kindle {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    60% {
+      text-shadow: 0 0 10px rgba(240, 223, 160, 0.55);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }
+
+  .mobile-menu a:hover,
+  .mobile-menu a:focus-visible {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(201, 168, 76, 0.14);
+    text-shadow: 0 0 8px rgba(240, 223, 160, 0.5);
+  }
+
+  .mobile-menu a:active {
+    background: rgba(201, 168, 76, 0.24);
   }
 
   /* Mission sub-links (India / Romania) are indented */
@@ -367,6 +645,52 @@ const navLinks = [
       display: flex;
     }
   }
+
+  /* ─── Reduced motion ──────────────────────────────────
+     Everything above still lights up on hover/tap/open — this section
+     just stops anything from moving or flickering on its own, and makes
+     sure nothing stays invisible if its "reveal" animation is switched
+     off (the mobile menu items in particular). */
+  @media (prefers-reduced-motion: reduce) {
+    .navbar::after {
+      animation: none;
+      background-position: 50% 0;
+      opacity: 0.55;
+    }
+
+    .logo-halo {
+      animation: none;
+      opacity: 0.85;
+    }
+
+    .navbar-inner::before {
+      transition: none;
+    }
+
+    .navbar-links a.navbar-cta,
+    .navbar-links a.navbar-cta:hover,
+    .navbar-links a.navbar-cta:focus-visible {
+      animation: none;
+      box-shadow: 0 0 10px rgba(201, 168, 76, 0.4);
+    }
+
+    .navbar-links > a::before,
+    .nav-dropdown-trigger::before {
+      display: none;
+    }
+
+    .navbar-links > a::after,
+    .nav-dropdown-trigger::after,
+    .navbar-toggle::before {
+      transition: none;
+    }
+
+    .mobile-menu a {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
 </style>
 
 <script>
@@ -379,4 +703,35 @@ const navLinks = [
     toggle.setAttribute('aria-expanded', String(!isOpen));
     menu.hidden = isOpen;
   });
+</script>
+
+<script>
+  // ── EDIT: mouse-following candlelight ──────────────────────────
+  // Purely decorative: a warm glow that follows the cursor across the
+  // menu bar on computers. Delete this whole <script> block (and the
+  // matching ".navbar-inner::before" / ".is-glowing" rules in the
+  // <style> block above) to remove it — the hamburger menu above is a
+  // completely separate script and keeps working fine either way.
+  const bar = document.querySelector('.navbar-inner') as HTMLElement | null;
+  const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const prefersCalm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (bar && hasFinePointer && !prefersCalm) {
+    let queued = 0;
+
+    bar.addEventListener('mousemove', (event) => {
+      const x = event.clientX;
+      const y = event.clientY;
+      if (queued) return;
+      queued = requestAnimationFrame(() => {
+        const rect = bar.getBoundingClientRect();
+        bar.style.setProperty('--mx', `${x - rect.left}px`);
+        bar.style.setProperty('--my', `${y - rect.top}px`);
+        queued = 0;
+      });
+    });
+
+    bar.addEventListener('mouseenter', () => bar.classList.add('is-glowing'));
+    bar.addEventListener('mouseleave', () => bar.classList.remove('is-glowing'));
+  }
 </script>
