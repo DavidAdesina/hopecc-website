@@ -23,6 +23,11 @@
 //     card                       → copy one whole
 //     <div class="country-card"> block and update the flag emoji,
 //     country name, link, text and stats inside it
+//   • The hero's night sky, turning globe and the India/Romania side
+//     panels → that all lives in
+//     src/components/MissionAtmosphere.astro (its on/off switches and
+//     dials are at the top of that file; removing its one line below
+//     returns this page to a plain hero)
 //
 // This file has two parts, in this order:
 //   1. The HTML below   — the words and layout people see on the page,
@@ -32,6 +37,9 @@
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
+// The hero's moving light: night sky, the turning globe with its arcs of
+// light from Hinckley, and the India/Romania wings — all in one component.
+import MissionAtmosphere from '../components/MissionAtmosphere.astro';
 import missionStats from '../data/mission-stats.json';
 
 // Same stats data that india.astro/romania.astro show in full — this card
@@ -53,6 +61,9 @@ const romaniaOverviewStats = missionStats.romania.filter((s) => s.showOnOverview
   ════════════════════════════════════════════════ -->
   <section class="mission-hero">
     <div class="hero-bg-overlay"></div>
+    <!-- The whole cinematic scene (sky, globe, arcs, wings) — one line.
+         Deleting this line returns the page to a plain hero. -->
+    <MissionAtmosphere />
     <div class="hero-content">
       <span class="hero-eyebrow">Hope Community Church</span>
       <h1 class="hero-title">Our Mission</h1>
@@ -291,7 +302,10 @@ const romaniaOverviewStats = missionStats.romania.filter((s) => s.showOnOverview
   /* ── HERO ─────────────────────────────────────────── */
   .mission-hero {
     position: relative;
-    min-height: 480px;
+    /* EDIT: hero height — was 480px; raised a little so the night-sky
+       scene (MissionAtmosphere.astro) has room to breathe. Safe to put
+       back to 480px if a shorter hero is ever preferred. */
+    min-height: 560px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -352,6 +366,50 @@ const romaniaOverviewStats = missionStats.romania.filter((s) => s.showOnOverview
     color: rgba(255, 255, 255, 0.78);
     line-height: 1.6;
     margin: 0;
+  }
+
+  /* The words land first, gently, then the atmosphere fades up behind
+     them (MissionAtmosphere delays itself to match). Same rhythm as the
+     homepage hero. */
+  .hero-eyebrow,
+  .hero-title,
+  .hero-subtitle,
+  .hero-scroll-hint {
+    opacity: 0;
+    animation: hero-rise 0.9s cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
+  }
+  .hero-title {
+    animation-delay: 0.12s;
+  }
+  .hero-subtitle {
+    animation-delay: 0.26s;
+  }
+  .hero-scroll-hint {
+    animation-delay: 0.55s;
+  }
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-eyebrow,
+    .hero-title,
+    .hero-subtitle,
+    .hero-scroll-hint {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    /* the little scroll-hint dot also stays still */
+    .hero-scroll-hint span::after {
+      animation: none;
+    }
   }
 
   /* Animated scroll indicator */

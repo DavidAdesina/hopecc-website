@@ -1,0 +1,1065 @@
+---
+// src/components/MissionAtmosphere.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   All the moving light on the MISSION page's hero lives in this one file.
+//   The idea is a night sky over two lands — an altarpiece with wings:
+//
+//     • a star field, gently twinkling
+//     • the earth itself: a slowly turning globe of tiny points of light,
+//       rising at the bottom of the hero like a horizon
+//     • three marked places on it — Hinckley (home), Lonavala in India and
+//       Satu-Nou in Romania — joined by two great arcs of light, with a
+//       pulse of light travelling out from Hinckley along each one
+//       ("sending", drawn literally)
+//     • two "wings", one each side, angled in 3D like the side panels of
+//       an altarpiece — India on the left (a lit diya lamp under an arch),
+//       Romania on the right (the village church under the Carpathians,
+//       one window warmly lit). Each wing is a real link to that
+//       country's page and leans toward you when hovered.
+//     • drifting marigold petals near India, falling snow near Romania,
+//       faint dust everywhere — drawn on a <canvas>
+//     • two huge, slow "breathing" veils of colour, a gentle edge
+//       darkening (vignette) and a whisper of film grain
+//
+//   It's interactive, but politely: moving the mouse parallax-shifts the
+//   layers (never the words); the wings respond to hover/keyboard focus.
+//   Visitors who ask their device for reduced motion get a still, calm,
+//   finished-looking scene.
+//
+//   IMPORTANT: apart from the two wing links, everything here is
+//   decoration. It sits behind the words, is hidden from screen readers,
+//   pauses when the page is hidden or scrolled away, and deliberately
+//   uses NO added libraries — just the same HTML/CSS/JavaScript the rest
+//   of the site is made of.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Turn a whole layer on/off       → search "EDIT: layers on/off"
+//   • More/fewer stars, petals, snow  → search "EDIT: dials"
+//   • Slower/faster globe or pulses   → search "EDIT: speed" (bigger
+//     seconds = slower)
+//   • Wing wording (names, places,
+//     "Read their story")             → search "EDIT: wing text"
+//   • Remove the WHOLE effect         → delete the <MissionAtmosphere />
+//     line in mission.astro (one line — the page goes back to a plain
+//     hero; the wings' links disappear too, but the two big country
+//     cards further down the page link to the same places)
+//
+// This file has three parts, in this order:
+//   1. The HTML below    — the layers of the scene, back-to-front
+//   2. The <style> block — colours, sizes, the wings and the slow motion
+//   3. The <script> block — the stars, globe, arcs and floating things.
+//      Its settings are all at the top in one labelled block.
+// ─────────────────────────────────────────────────────────────────────────
+---
+
+<!-- Layer 1 · the breathing veils of colour (furthest back):
+     marigold warmth toward India's side, cool dawn toward Romania's -->
+<div class="mfx mfx-fade" data-layer="veils" aria-hidden="true">
+  <div class="mveil mveil-india par" data-p="22" data-s="0.24"></div>
+  <div class="mveil mveil-romania par" data-p="20" data-s="0.2"></div>
+</div>
+
+<!-- Layer 2 · the sky itself: stars, the turning globe, the two arcs of
+     light and the floating petals/snow/dust — all drawn by the script -->
+<canvas
+  class="mfx mfx-fade par"
+  data-layer="sky"
+  data-p="6"
+  data-s="0.1"
+  id="mission-sky-canvas"
+  aria-hidden="true"></canvas>
+
+<!-- A whispered label above the home marker (the script places it) -->
+<span class="home-label mfx-fade par" data-layer="sky" data-p="6" data-s="0.1" id="mission-home-label" aria-hidden="true">Hinckley</span>
+
+<!-- Layer 3 · the wings (wide screens only — phones and narrower screens
+     keep the sky and skip these; the country cards below the hero carry
+     the same links everywhere). Each wing IS a link. -->
+<div class="wings" data-layer="wings">
+  <!-- ── India · left wing ─────────────────────────────────────────── -->
+  <a class="wing wing-india par" data-p="13" data-s="0.16" href="/mission/india" aria-label="Read the full India story">
+    <span class="wing-swing">
+      <span class="wing-panel">
+        <span class="wing-glow wing-glow-india" aria-hidden="true"></span>
+        <svg class="wing-scene" viewBox="0 0 260 310" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true">
+          <!-- the arch: a jali-style frame in thin gold -->
+          <path d="M34 306 V150 C34 76 72 38 130 32 C188 38 226 76 226 150 V306"
+            stroke="#c9a84c" stroke-width="2.2" opacity="0.5"></path>
+          <path d="M50 306 V156 C50 90 82 54 130 48 C178 54 210 90 210 156 V306"
+            stroke="#c9a84c" stroke-width="1.3" opacity="0.3"></path>
+          <!-- lattice hints inside the arch head -->
+          <path d="M74 96 L186 96 M64 122 L196 122 M92 72 L168 72"
+            stroke="#c9a84c" stroke-width="1" opacity="0.16"></path>
+          <!-- a small hanging bell either side -->
+          <path d="M66 150 v18 M194 150 v18" stroke="#c9a84c" stroke-width="1" opacity="0.3"></path>
+          <circle cx="66" cy="172" r="4" stroke="#c9a84c" stroke-width="1.2" opacity="0.4"></circle>
+          <circle cx="194" cy="172" r="4" stroke="#c9a84c" stroke-width="1.2" opacity="0.4"></circle>
+          <!-- the diya (oil lamp): pedestal, bowl and its living flame -->
+          <path d="M104 268 h52 M112 262 h36" stroke="#c9a84c" stroke-width="2" opacity="0.5"></path>
+          <path d="M82 240 Q130 268 178 240 Q130 252 82 240 Z"
+            fill="#7a3c14" opacity="0.9"></path>
+          <path d="M82 240 Q130 268 178 240" stroke="#e8973a" stroke-width="1.6" opacity="0.75"></path>
+          <g class="diya-flame">
+            <path class="fl fl-outer"
+              d="M130 238 C113 214 117 194 130 174 C143 194 147 214 130 238 Z"
+              fill="#e8973a" opacity="0.5"></path>
+            <path class="fl fl-mid"
+              d="M130 236 C119 217 122 202 130 187 C138 202 141 217 130 236 Z"
+              fill="#f0dfa0" opacity="0.7"></path>
+            <path class="fl fl-core"
+              d="M130 233 C125 222 126 213 130 204 C134 213 135 222 130 233 Z"
+              fill="#fffbe9" opacity="0.92"></path>
+          </g>
+        </svg>
+        <!-- EDIT: wing text — India -->
+        <span class="wing-words">
+          <span class="wing-name">India</span>
+          <span class="wing-place">Lonavala, Maharashtra</span>
+          <span class="wing-cta">Read their story →</span>
+        </span>
+      </span>
+    </span>
+  </a>
+
+  <!-- ── Romania · right wing ──────────────────────────────────────── -->
+  <a class="wing wing-romania par" data-p="13" data-s="0.16" href="/mission/romania" aria-label="Read the full Romania story">
+    <span class="wing-swing">
+      <span class="wing-panel">
+        <span class="wing-glow wing-glow-romania" aria-hidden="true"></span>
+        <svg class="wing-scene" viewBox="0 0 260 310" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true">
+          <!-- a pale moon over the Carpathians -->
+          <circle cx="206" cy="64" r="24" fill="#dce8f4" opacity="0.1"></circle>
+          <circle cx="206" cy="64" r="13" fill="#dce8f4" opacity="0.5"></circle>
+          <!-- three ridgelines, far to near -->
+          <path d="M0 196 L42 152 L86 182 L132 134 L178 170 L218 142 L260 178 V310 H0 Z"
+            fill="#1c3852" opacity="0.85"></path>
+          <path d="M0 224 L56 182 L106 210 L162 176 L214 204 L260 188 V310 H0 Z"
+            fill="#142a42" opacity="0.95"></path>
+          <path d="M0 258 Q64 242 130 250 Q196 258 260 248 V310 H0 Z"
+            fill="#0c1c30"></path>
+          <!-- fir trees -->
+          <path d="M40 252 l9 -22 l9 22 Z M44 240 l5 -14 l5 14 Z" fill="#0a1626"></path>
+          <path d="M70 254 l8 -18 l8 18 Z" fill="#0a1626"></path>
+          <path d="M196 252 l9 -20 l9 20 Z M200 241 l5 -13 l5 13 Z" fill="#0a1626"></path>
+          <path d="M228 254 l7 -16 l7 16 Z" fill="#0a1626"></path>
+          <!-- the village church: tower, spire, cross, nave — one window lit -->
+          <rect x="112" y="192" width="18" height="62" fill="#0e2036"></rect>
+          <path d="M108 192 L121 158 L134 192 Z" fill="#0e2036"></path>
+          <path d="M121 158 v-12 M115 152 h12" stroke="#f0dfa0" stroke-width="1.6" opacity="0.8"></path>
+          <rect x="130" y="212" width="44" height="42" fill="#0e2036"></rect>
+          <path d="M128 212 L152 196 L176 212 Z" fill="#0e2036"></path>
+          <rect class="lit-window" x="146" y="226" width="11" height="16" rx="2" fill="#f0dfa0"></rect>
+        </svg>
+        <span class="mist mist-a" aria-hidden="true"></span>
+        <span class="mist mist-b" aria-hidden="true"></span>
+        <!-- EDIT: wing text — Romania -->
+        <span class="wing-words">
+          <span class="wing-name">Romania</span>
+          <span class="wing-place">Satu-Nou, Bacău County</span>
+          <span class="wing-cta">Read their story →</span>
+        </span>
+      </span>
+    </span>
+  </a>
+</div>
+
+<!-- Layer 4 · the framing: edge-darkening and a whisper of film grain -->
+<div class="mvignette" aria-hidden="true"></div>
+<div class="mgrain" data-layer="grain" aria-hidden="true"></div>
+
+<style>
+  /* Every decorative layer: stretched over the whole hero, unclickable,
+     behind the words (mission.astro gives .hero-content a higher stacking
+     order). The wings are the one exception — they're real links. */
+  .mfx {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* The atmosphere fades up AFTER the words have landed (see the hero
+     text's entrance in mission.astro) so the page opens on the message. */
+  .mfx-fade {
+    opacity: 0;
+    animation: mfx-in 1.6s ease-out 0.7s forwards;
+  }
+  @keyframes mfx-in {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* The parallax hook: the script writes --dx / --dy into these, and this
+     one transform line moves the layer. */
+  .par {
+    transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0);
+  }
+
+  /* ── Layer 1 · breathing veils ─────────────────────────────────────── */
+  .mveil {
+    position: absolute;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .mveil-india {
+    left: -28%;
+    top: -30%;
+    width: 90vw;
+    height: 90vw;
+    max-width: 1150px;
+    max-height: 1150px;
+    background: radial-gradient(
+      circle at 52% 55%,
+      rgba(232, 151, 58, 0.09),
+      rgba(201, 168, 76, 0.03) 45%,
+      transparent 68%
+    );
+    /* EDIT: speed — 52s is one full breath of this veil */
+    animation: mveil-a 52s ease-in-out infinite alternate;
+  }
+  .mveil-romania {
+    right: -30%;
+    top: -18%;
+    width: 96vw;
+    height: 96vw;
+    max-width: 1250px;
+    max-height: 1250px;
+    background: radial-gradient(
+      circle at 46% 46%,
+      rgba(74, 144, 196, 0.09),
+      rgba(168, 204, 232, 0.03) 45%,
+      transparent 68%
+    );
+    animation: mveil-b 64s ease-in-out infinite alternate;
+  }
+  @keyframes mveil-a {
+    from {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(4%, 5%) scale(1.08);
+    }
+  }
+  @keyframes mveil-b {
+    from {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(0, 0) scale(1.05);
+    }
+    to {
+      transform: translate3d(var(--dx, 0px), var(--dy, 0px), 0) translate(-4%, 3%) scale(1);
+    }
+  }
+
+  /* ── Layer 2 · the sky canvas & the Hinckley whisper ───────────────── */
+  #mission-sky-canvas {
+    width: 100%;
+    height: 100%;
+  }
+  .home-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: 'Nunito', 'Century Gothic', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(240, 223, 160, 0.65);
+    text-shadow: 0 0 12px rgba(201, 168, 76, 0.5);
+    pointer-events: none;
+    visibility: hidden; /* the script shows it once it's been placed */
+    margin: 0;
+  }
+
+  /* ── Layer 3 · the wings ───────────────────────────────────────────── */
+  .wings {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    perspective: 1300px;
+    /* One above the words' container: the two only ever overlap by a few
+       transparent padding pixels at the narrowest wing widths, and this
+       keeps the whole wing clickable there. */
+    z-index: 2;
+    /* Wide screens only — below this there isn't room beside the words.
+       (The country cards further down carry the same links on every
+       screen size, so nothing is lost.) */
+    display: none;
+  }
+  @media (min-width: 1280px) {
+    .wings {
+      display: block;
+    }
+  }
+
+  .wing {
+    position: absolute;
+    top: 50%;
+    width: clamp(230px, 19vw, 300px);
+    margin-top: -180px; /* half of the panel's ~360px visual height */
+    pointer-events: auto;
+    text-decoration: none;
+    display: block;
+    border-radius: 14px;
+  }
+  .wing-india {
+    left: clamp(20px, 4.5vw, 120px);
+  }
+  .wing-romania {
+    right: clamp(20px, 4.5vw, 120px);
+  }
+  .wing:focus-visible {
+    outline: 2px solid #f0dfa0;
+    outline-offset: 6px;
+  }
+
+  /* Three nested layers so the entrance, the resting angle and the hover
+     lean never fight over the same transform:
+       .wing        → parallax (above)
+       .wing-swing  → the entrance: each wing swings open like a panel
+       .wing-panel  → the resting 3D angle, and the lean on hover/focus  */
+  .wing-swing {
+    display: block;
+    opacity: 0;
+    transform: rotateY(0deg);
+    animation: wing-open 1.4s cubic-bezier(0.22, 0.9, 0.3, 1) 1s forwards;
+  }
+  .wing-romania .wing-swing {
+    animation-name: wing-open-r;
+  }
+  @keyframes wing-open {
+    from {
+      opacity: 0;
+      transform: translateX(-36px) rotateY(38deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) rotateY(0deg);
+    }
+  }
+  @keyframes wing-open-r {
+    from {
+      opacity: 0;
+      transform: translateX(36px) rotateY(-38deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) rotateY(0deg);
+    }
+  }
+
+  .wing-panel {
+    display: block;
+    position: relative;
+    transform: rotateY(14deg);
+    transition: transform 0.5s cubic-bezier(0.22, 0.9, 0.3, 1);
+    will-change: transform;
+  }
+  .wing-romania .wing-panel {
+    transform: rotateY(-14deg);
+  }
+  .wing:hover .wing-panel,
+  .wing:focus-visible .wing-panel {
+    transform: rotateY(4deg) translateZ(22px);
+  }
+  .wing-romania:hover .wing-panel,
+  .wing-romania:focus-visible .wing-panel {
+    transform: rotateY(-4deg) translateZ(22px);
+  }
+
+  .wing-scene {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Each wing's pool of light, brightening on hover */
+  .wing-glow {
+    position: absolute;
+    inset: -18% -22%;
+    border-radius: 50%;
+    transition: opacity 0.6s ease;
+    opacity: 0.75;
+    pointer-events: none;
+  }
+  .wing:hover .wing-glow,
+  .wing:focus-visible .wing-glow {
+    opacity: 1;
+  }
+  .wing-glow-india {
+    background: radial-gradient(
+      circle at 50% 62%,
+      rgba(232, 151, 58, 0.16),
+      rgba(201, 168, 76, 0.05) 48%,
+      transparent 70%
+    );
+  }
+  .wing-glow-romania {
+    background: radial-gradient(
+      circle at 50% 60%,
+      rgba(168, 204, 232, 0.1),
+      rgba(74, 144, 196, 0.04) 48%,
+      transparent 70%
+    );
+  }
+
+  /* The diya's flame: two flickers at different speeds layered together
+     so it never repeats exactly. EDIT: speed — smaller = livelier. */
+  .diya-flame {
+    transform-origin: 130px 238px;
+    animation: flame-sway 3.4s ease-in-out infinite alternate;
+  }
+  .fl {
+    transform-origin: 130px 238px;
+  }
+  .fl-outer {
+    animation: flame-breathe 1.7s ease-in-out infinite alternate;
+  }
+  .fl-mid {
+    animation: flame-breathe 1.15s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes flame-sway {
+    from {
+      transform: skewX(-1.6deg) scaleY(0.985);
+    }
+    to {
+      transform: skewX(1.8deg) scaleY(1.02);
+    }
+  }
+  @keyframes flame-breathe {
+    from {
+      transform: scaleY(0.96) scaleX(1.02);
+    }
+    to {
+      transform: scaleY(1.05) scaleX(0.97);
+    }
+  }
+
+  /* Romania's lit window breathes very gently — someone is home. */
+  .lit-window {
+    filter: drop-shadow(0 0 7px rgba(240, 223, 160, 0.9));
+    animation: window-warm 5s ease-in-out infinite alternate;
+  }
+  @keyframes window-warm {
+    from {
+      opacity: 0.75;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Mist drifting along the valley floor */
+  .mist {
+    position: absolute;
+    height: 34px;
+    width: 82%;
+    left: 6%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(168, 204, 232, 0.13), transparent 70%);
+    filter: blur(7px);
+    pointer-events: none;
+  }
+  .mist-a {
+    bottom: 26%;
+    animation: mist-drift 26s ease-in-out infinite alternate;
+  }
+  .mist-b {
+    bottom: 20%;
+    width: 68%;
+    left: 18%;
+    animation: mist-drift 34s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes mist-drift {
+    from {
+      transform: translateX(-7%);
+    }
+    to {
+      transform: translateX(7%);
+    }
+  }
+
+  /* The words on each wing */
+  .wing-words {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-family: 'Nunito', 'Century Gothic', sans-serif;
+  }
+  .wing-name {
+    display: block;
+    font-size: 22px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: -0.01em;
+  }
+  .wing-place {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .wing-cta {
+    display: block;
+    margin-top: 9px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: #f0dfa0;
+    opacity: 0;
+    transform: translateY(5px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease;
+  }
+  .wing:hover .wing-cta,
+  .wing:focus-visible .wing-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Layer 4 · framing ─────────────────────────────────────────────── */
+  .mvignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 40%, transparent 52%, rgba(6, 14, 28, 0.5) 100%);
+  }
+  .mgrain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ── Reduced motion: a still, finished scene ───────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .mfx-fade,
+    .wing-swing {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    .mveil-india,
+    .mveil-romania,
+    .diya-flame,
+    .fl-outer,
+    .fl-mid,
+    .lit-window,
+    .mist-a,
+    .mist-b {
+      animation: none;
+    }
+    .wing-panel,
+    .wing-glow,
+    .wing-cta {
+      transition: none;
+    }
+    /* keep the invitation visible without needing a hover */
+    .wing-cta {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // ═══════════════════════════════════════════════════════════════════════
+  //  THE SETTINGS — everything tweakable lives here.
+  // ═══════════════════════════════════════════════════════════════════════
+
+  // EDIT: dials — counts and strengths.
+  const SETTINGS = {
+    // The sky, on computers…
+    starCount: 90, // twinkling stars
+    globePoints: 900, // points of light making up the earth
+    dustCount: 14, // faint dust drifting everywhere
+    petalCount: 10, // marigold petals near the India wing
+    snowCount: 12, // snow near the Romania wing
+    // …and on phones (fewer, to keep older phones smooth):
+    phoneStarCount: 45,
+    phoneGlobePoints: 380,
+    phoneDustCount: 8,
+    // EDIT: speed — bigger seconds = slower.
+    globeSpinSeconds: 150, // one full turn of the earth
+    pulseSeconds: 7, // one journey of light from Hinckley to a field
+  };
+
+  // EDIT: layers on/off — set any of these to false to remove that layer.
+  const LAYERS = {
+    veils: true, // the huge breathing colour veils
+    sky: true, // stars, globe, arcs and floating things (the canvas)
+    wings: true, // the India and Romania side panels (wide screens)
+    grain: true, // the film-grain texture
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+  // The hero section this component lives inside. If a future page ever
+  // uses this component without a .mission-hero around it, we do nothing.
+  const hero = document.querySelector('.mission-hero');
+  const canvas = document.getElementById('mission-sky-canvas');
+
+  if (hero && canvas) {
+    // Remove any layers switched off in LAYERS above.
+    for (const name of Object.keys(LAYERS)) {
+      if (!LAYERS[name]) {
+        for (const el of hero.querySelectorAll('[data-layer="' + name + '"]')) {
+          el.remove();
+        }
+      }
+    }
+
+    const ctx = canvas.getContext('2d');
+    const homeLabel = document.getElementById('mission-home-label');
+
+    // ── Pre-made glowing-dot pictures (sprites) ─────────────────────────
+    function makeSprite(r, g, b) {
+      const s = document.createElement('canvas');
+      s.width = s.height = 64;
+      const c = s.getContext('2d');
+      const grad = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, 'rgba(255,255,255,0.95)');
+      grad.addColorStop(0.18, 'rgba(' + r + ',' + g + ',' + b + ',0.85)');
+      grad.addColorStop(0.45, 'rgba(' + r + ',' + g + ',' + b + ',0.28)');
+      grad.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+      c.fillStyle = grad;
+      c.fillRect(0, 0, 64, 64);
+      return s;
+    }
+    // The palette: the site's gold, India's marigold, Romania's hearth-red,
+    // starlight, and the pale blue of the globe's points.
+    const SPR = {
+      gold: makeSprite(201, 168, 76),
+      marigold: makeSprite(232, 151, 58),
+      hearth: makeSprite(216, 96, 74),
+      star: makeSprite(222, 232, 244),
+      globe: makeSprite(150, 190, 225),
+      pale: makeSprite(240, 223, 160),
+    };
+
+    // ── Geometry helpers: points on a sphere, and the three places ─────
+    // (x right, y up, z toward the viewer; everything is a unit vector
+    // that gets tilted, projected and scaled at draw time.)
+    const TILT = -0.42; // how far the top of the earth leans toward us
+    const cosT = Math.cos(TILT);
+    const sinT = Math.sin(TILT);
+
+    function sph(latDeg, lonDeg) {
+      const la = (latDeg * Math.PI) / 180;
+      const lo = (lonDeg * Math.PI) / 180;
+      return {
+        x: Math.cos(la) * Math.sin(lo),
+        y: Math.sin(la),
+        z: Math.cos(la) * Math.cos(lo),
+      };
+    }
+    function tilt(p) {
+      return {
+        x: p.x,
+        y: p.y * cosT - p.z * sinT,
+        z: p.y * sinT + p.z * cosT,
+      };
+    }
+    function slerp(a, b, t) {
+      let dot = a.x * b.x + a.y * b.y + a.z * b.z;
+      dot = Math.min(Math.max(dot, -1), 1);
+      const th = Math.acos(dot) * t;
+      const rx = b.x - a.x * dot;
+      const ry = b.y - a.y * dot;
+      const rz = b.z - a.z * dot;
+      const rl = Math.hypot(rx, ry, rz) || 1;
+      return {
+        x: a.x * Math.cos(th) + (rx / rl) * Math.sin(th),
+        y: a.y * Math.cos(th) + (ry / rl) * Math.sin(th),
+        z: a.z * Math.cos(th) + (rz / rl) * Math.sin(th),
+      };
+    }
+
+    // The three marked places. These are placed for COMPOSITION on the
+    // visible crown of the rising earth — Hinckley near the top, each
+    // field out toward its own wing — while the points of the globe
+    // itself turn beneath them: the world turns, the connections hold.
+    // (x is left/right across the sphere, y is height on it; z is worked
+    // out so each point sits exactly on the surface, facing us.)
+    function unitAt(x, y) {
+      return { x, y, z: Math.sqrt(Math.max(0.001, 1 - x * x - y * y)) };
+    }
+    const HOME = unitAt(-0.12, 0.96); // nudged off-centre so the scroll hint keeps its own space
+    const INDIA = unitAt(-0.52, 0.835);
+    const ROMANIA = unitAt(0.5, 0.845);
+
+    // The two arcs, sampled once (they don't move).
+    function buildArc(from, to, n) {
+      const pts = [];
+      for (let i = 0; i <= n; i++) {
+        const t = i / n;
+        const p = slerp(from, to, t);
+        const bulge = 1 + 0.2 * Math.sin(Math.PI * t); // lift off the surface
+        pts.push({ x: p.x * bulge, y: p.y * bulge, z: p.z * bulge, t });
+      }
+      return pts;
+    }
+    const ARCS = [
+      { pts: buildArc(HOME, INDIA, 42), dest: INDIA, spr: SPR.marigold, phase: 0 },
+      { pts: buildArc(HOME, ROMANIA, 42), dest: ROMANIA, spr: SPR.hearth, phase: 0.5 },
+    ];
+
+    // The earth's own points of light: an evenly-scattered ("fibonacci")
+    // sphere, rebuilt when the screen size changes.
+    let globePts = [];
+    function buildGlobe(n) {
+      globePts = [];
+      const ga = Math.PI * (3 - Math.sqrt(5)); // golden angle
+      for (let i = 0; i < n; i++) {
+        const y = 1 - (i / (n - 1)) * 2;
+        const r = Math.sqrt(Math.max(0, 1 - y * y));
+        const th = ga * i;
+        globePts.push({
+          x: Math.cos(th) * r,
+          y,
+          z: Math.sin(th) * r,
+          s: 2.6 + Math.random() * 2.6, // each point's own size…
+          a: 0.35 + Math.random() * 0.65, // …and brightness
+        });
+      }
+    }
+
+    // ── The changeable numbers: sizes, stars, floating things ──────────
+    let W = 0;
+    let H = 0;
+    let isNarrow = false;
+    let wingsRoom = false;
+    let CX = 0; // the earth's centre and radius, in screen pixels
+    let CY = 0;
+    let R = 0;
+    let stars = [];
+    let floaters = [];
+    let running = false;
+    let inView = true;
+    let lastT = 0;
+
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function project(p) {
+      // Orthographic with depth cueing: nearer points are bigger and
+      // brighter. z runs -1 (far side) … 1 (near side).
+      return {
+        sx: CX + p.x * R,
+        sy: CY - p.y * R,
+        z: p.z,
+      };
+    }
+
+    function placeHomeLabel() {
+      if (!homeLabel) return;
+      const pr = project(HOME);
+      homeLabel.style.left = pr.sx + 'px';
+      homeLabel.style.top = pr.sy - 26 + 'px';
+      // Keep the .par parallax alive: an inline transform replaces the
+      // class one, so the parallax variables come along inside it.
+      homeLabel.style.transform =
+        'translateX(-50%) translate3d(var(--dx, 0px), var(--dy, 0px), 0)';
+      homeLabel.style.visibility = 'visible';
+    }
+
+    function makeFloater(kind, anyAge) {
+      const p = { kind };
+      p.life = rand(9, 17);
+      p.t = anyAge ? rand(0, p.life) : 0;
+      if (kind === 'dust') {
+        p.x = rand(0, 1) * W;
+        p.y = rand(0.05, 0.95) * H;
+        p.vx = rand(-2, 2);
+        p.vy = -rand(2, 7);
+        p.size = rand(4, 8);
+        p.maxA = rand(0.08, 0.22);
+        p.spr = pick([SPR.pale, SPR.star, SPR.gold]);
+      } else if (kind === 'petal') {
+        // Marigold petals rising and swaying near the India wing.
+        p.x = rand(0.02, 0.2) * W;
+        p.y = rand(0.25, 0.98) * H;
+        p.vx = rand(-1, 4);
+        p.vy = -rand(5, 13);
+        p.size = rand(5, 10);
+        p.maxA = rand(0.16, 0.42);
+        p.spr = pick([SPR.marigold, SPR.marigold, SPR.gold]);
+      } else {
+        // 'snow' — falling gently near the Romania wing.
+        p.x = rand(0.8, 0.99) * W;
+        p.y = rand(0.02, 0.9) * H;
+        p.vx = rand(-3, 1);
+        p.vy = rand(5, 13);
+        p.size = rand(3.5, 7);
+        p.maxA = rand(0.14, 0.38);
+        p.spr = pick([SPR.star, SPR.star, SPR.pale]);
+      }
+      p.swayAmp = rand(4, 14);
+      p.swayFreq = rand(0.12, 0.35);
+      p.phase = rand(0, Math.PI * 2);
+      return p;
+    }
+
+    function buildSky() {
+      stars = [];
+      const n = isNarrow ? SETTINGS.phoneStarCount : SETTINGS.starCount;
+      for (let i = 0; i < n; i++) {
+        stars.push({
+          x: Math.random() * W,
+          y: Math.random() * H * 0.82,
+          size: rand(1.6, 4.2),
+          a: rand(0.12, 0.5),
+          w: rand(0.3, 1.1), // twinkle speed
+          ph: rand(0, Math.PI * 2),
+        });
+      }
+      floaters = [];
+      const plan = [['dust', isNarrow ? SETTINGS.phoneDustCount : SETTINGS.dustCount]];
+      if (wingsRoom) {
+        plan.push(['petal', SETTINGS.petalCount]);
+        plan.push(['snow', SETTINGS.snowCount]);
+      }
+      for (const [kind, count] of plan) {
+        for (let i = 0; i < count; i++) floaters.push(makeFloater(kind, true));
+      }
+      buildGlobe(isNarrow ? SETTINGS.phoneGlobePoints : SETTINGS.globePoints);
+    }
+
+    function resize() {
+      const rect = hero.getBoundingClientRect();
+      // Cap the pixel density: full Retina resolution isn't visible for a
+      // soft glow, and capping it roughly halves the work older phones do.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      W = Math.max(1, Math.round(rect.width));
+      H = Math.max(1, Math.round(rect.height));
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      isNarrow = W < 680;
+      wingsRoom = W >= 1280;
+      // The earth rises at the bottom of the hero like a horizon: its
+      // crown sits about two-thirds of the way down, the rest below the
+      // fold. EDIT: dials — the 0.68 is how far down the crown sits.
+      R = isNarrow ? W * 0.85 : Math.max(H * 0.95, W * 0.4);
+      CX = W / 2;
+      CY = H * (isNarrow ? 0.74 : 0.68) + R;
+      buildSky();
+      placeHomeLabel();
+      if (reduceMotion) drawFrame(0.001, 12000); // re-draw the still scene
+    }
+
+    // ── Drawing ─────────────────────────────────────────────────────────
+    function drawSprite(spr, x, y, size, alpha) {
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(spr, x - size / 2, y - size / 2, size, size);
+    }
+
+    function drawGlobe(now) {
+      const yaw = ((now / 1000) * Math.PI * 2) / SETTINGS.globeSpinSeconds;
+      const cy = Math.cos(yaw);
+      const sy = Math.sin(yaw);
+      for (const p of globePts) {
+        // spin about the vertical axis, then lean toward the viewer
+        const x1 = p.x * cy + p.z * sy;
+        const z1 = -p.x * sy + p.z * cy;
+        const pr = project(tilt({ x: x1, y: p.y, z: z1 }));
+        if (pr.sy > H + 24 || pr.sy < -24 || pr.sx < -24 || pr.sx > W + 24) continue;
+        const depth = (pr.z + 1) / 2; // 0 far … 1 near
+        drawSprite(SPR.globe, pr.sx, pr.sy, p.s * (0.55 + depth * 0.75), p.a * (0.06 + depth * 0.24));
+      }
+    }
+
+    function drawArcs(now) {
+      for (const arc of ARCS) {
+        // the resting path: a faint dotted line of gold
+        for (const p of arc.pts) {
+          const pr = project(p);
+          if (pr.sy > H + 20) continue;
+          const depth = (pr.z + 1) / 2;
+          drawSprite(SPR.gold, pr.sx, pr.sy, 3.4 + depth * 2.2, 0.07 + depth * 0.13);
+        }
+        // the travelling pulse — light leaving home for the field
+        const u = ((now / 1000) / SETTINGS.pulseSeconds + arc.phase) % 1;
+        const fade = Math.min(u / 0.07, 1) * Math.min((1 - u) / 0.1, 1);
+        for (let k = 0; k < 7; k++) {
+          const ut = u - k * 0.013;
+          if (ut < 0) continue;
+          const i = Math.min(Math.round(ut * (arc.pts.length - 1)), arc.pts.length - 1);
+          const pr = project(arc.pts[i]);
+          drawSprite(k === 0 ? SPR.pale : arc.spr, pr.sx, pr.sy, k === 0 ? 22 : 15 - k * 1.6, fade * (k === 0 ? 0.8 : 0.4 - k * 0.05));
+        }
+        // a soft ring blooming where the light lands
+        if (u > 0.94) {
+          const kk = (u - 0.94) / 0.06;
+          const pr = project(arc.dest);
+          ctx.globalAlpha = (1 - kk) * 0.45;
+          ctx.strokeStyle = 'rgba(240,223,160,1)';
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.arc(pr.sx, pr.sy, 3 + kk * 20, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+      // the three marked places, breathing gently
+      const markers = [
+        { v: HOME, spr: SPR.gold, base: 15 },
+        { v: INDIA, spr: SPR.marigold, base: 13 },
+        { v: ROMANIA, spr: SPR.hearth, base: 13 },
+      ];
+      let mi = 0;
+      for (const m of markers) {
+        const pr = project(m.v);
+        const breathe = 1 + 0.16 * Math.sin((now / 1000) * 1.4 + mi * 2.1);
+        drawSprite(m.spr, pr.sx, pr.sy, m.base * breathe, 0.85);
+        mi++;
+      }
+    }
+
+    function drawStars(now) {
+      for (const s of stars) {
+        const tw = 0.6 + 0.4 * Math.sin((now / 1000) * s.w + s.ph);
+        drawSprite(SPR.star, s.x, s.y, s.size, s.a * tw);
+      }
+    }
+
+    function drawFrame(dt, now) {
+      ctx.clearRect(0, 0, W, H);
+      drawStars(now);
+      drawGlobe(now);
+      drawArcs(now);
+      for (let i = floaters.length - 1; i >= 0; i--) {
+        const p = floaters[i];
+        p.t += dt;
+        const gone = p.t >= p.life || p.y < -30 || p.y > H + 40 || p.x < -40 || p.x > W + 40;
+        if (gone) {
+          floaters[i] = makeFloater(p.kind, false);
+          continue;
+        }
+        p.x += p.vx * dt + Math.sin(p.t * p.swayFreq * Math.PI * 2 + p.phase) * p.swayAmp * dt;
+        p.y += p.vy * dt;
+        const a = Math.sin(Math.PI * Math.min(p.t / p.life, 1)) * p.maxA;
+        drawSprite(p.spr, p.x, p.y, p.size, a);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // ── The heartbeat ───────────────────────────────────────────────────
+    function step(now) {
+      if (!running) return;
+      const dt = Math.min((now - lastT) / 1000, 0.05);
+      lastT = now;
+      drawFrame(dt, now);
+      easeParallax(dt);
+      requestAnimationFrame(step);
+    }
+
+    function start() {
+      if (running || reduceMotion || !inView) return;
+      running = true;
+      lastT = performance.now();
+      requestAnimationFrame(step);
+    }
+    function stop() {
+      running = false;
+    }
+
+    // Politeness: pause when the tab is hidden or the hero scrolls away.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        (entries) => {
+          inView = entries[0].isIntersecting;
+          if (inView) start();
+          else stop();
+        },
+        { threshold: 0.02 }
+      ).observe(hero);
+    }
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
+    });
+
+    // ── Parallax: the light leans with the mouse; the words never do ───
+    let tx = 0;
+    let ty = 0;
+    let cx = 0;
+    let cy = 0;
+    let scrollP = 0;
+
+    const parEls = [];
+    for (const el of hero.querySelectorAll('[data-p]')) {
+      parEls.push({
+        el,
+        p: parseFloat(el.getAttribute('data-p')) || 0,
+        s: parseFloat(el.getAttribute('data-s')) || 0,
+      });
+    }
+
+    function easeParallax(dt) {
+      const k = Math.min(dt * 4.5, 1);
+      cx += (tx - cx) * k;
+      cy += (ty - cy) * k;
+      for (const o of parEls) {
+        o.el.style.setProperty('--dx', (-cx * o.p).toFixed(2) + 'px');
+        o.el.style.setProperty('--dy', (-cy * o.p + scrollP * 260 * o.s).toFixed(2) + 'px');
+      }
+    }
+
+    if (finePointer && !reduceMotion) {
+      hero.addEventListener(
+        'pointermove',
+        (e) => {
+          const r = hero.getBoundingClientRect();
+          tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+          ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        },
+        { passive: true }
+      );
+      hero.addEventListener('pointerleave', () => {
+        tx = 0;
+        ty = 0;
+      });
+    }
+
+    // ── Scroll depth: layers separate slightly as you scroll away ──────
+    let scrollTicking = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+          const r = hero.getBoundingClientRect();
+          scrollP = Math.min(Math.max(-r.top / Math.max(r.height, 1), 0), 1);
+          scrollTicking = false;
+        });
+      },
+      { passive: true }
+    );
+
+    // ── Go ─────────────────────────────────────────────────────────────
+    resize();
+    if (!reduceMotion) {
+      start();
+    } else {
+      // Reduced motion: one calm, complete picture — the earth paused
+      // mid-turn, both journeys of light caught mid-flight — and no
+      // animation loop at all.
+      drawFrame(0.001, 12000);
+    }
+  }
+</script>
