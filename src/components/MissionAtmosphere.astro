@@ -73,6 +73,14 @@
 <!-- A whispered label above the home marker (the script places it) -->
 <span class="home-label mfx-fade par" data-layer="sky" data-p="6" data-s="0.1" id="mission-home-label" aria-hidden="true">Hinckley</span>
 
+<!-- EDIT: field labels — the phone/tablet equivalent of the wings below:
+     below 1280px there's no room for the wings, so these two do the same
+     naming-and-linking job in miniature, right on the globe's crown. They
+     hide themselves once the wings have room (see the media query in the
+     <style> block) so nothing duplicates on wide screens. -->
+<a class="home-label field-label mfx-fade par" data-layer="sky" data-p="6" data-s="0.1" id="mission-india-label" href="/mission/india" aria-label="Read the full India story">India →</a>
+<a class="home-label field-label mfx-fade par" data-layer="sky" data-p="6" data-s="0.1" id="mission-romania-label" href="/mission/romania" aria-label="Read the full Romania story">Romania →</a>
+
 <!-- Layer 3 · the wings (wide screens only — phones and narrower screens
      keep the sky and skip these; the country cards below the hero carry
      the same links everywhere). Each wing IS a link. -->
@@ -270,6 +278,46 @@
     pointer-events: none;
     visibility: hidden; /* the script shows it once it's been placed */
     margin: 0;
+  }
+
+  /* India/Romania's version of the whisper above -- but a real link, so
+     it needs an actual tap target and a visible "this does something"
+     treatment, not just ghostly text. EDIT: dials — padding controls the
+     tap target size; keep it generous, phones need ~24px minimum. */
+  .field-label {
+    display: inline-block;
+    font-size: 11px;
+    white-space: nowrap;
+    pointer-events: auto;
+    /* Same fix .wings already needed: .hero-content (z-index: 1) is often
+       wider/taller than its visible text, and its transparent padding
+       would otherwise sit on top of this and silently eat the tap. */
+    z-index: 2;
+    padding: 7px 14px;
+    background: rgba(13, 31, 60, 0.55);
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    border-radius: 999px;
+    backdrop-filter: blur(2px);
+    text-decoration: none;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .field-label:hover,
+  .field-label:focus-visible {
+    background: rgba(13, 31, 60, 0.78);
+    border-color: rgba(240, 223, 160, 0.75);
+  }
+  .field-label:focus-visible {
+    outline: 2px solid #f0dfa0;
+    outline-offset: 3px;
+  }
+  /* Once the wings have room, they do this job instead -- hide the
+     miniature version so nothing duplicates. */
+  @media (min-width: 1280px) {
+    .field-label {
+      display: none;
+    }
   }
 
   /* ── Layer 3 · the wings ───────────────────────────────────────────── */
@@ -619,6 +667,8 @@
 
     const ctx = canvas.getContext('2d');
     const homeLabel = document.getElementById('mission-home-label');
+    const indiaLabel = document.getElementById('mission-india-label');
+    const romaniaLabel = document.getElementById('mission-romania-label');
 
     // ── Pre-made glowing-dot pictures (sprites) ─────────────────────────
     function makeSprite(r, g, b) {
@@ -771,6 +821,31 @@
       homeLabel.style.visibility = 'visible';
     }
 
+    // India and Romania's crown points sit deliberately close to the
+    // hero's left/right edges (the same lack of room that keeps the
+    // wings themselves at 1280px+) -- so once each pill's REAL rendered
+    // width is known, nudge it back on-screen rather than trusting the
+    // marker's raw x position to always have space either side of it.
+    function placeFieldLabel(el, point, liftPx) {
+      if (!el) return;
+      const pr = project(point);
+      el.style.left = pr.sx + 'px';
+      el.style.top = pr.sy - liftPx + 'px';
+      el.style.transform =
+        'translateX(-50%) translate3d(var(--dx, 0px), var(--dy, 0px), 0)';
+      el.style.visibility = 'visible';
+      const half = el.offsetWidth / 2;
+      const margin = 10;
+      if (half > 0) {
+        const clampedX = Math.min(Math.max(pr.sx, half + margin), W - half - margin);
+        if (clampedX !== pr.sx) el.style.left = clampedX + 'px';
+      }
+    }
+    function placeFieldLabels() {
+      placeFieldLabel(indiaLabel, INDIA, 24);
+      placeFieldLabel(romaniaLabel, ROMANIA, 24);
+    }
+
     function makeFloater(kind, anyAge) {
       const p = { kind };
       p.life = rand(9, 17);
@@ -853,6 +928,7 @@
       CY = H * (isNarrow ? 0.74 : 0.68) + R;
       buildSky();
       placeHomeLabel();
+      placeFieldLabels();
       if (reduceMotion) drawFrame(0.001, 12000); // re-draw the still scene
     }
 
