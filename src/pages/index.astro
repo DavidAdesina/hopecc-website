@@ -82,8 +82,8 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
            so each line of the heading can rise in on page load. Edit the
            words exactly as before — just leave the spans around them. -->
       <h1>
-        <span class="hero-line">A place to <em>belong,</em></span>
-        <span class="hero-line">grow and serve</span>
+        <span class="hero-line"><em>CHRIST</em> centred,</span>
+        <span class="hero-line"><em>PEOPLE</em> focused</span>
       </h1>
       <p class="hero-sub">
         We're a warm, friendly church family in Hinckley, Leicestershire. Everyone is welcome —
@@ -448,7 +448,9 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     color: var(--blue-light);
     /* One pass of light travels through this word shortly after the page
        opens, then it settles back to the normal blue. The gradient is
-       painted "through" the letters themselves. */
+       painted "through" the letters themselves. Two words carry this
+       treatment now (CHRIST, PEOPLE) — the rule just below staggers the
+       second one so the two passes read as a sequence, not one flash. */
     background: linear-gradient(
       100deg,
       var(--blue-light) 0%,
@@ -463,10 +465,14 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: belong-shimmer 2.4s ease-in-out 2.1s 1 both;
+    animation: hero-word-shimmer 2.4s ease-in-out 2.1s 1 both;
   }
 
-  @keyframes belong-shimmer {
+  .hero h1 .hero-line + .hero-line em {
+    animation-delay: 2.3s;
+  }
+
+  @keyframes hero-word-shimmer {
     from {
       background-position: 100% 0;
     }
