@@ -47,3 +47,13 @@ output "github_actions_deploy_role_arn" {
   description = "Role ARN for the GitHub Actions workflow's role-to-assume input (OIDC deploy auth)"
   value       = aws_iam_role.github_actions_deploy.arn
 }
+
+# The four nameservers Route 53 assigns this zone. THIS is what needs to
+# replace ns1.netnerd.com / ns2.netnerd.com at the domain's registrar
+# (Fasthosts Internet Ltd -- confirmed via Nominet's RDAP lookup, not
+# NetNerd itself) once it's actually time for the DNS cutover. Not used
+# until then -- creating the zone doesn't touch live traffic on its own.
+output "route53_nameservers" {
+  description = "Nameservers to set at Fasthosts (the registrar) for the actual DNS cutover"
+  value       = aws_route53_zone.site.name_servers
+}
