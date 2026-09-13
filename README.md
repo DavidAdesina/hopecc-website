@@ -129,11 +129,9 @@ hopecc-website/
     ├── components/
     │   ├── Navbar.astro         Site header/navigation, used on every page
     │   ├── Footer.astro         Site footer, used on every page
-    │   ├── HeroAtmosphere.astro Homepage hero's animated night-sky/candlelight
-    │   │                        scene — see "Cinematic effects" below
-    │   ├── HeroFlame.astro      The church's flame logo, animated; used inside
-    │   │                        HeroAtmosphere.astro and reused in the homepage's
-    │   │                        mobile layout
+    │   ├── HeroFlame.astro      The church's flame logo, animated; used on
+    │   │                        the Contact page beside the "Contact
+    │   │                        Details" heading
     │   ├── MissionAtmosphere.astro  Mission page hero's night-sky/globe/wings
     │   │                        scene — see "Cinematic effects" below
     │   └── Welcome.astro        Unused Astro-starter boilerplate — see below
@@ -191,10 +189,12 @@ hopecc-website/
   | Cream       | `#f7f9fc`  |
   | Font        | Nunito, weight 800 for headings |
 
-- **Decorative motion:** four parts of the site (homepage hero, Mission page
-  hero, Contact page, navbar) carry gold "glow"/kindle-style CSS+JS
-  animation — see [Cinematic effects](#cinematic-effects) below for what
-  each does and which files they live in.
+- **Decorative motion:** three parts of the site (Mission page hero,
+  Contact page, navbar) carry gold "glow"/kindle-style CSS+JS animation —
+  see [Cinematic effects](#cinematic-effects) below for what each does and
+  which files they live in. The homepage hero works differently — a real
+  photo of the building rather than the candlelight treatment — see
+  [Homepage hero](#homepage-hero) below.
 - **Worth knowing:** `EDIT:` comments in those files now cover two
   different audiences — plain content values (numbers, words, a line of
   verse, two wing labels) meant for `MAINTENANCE-GUIDE.md`'s non-technical
@@ -206,9 +206,43 @@ hopecc-website/
 
 ---
 
+## Homepage hero
+
+The homepage hero was rebuilt around a real photo of the building
+(client-requested — see `7c`/`7d` in the Pre-launch plan table below),
+replacing the animated night-sky scene it used to share with the other
+three surfaces below. `HeroAtmosphere.astro` was deleted as part of this —
+it's no longer used anywhere. `HeroFlame.astro` wasn't deleted; it moved
+to the Contact page (see the project structure tree above).
+
+Both parts of the new hero read the same one file,
+**`public/images/church-photo.jpg`**, so replacing that single image
+changes the whole scene at once:
+
+- **The backdrop** — the same photo, blurred heavily and drifting very
+  slowly, fills the entire hero as a soft wash of colour behind the words.
+  Being blurred, it's cropped to fill the space (`object-fit: cover`) —
+  invisible at this blur radius, so it's not worth worrying about.
+- **The framed photo** — the same photo again, sharp and never cropped,
+  in a gold-edged frame beside the words on computers (below them on
+  phones), with a soft breathing glow behind it, a one-time sweep of
+  light across it on load, and — computers only, and only for visitors
+  who haven't asked their device for reduced motion — a gentle lean
+  toward the mouse.
+
+Unlike the three effects below, this isn't an optional decorative layer
+sitting behind fixed content — the photo is structural to the hero now,
+so there's no single line to delete to go back to a plain hero. The one
+genuinely optional piece is the mouse-lean: a small, self-contained
+`<script>` block at the end of `index.astro` — deleting it just leaves
+the photo holding still. Everything here (including the tone/filter
+applied to the photo) is marked `EDIT: hero photo` in `index.astro`.
+
+---
+
 ## Cinematic effects
 
-Four parts of the site have a layered "night sky and candlelight" visual
+Three parts of the site have a layered "night sky and candlelight" visual
 treatment, all built the same way: plain CSS `@keyframes`/`<style>` blocks
 and small amounts of vanilla JavaScript, no added libraries, decoration
 hidden from screen readers (`aria-hidden`), a calm static fallback under
@@ -218,17 +252,19 @@ up or down.
 
 | Where | File(s) | What it is |
 |-------|---------|------------|
-| Homepage hero | `src/components/HeroAtmosphere.astro` + `HeroFlame.astro`, used in `index.astro` | Breathing colour veils, soft light pools, god-rays falling from an arched window, a `<canvas>` of floating dust/embers, the animated flame logo, mouse-parallax across the layers and a click-to-release burst of light |
 | Mission page hero | `src/components/MissionAtmosphere.astro`, used in `mission.astro` | A twinkling star field and a slowly turning globe, two arcs of light "sending" outward from Hinckley to India and Romania, two 3D "wing" panels (each a real link to that country's page) that lean toward the cursor on hover, drifting petals/snow/dust |
 | Contact page | `src/pages/contact.astro`'s contact-details card | The six contact options ("candlelit windows") kindle on hover, tap, or scroll-into-view, plus a mouse-tracked candlelight glow across the card |
 | Navbar | `src/components/Navbar.astro` | Links glow gold on hover/tap/focus, the Contact Us button pulses like a beacon, mobile menu items light up one-by-one as the menu opens, a mouse-tracked glow across the desktop bar |
 
-The homepage and Mission page treatments already existed by the time this
-section was written. The Contact page and navbar were added afterward, at
-the client's request, during the final pre-DNS review pass — see `7a`/`7b`
-in the Pre-launch plan table below, including how those two were verified.
-Removing any one of the four is a single-line change in each case; every
-component's own header comment says exactly which line to delete.
+The homepage hero used to be a fourth surface here, built the same way —
+see [Homepage hero](#homepage-hero) above for what replaced it. The
+Mission page treatment already existed by the time this section was
+written. The Contact page and navbar were added afterward, at the
+client's request, during the final pre-DNS review pass — see `7a`/`7b`
+in the Pre-launch plan table below, including how those two were
+verified. Removing any one of the three remaining effects is a
+single-line change in each case; every component's own header comment
+says exactly which line to delete.
 
 ---
 
@@ -666,6 +702,8 @@ resolved (see below) — one remains outstanding by design:
 | 7+ | AWS deployment (S3, CloudFront, ACM, Lambda, API Gateway) + GitHub Actions CI/CD | ✅ Done — see the AWS deployment table below |
 | 7a | Cinematic "candlelit windows" glow treatment added to the Contact page's contact-details card (client-requested, during final pre-DNS review) | ✅ Done |
 | 7b | Matching glow theme extended to `Navbar.astro` (client-requested) | ✅ Done |
+| 7c | Homepage hero heading changed to "Christ centred, People focused" (client-requested) | ✅ Done |
+| 7d | Homepage hero rebuilt around a real photo of the building; `HeroAtmosphere.astro` deleted as no longer used (client-requested) | ✅ Done — see "Homepage hero" above |
 | Last | DNS cutover, launch, wind-down + ownership handover | In progress — see below |
 
 **AWS deployment (this ran as its own set of sessions, tracked separately

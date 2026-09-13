@@ -267,6 +267,25 @@ wording, search `EDIT: wing text` in
 **`src/components/MissionAtmosphere.astro`** — there are two spots, one per
 country, right next to each other in the file.
 
+### 13. Homepage hero photo & caption
+
+The large photo on the homepage — the blurred colour wash behind
+everything, and the sharp framed photo beside the welcome text — is the
+same picture, shown twice from one file:
+**`public/images/church-photo.jpg`**. To use a different photo, follow the
+same steps as "Photos (swapping an existing image)" above (replace that
+one file, or give it a new name and update the path) — both copies update
+together automatically, since they read the same file.
+
+Unlike most photos on the site, this one is **never cropped** — whatever
+shape you use will show in full. Landscape (wider than tall) still works
+best, since a very tall, narrow photo will make the framed copy unusually
+tall next to the text beside it.
+
+The small caption on the framed photo (currently *"Our home on Deveron
+Way"*) is ordinary text in the same spot — search `EDIT: hero photo` in
+**`src/pages/index.astro`** to find and change it, or remove it entirely.
+
 ---
 
 ## A note on the "Watch & Listen" page
@@ -291,24 +310,27 @@ delete it in future; it doesn't affect anything.
 
 ## A note on the site's "cinematic" effects
 
-Four parts of the site now have moving, glowing, atmosphere-style visual
-treatments: the **homepage hero** (a night-sky-and-candlelight scene behind
-the welcome text), the **Mission page hero** (a turning globe with two
-"wing" panels for India and Romania), the **Contact page**'s six contact
-options (they light up like little glowing windows), and the **menu bar**
-at the top of every page (a gold glow on hover/tap). These are **design
-effects, not content** — nothing here needs regular updating, and none of
-the usual page content (words, photos, numbers) moved or changed because
-of them.
+Three parts of the site have moving, glowing, atmosphere-style visual
+treatments: the **Mission page hero** (a turning globe with two "wing"
+panels for India and Romania), the **Contact page**'s six contact options
+(they light up like little glowing windows), and the **menu bar** at the
+top of every page (a gold glow on hover/tap). These are **design effects,
+not content** — nothing here needs regular updating, and none of the
+usual page content (words, photos, numbers) moved or changed because of
+them.
+
+The **homepage hero** used to be a fourth effect in this same family, but
+it's since been rebuilt around a real photo of the building instead — see
+"13." above if you want to change that photo or its caption.
 
 A few things worth knowing:
 
 - Anyone with "reduce motion" turned on in their phone or computer's
   accessibility settings automatically sees a calm, still version of all
-  four — nothing flickers or drifts for them.
+  three (and the homepage photo holds still too) — nothing flickers or
+  drifts for them.
 - These effects live in CSS and JavaScript — the "code-like" parts this
   guide already tells you to leave alone — inside
-  `src/components/HeroAtmosphere.astro` and `HeroFlame.astro` (homepage),
   `src/components/MissionAtmosphere.astro` (Mission page),
   `src/pages/contact.astro` (Contact page), and `src/components/Navbar.astro`
   (menu bar). Each file has its own "EDIT:" notes explaining what every
@@ -337,6 +359,7 @@ A few things worth knowing:
 | Room hire checklist                   | `contact.astro`                                                 |
 | Contact page's Bible verse             | `contact.astro` — search `EDIT: verse line`                    |
 | Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
+| Homepage hero photo/caption           | `public/images/church-photo.jpg` (both copies update together); caption is in `index.astro` — search `EDIT: hero photo` |
 
 ---
 
