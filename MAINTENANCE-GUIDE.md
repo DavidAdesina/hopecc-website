@@ -342,6 +342,30 @@ A few things worth knowing:
 
 ---
 
+## A note on the tab icon and the picture that shows when the link is shared
+
+You may have noticed that pasting the website's link into WhatsApp or a
+text message used to show a plain grey "A" instead of anything to do with
+the church, and no picture at all. That's now fixed — sharing the link
+shows the church's own flame logo as the icon, plus a proper preview
+picture of the building with "Christ centred, People focused" underneath.
+
+This isn't something you'll ever need to change yourself — there's no
+"EDIT:" marker for it, because it isn't ordinary text or a simple photo
+swap; it's several specially-sized image files that all need to work
+together correctly across phones, browsers, and messaging apps. If the
+church gets a new logo in future, or wants a different picture to show
+when the link is shared, ask your technical volunteer — they'll know to
+look at the "Favicons & share image" section of `README.md`.
+
+One quirk worth knowing, since it can look like something's broken when it
+isn't: WhatsApp and iMessage remember an old preview for any link that's
+already been sent before, sometimes for several days, even after this is
+fixed on the website's end. To check it's working, paste the link
+somewhere it hasn't been sent before, rather than resending an old message.
+
+---
+
 ## Quick reference: "I want to change..."
 
 | What you want to change              | File(s) to open                                              |
@@ -360,6 +384,7 @@ A few things worth knowing:
 | Contact page's Bible verse             | `contact.astro` — search `EDIT: verse line`                    |
 | Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
 | Homepage hero photo/caption           | `public/images/church-photo.jpg` (both copies update together); caption is in `index.astro` — search `EDIT: hero photo` |
+| Tab icon / link-preview picture       | Not a text or photo edit — see the note above, and ask your technical volunteer |
 
 ---
 

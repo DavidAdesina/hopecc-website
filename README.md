@@ -118,8 +118,14 @@ hopecc-website/
 │   ├── admin/                  Decap CMS — config.yml (collections/fields)
 │   │                            and index.html (the /admin screen)
 │   ├── documents/             PDFs (e.g. the safeguarding policy)
-│   ├── images/                 All site photos, logos, and the OG share image
-│   ├── favicon.ico / favicon.svg
+│   ├── images/                 All site photos, logos, and og-home.jpg (the
+│   │                            share-link image — see "Favicons & share
+│   │                            image" below)
+│   ├── favicon.ico / favicon.svg   Tab icon, built from the flame logo
+│   ├── apple-touch-icon.png     180×180 iOS home-screen icon
+│   ├── icon-192.png / icon-512.png  Manifest icons (Android "add to home
+│   │                            screen")
+│   └── manifest.json             Referenced by Layout.astro's <head>
 │
 └── src/
     ├── assets/                 Astro-starter placeholder assets (unused)
@@ -195,6 +201,9 @@ hopecc-website/
   which files they live in. The homepage hero works differently — a real
   photo of the building rather than the candlelight treatment — see
   [Homepage hero](#homepage-hero) below.
+- **The tab icon and link-preview image** are also built from real brand
+  assets now (the flame logo and the church photo) rather than framework
+  defaults — see [Favicons & share image](#favicons--share-image) below.
 - **Worth knowing:** `EDIT:` comments in those files now cover two
   different audiences — plain content values (numbers, words, a line of
   verse, two wing labels) meant for `MAINTENANCE-GUIDE.md`'s non-technical
@@ -265,6 +274,78 @@ in the Pre-launch plan table below, including how those two were
 verified. Removing any one of the three remaining effects is a
 single-line change in each case; every component's own header comment
 says exactly which line to delete.
+
+---
+
+## Favicons & share image
+
+Pasting the site's link into WhatsApp, iMessage, or a browser tab used to
+show the default Astro starter logo (a plain "A") instead of anything
+belonging to the church — `public/favicon.svg`/`favicon.ico` had simply
+never been replaced, and the `og:image`/`twitter:image` tags pointed at a
+file, `og-image.png`, that was never actually built. Fixed by generating a
+full icon set from the church's own flame logo — the same flame drawn in
+`HeroFlame.astro`, itself traced from `public/images/logo-white.svg` — plus
+a real share-link image styled after the homepage hero.
+
+New files, all in `public/` (see the project structure tree above):
+
+- **`favicon.svg` / `favicon.ico`** (16/32/48px) — the browser tab icon.
+- **`apple-touch-icon.png`** (180×180) — iOS "Add to Home Screen".
+  Deliberately full-bleed and opaque with square corners: iOS applies its
+  own rounded mask and composites any transparency onto black, so a
+  transparent or pre-rounded icon would show a black square behind it.
+- **`icon-192.png` / `icon-512.png` + `manifest.json`** — Android/PWA
+  "add to home screen", referenced from `Layout.astro`'s `<head>` via
+  `<link rel="manifest">`.
+- **`public/images/og-home.jpg`** (1200×630 JPEG, ~80KB) — the actual
+  link-preview image (`og:image` / `twitter:image` in `Layout.astro`),
+  replacing the never-implemented `og-image.png` placeholder. That
+  placeholder was never actually built as a real image and had no other
+  references anywhere in the repo (confirmed by a full-repo search before
+  removing it) — it's been deleted (`511f1f2`), not just superseded.
+
+All of the flame artwork used is the same single SVG path + ellipse that
+appears in `HeroFlame.astro` — there's no separate "icon version" of the
+logo to keep in sync; it's the same flame, just laid out on a plain navy
+tile instead of animated.
+
+### Why `og:image` doesn't point at `hopecc.org.uk`
+
+`Layout.astro` builds its canonical and Open Graph URLs from `Astro.site`
+(`https://hopecc.org.uk` — see [`astro.config.mjs`](#astroconfigmjs)
+below), but link-preview scrapers (WhatsApp, iMessage, Facebook, X) fetch
+`og:image` from wherever *that specific tag's URL* points, independent of
+the page it was found on. Before the DNS cutover, `hopecc.org.uk` still
+resolves to the old host, so an `og:image` pointing there would fail to
+load — which is exactly the symptom that prompted this fix: the image
+never showed, even though `og:title`/`og:description` did, since those are
+inline in the page's own HTML and don't need a second fetch.
+
+The fix: `og:image` and `twitter:image` are hardcoded to the CloudFront
+domain (`https://d3jmbi4qqbxnbe.cloudfront.net/images/og-home.jpg`)
+instead of being built from `Astro.site`. This keeps working after the
+DNS cutover too, so repointing both tags at `hopecc.org.uk` afterwards is
+optional tidy-up planned for the post-cutover wind-down, not a
+requirement — nothing breaks if it's skipped, since the CloudFront URL
+keeps resolving indefinitely either way.
+
+### A platform quirk worth knowing
+
+WhatsApp and iMessage cache link previews **per device, with no official
+refresh button** — a URL that's already been shared once may keep showing
+its old preview (or no preview at all) for days after a fix like this
+ships. Testing needs either a URL nobody's pasted before, or a throwaway
+query string appended to force a fresh fetch (e.g. `?v=2`).
+
+### If Ian's new logo replaces the flame
+
+The icon set isn't auto-generated from `HeroFlame.astro` at build time —
+it's a separate, hand-built image set made once from the same flame
+artwork. Regenerating it needs a developer or technical volunteer working
+from the new logo's flame shape; there's no `EDIT:` marker here for a
+non-technical editor, since it isn't a simple text or photo swap (see
+`MAINTENANCE-GUIDE.md`'s note on this).
 
 ---
 
@@ -704,6 +785,7 @@ resolved (see below) — one remains outstanding by design:
 | 7b | Matching glow theme extended to `Navbar.astro` (client-requested) | ✅ Done |
 | 7c | Homepage hero heading changed to "Christ centred, People focused" (client-requested) | ✅ Done |
 | 7d | Homepage hero rebuilt around a real photo of the building; `HeroAtmosphere.astro` deleted as no longer used (client-requested) | ✅ Done — see "Homepage hero" above |
+| 7e | Favicon + share-link image built from the flame logo; `og:image`/`twitter:image` fixed to a fetchable URL (client noticed the wrong icon/missing preview when sharing the link) | ✅ Done — see "Favicons & share image" above |
 | Last | DNS cutover, launch, wind-down + ownership handover | In progress — see below |
 
 **AWS deployment (this ran as its own set of sessions, tracked separately
