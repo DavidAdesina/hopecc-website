@@ -15,6 +15,14 @@ const {
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Share image for link previews (WhatsApp, iMessage, Facebook, X, …).
+// Served from the CloudFront domain — NOT Astro.site — on purpose: until
+// the DNS cutover, hopecc.org.uk still points at the old host, so link
+// scrapers could never fetch an image from there. This URL keeps working
+// after the cutover too; switching it to the real domain then is optional
+// tidy-up (see README, "Favicons & share image").
+const ogImage = 'https://d3jmbi4qqbxnbe.cloudfront.net/images/og-home.jpg';
 ---
 
 <!doctype html>
@@ -33,10 +41,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={`${title} | Hope Community Church`} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="https://hopecc.org.uk/images/og-image.png" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Hope Community Church — Hinckley, Leicestershire" />
+    <meta property="og:image:alt" content="The Hope Community Church building on Deveron Way, Hinckley — Christ centred, People focused" />
     <meta property="og:site_name" content="Hope Community Church" />
     <meta property="og:locale" content="en_GB" />
 
@@ -44,10 +53,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} | Hope Community Church`} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="https://hopecc.org.uk/images/og-image.png" />
+    <meta name="twitter:image" content={ogImage} />
 
-    <!-- Favicon (add your own to /public/) -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Icons — all built from the church's flame logo (the same flame as
+         HeroFlame.astro / logo-white.svg). To regenerate when Ian's new
+         logo arrives, see README, "Favicons & share image". -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0d1f3c" />
 
     <!-- Google Fonts: Nunito -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
