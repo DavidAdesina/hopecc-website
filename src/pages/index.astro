@@ -15,11 +15,12 @@
 //   • "Who we are" text           → search "EDIT: welcome text"
 //   • The three info cards        → search "EDIT: info cards"
 //   • Room hire banner text       → search "EDIT: room hire banner"
-//   • The hero's moving light      → that all lives in
-//     src/components/HeroAtmosphere.astro (the scene + its on/off
-//     switches and dials) and src/components/HeroFlame.astro (the
-//     flame itself — also the ONE file to update when the new logo
-//     arrives from Ian)
+//   • The hero photo & backdrop   → search "EDIT: hero photo". The framed
+//     photo, its caption, and the blurred colour-wash behind the whole
+//     hero all read from ONE file (public/images/church-photo.jpg) —
+//     swap that single image to change the entire scene at once.
+//     (HeroFlame.astro still exists for the contact page, and is still
+//     the ONE file to update when the new logo arrives from Ian.)
 //
 // This file has two parts, in this order:
 //   1. The HTML below   — the words and layout people see on the page,
@@ -28,11 +29,6 @@
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
 import Layout from '../layouts/Layout.astro';
-// The hero's moving light: HeroAtmosphere is the whole scene, HeroFlame is
-// just the flame (phones show a small one above the heading). Removing the
-// effect = delete these two imports and the two places they're used below.
-import HeroAtmosphere from '../components/HeroAtmosphere.astro';
-import HeroFlame from '../components/HeroFlame.astro';
 import servicesData from '../data/services.json';
 const services = servicesData.services;
 
@@ -62,36 +58,57 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
   <!-- ============================================================
        HERO
        EDIT: hero text — the heading and text below
+       EDIT: hero photo — the photo appears twice on purpose: once
+       blurred into a soft wash of colour behind the whole hero, and
+       once sharp inside the gold frame. Both read the same file
+       (public/images/church-photo.jpg), so replacing that ONE image
+       updates the entire scene in one go.
   ============================================================ -->
   <section class="hero">
-    <!-- All the moving light on the hero (dust, embers, the arched window,
-         and — on computers — the big flame on the left). Pure decoration:
-         delete this one line and the hero goes back to plain navy. All its
-         dials and on/off switches are inside the component itself. -->
-    <HeroAtmosphere />
+    <!-- The backdrop: the church's own photo, blurred into ambient
+         colour and drifting very slowly. Pure decoration — the sharp,
+         readable copy of the photo is the framed one further down. -->
+    <div class="hero-backdrop" aria-hidden="true">
+      <img src="/images/church-photo.jpg" alt="" loading="eager" />
+      <div class="hero-backdrop-tint"></div>
+    </div>
 
     <div class="hero-inner">
-      <!-- On phones only: a small living flame above the heading (computers
-           hide this and show the big one on the left instead). -->
-      <div class="hero-flame-mobile" aria-hidden="true">
-        <HeroFlame />
+      <div class="hero-copy">
+        <p class="eyebrow">Welcome to Hope Community Church · Hinckley</p>
+        <!-- The two <span class="hero-line"> wrappers replaced the old <br />
+             so each line of the heading can rise in on page load. Edit the
+             words exactly as before — just leave the spans around them. -->
+        <h1>
+          <span class="hero-line"><em>CHRIST</em> centred,</span>
+          <span class="hero-line"><em>PEOPLE</em> focused</span>
+        </h1>
+        <p class="hero-sub">
+          We're a warm, friendly church family in Hinckley, Leicestershire. Everyone is welcome —
+          wherever you're starting from.
+        </p>
+        <div class="hero-btns">
+          <a href="/contact" class="btn-gold">Plan your visit</a>
+        </div>
       </div>
 
-      <p class="eyebrow">Welcome to Hope Community Church · Hinckley</p>
-      <!-- The two <span class="hero-line"> wrappers replaced the old <br />
-           so each line of the heading can rise in on page load. Edit the
-           words exactly as before — just leave the spans around them. -->
-      <h1>
-        <span class="hero-line"><em>CHRIST</em> centred,</span>
-        <span class="hero-line"><em>PEOPLE</em> focused</span>
-      </h1>
-      <p class="hero-sub">
-        We're a warm, friendly church family in Hinckley, Leicestershire. Everyone is welcome —
-        wherever you're starting from.
-      </p>
-      <div class="hero-btns">
-        <a href="/contact" class="btn-gold">Plan your visit</a>
-      </div>
+      <!-- The framed photo. On computers it sits beside the words and
+           leans very gently toward the mouse (see the small script at the
+           bottom of this file); on phones it sits just below them. -->
+      <figure class="hero-photo">
+        <div class="hero-photo-glow" aria-hidden="true"></div>
+        <div class="hero-photo-card">
+          <img
+            src="/images/church-photo.jpg"
+            alt="The Hope Community Church building on Deveron Way, Hinckley"
+            width="640"
+            height="480"
+            loading="eager"
+          />
+          <!-- EDIT: hero photo — the little caption on the photo -->
+          <figcaption class="hero-photo-caption">Our home on Deveron Way</figcaption>
+        </div>
+      </figure>
     </div>
   </section>
 
@@ -343,6 +360,45 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
       <a href="/room-hire" class="btn-gold">Find out more</a>
     </div>
   </section>
+  <!-- EDIT: hero photo — the gentle 3D lean. On computers only, the framed
+       photo leans a few degrees toward the mouse as it moves, the same way
+       the contact page's windows do. Purely decorative and self-contained:
+       delete this whole <script> block and the photo simply holds still.
+       It switches itself off on touch screens and for visitors who ask
+       their device for reduced motion. -->
+  <script>
+    const heroPhoto = document.querySelector('.hero-photo');
+    const heroPhotoCard = document.querySelector('.hero-photo-card');
+    const heroFinePointer = window.matchMedia('(pointer: fine)').matches;
+    const heroMotionOk = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (heroPhoto instanceof HTMLElement && heroPhotoCard instanceof HTMLElement && heroFinePointer && heroMotionOk) {
+      let rafId = 0;
+      let leanX = 0;
+      let leanY = 0;
+
+      heroPhoto.addEventListener('pointermove', (e) => {
+        const box = heroPhoto.getBoundingClientRect();
+        const px = (e.clientX - box.left) / box.width - 0.5;
+        const py = (e.clientY - box.top) / box.height - 0.5;
+        leanY = px * 7; // side-to-side lean, in degrees (±3.5° at the edges)
+        leanX = py * -5; // up-and-down lean, in degrees (±2.5° at the edges)
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            rafId = 0;
+            heroPhotoCard.style.transform =
+              'rotateY(' + leanY.toFixed(2) + 'deg) rotateX(' + leanX.toFixed(2) + 'deg)';
+          });
+        }
+      });
+
+      heroPhoto.addEventListener('pointerleave', () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = 0;
+        heroPhotoCard.style.transform = '';
+      });
+    }
+  </script>
 </Layout>
 
 <style>
@@ -358,9 +414,9 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
 
   /* ---- Hero ---- */
   .hero {
-    /* position/overflow let the atmosphere live inside the hero and be
-       trimmed neatly at its edges; the layered background turns the flat
-       navy into a softly lit room. The words and spacing are unchanged. */
+    /* position/overflow let the backdrop live inside the hero and be
+       trimmed neatly at its edges; the gradient is the fallback colour
+       for the instant before the backdrop photo loads. */
     position: relative;
     overflow: hidden;
     background:
@@ -368,8 +424,7 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
       var(--navy);
     color: #fff;
     padding: 88px 28px 96px;
-    text-align: center;
-    /* Give the light some room on big screens: the hero grows toward
+    /* Give the scene some room on big screens: the hero grows toward
        filling the window (minus roughly the menu bar + times strip).
        The first line is a fallback for older browsers. */
     min-height: max(540px, calc(100vh - 152px));
@@ -379,12 +434,74 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     justify-content: center;
   }
 
+  /* EDIT: hero photo — the backdrop. The church's own photo, blurred into
+     a wash of warm brick and evening sky behind everything. The heavy
+     blur also means the modest photo file can fill any screen without
+     ever looking pixelated. */
+  .hero-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-backdrop img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(38px) saturate(1.3) brightness(0.85);
+    /* scaled up so the blur never shows a soft edge at the borders, then
+       drifting very slowly — one full drift takes 36 seconds */
+    transform: scale(1.16);
+    animation: backdrop-drift 36s ease-in-out infinite alternate;
+  }
+  @keyframes backdrop-drift {
+    from {
+      transform: scale(1.16) translate(0, 0);
+    }
+    to {
+      transform: scale(1.26) translate(-1.6%, -1.2%);
+    }
+  }
+  /* the navy wash over the blurred photo: darkest on the left (behind
+     the words, so they stay easy to read), lighter on the right (so the
+     warm colour glows through around the framed photo), and fading to
+     near-solid navy at the top and bottom so the menu bar and times
+     strip join on seamlessly */
+  .hero-backdrop-tint {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(13, 31, 60, 0.66) 0%,
+        rgba(13, 31, 60, 0.16) 24%,
+        rgba(13, 31, 60, 0.18) 62%,
+        rgba(13, 31, 60, 0.9) 100%
+      ),
+      linear-gradient(
+        97deg,
+        rgba(13, 31, 60, 0.96) 0%,
+        rgba(13, 31, 60, 0.88) 38%,
+        rgba(13, 31, 60, 0.62) 68%,
+        rgba(13, 31, 60, 0.44) 100%
+      );
+  }
+
   .hero-inner {
-    max-width: 680px;
+    max-width: 1180px;
+    width: 100%;
     margin: 0 auto;
-    /* keeps the words stacked above every layer of light */
+    /* keeps the words and photo stacked above the backdrop */
     position: relative;
     z-index: 8;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+    gap: clamp(40px, 6vw, 90px);
+    align-items: center;
+  }
+
+  .hero-copy {
+    text-align: left;
+    max-width: 620px;
   }
 
   .eyebrow {
@@ -484,8 +601,8 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
   .hero-sub {
     font-size: 17px;
     color: rgba(255, 255, 255, 0.72);
-    max-width: 440px;
-    margin: 0 auto 38px;
+    max-width: 470px;
+    margin: 0 0 38px;
     line-height: 1.75;
     animation: hero-line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.34s both;
   }
@@ -493,7 +610,7 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
   .hero-btns {
     display: flex;
     gap: 12px;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
     animation: hero-line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.5s both;
   }
@@ -512,36 +629,155 @@ const sundayEveningTime = sundayEvening?.shortTime ?? 'See What’s On for times
     box-shadow: 0 12px 32px rgba(201, 168, 76, 0.4);
   }
 
-  /* The small phone flame: hidden on computers, shown on narrow screens
-     (the atmosphere's big flame is hidden on phones at the same width). */
-  .hero-flame-mobile {
-    display: none;
+  /* EDIT: hero photo — the framed photo itself. */
+  .hero-photo {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    /* the source photo is 640px wide — never stretch it much past that */
+    max-width: 560px;
+    justify-self: end;
+    /* the 3D "stage" for the gentle mouse-lean (script at the bottom) */
+    perspective: 950px;
+    animation: hero-photo-in 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s both;
+  }
+  @keyframes hero-photo-in {
+    from {
+      opacity: 0;
+      transform: translateY(26px) scale(0.97);
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+  /* a soft, slowly breathing circle of golden light behind the frame */
+  .hero-photo-glow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 130%;
+    aspect-ratio: 1;
+    margin-left: -65%;
+    margin-top: -65%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(240, 223, 160, 0.2) 0%,
+      rgba(201, 168, 76, 0.08) 46%,
+      transparent 70%
+    );
+    animation: photo-glow-breathe 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes photo-glow-breathe {
+    0%,
+    100% {
+      opacity: 0.65;
+      transform: scale(0.97);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.03);
+    }
+  }
+  .hero-photo-card {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(240, 223, 160, 0.5);
+    box-shadow:
+      0 24px 60px rgba(3, 9, 20, 0.5),
+      0 0 44px 6px rgba(201, 168, 76, 0.16);
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .hero-photo-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* EDIT: hero photo — the photo's tone. Deliberately just a whisper
+       of warmth, so the building reads clearly and true-to-life. */
+    filter: saturate(1.05) sepia(0.08) contrast(1.04) brightness(1.02);
+  }
+  /* one soft pass of light sweeps across the photo shortly after it
+     appears, then never again — like evening sun catching the glass */
+  .hero-photo-card::after {
+    content: '';
+    position: absolute;
+    inset: -20% -35%;
+    background: linear-gradient(
+      115deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.14) 50%,
+      rgba(240, 223, 160, 0.1) 55%,
+      transparent 65%
+    );
+    transform: translateX(-130%);
+    animation: photo-sheen 1.6s ease-in-out 2.6s 1 both;
+    pointer-events: none;
+  }
+  @keyframes photo-sheen {
+    to {
+      transform: translateX(130%);
+    }
+  }
+  .hero-photo-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 26px 18px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(240, 223, 160, 0.92);
+    background: linear-gradient(to top, rgba(6, 14, 28, 0.78), transparent);
   }
 
   @media (max-width: 940px) {
-    .hero-flame-mobile {
-      display: block;
-      width: 92px;
-      margin: 0 auto 14px;
-      /* a touch brighter than the big faint one on computers */
-      --flame-strength: 1.3;
-      animation: hero-line-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    }
-
     .hero {
       min-height: max(600px, calc(100vh - 210px));
       min-height: max(600px, calc(100svh - 210px));
     }
+
+    /* narrow screens stack: the words first, the photo just beneath */
+    .hero-inner {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+    .hero-copy {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .hero-sub {
+      margin: 0 auto 38px;
+    }
+    .hero-btns {
+      justify-content: center;
+    }
+    .hero-photo {
+      max-width: 460px;
+      justify-self: center;
+    }
   }
 
   /* For anyone whose device asks for reduced motion: no entrances, no
-     shimmer — the finished page simply appears, complete and still. */
+     shimmer, no drift, no sweep — the finished page simply appears,
+     complete and still. (The photo's mouse-lean script at the bottom of
+     this file also switches itself off for these visitors.) */
   @media (prefers-reduced-motion: reduce) {
     .eyebrow,
     .hero h1 .hero-line,
     .hero-sub,
     .hero-btns,
-    .hero-flame-mobile {
+    .hero-backdrop img,
+    .hero-photo,
+    .hero-photo-glow,
+    .hero-photo-card::after {
       animation: none;
     }
 
