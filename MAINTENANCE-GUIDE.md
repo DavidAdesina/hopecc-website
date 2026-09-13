@@ -366,6 +366,31 @@ somewhere it hasn't been sent before, rather than resending an old message.
 
 ---
 
+## A note on the website's actual address (hopecc.org.uk)
+
+Until now, going to `hopecc.org.uk` showed the church's older website,
+even though everything described in this guide was already built,
+tested, and ready behind the scenes. That's now changed — `hopecc.org.uk`
+shows the real, current site this guide describes.
+
+This was a one-time technical change and isn't something you'll ever need
+to do again or think about while making ordinary content edits. Two
+things worth knowing, since they could look like a fault if you didn't
+know they were expected:
+
+- For a day or so after a change like this, different devices can briefly
+  show different things — one phone showing the new site while another
+  still shows the old one. This sorts itself out on its own within a day
+  or two at most, and is completely normal.
+- The church's email address, `info@hopecc.org.uk`, was carefully checked
+  and kept working throughout — nothing about this change affects email.
+
+If the website's address itself is ever mentioned as needing to change
+again in future (a new domain, a different hosting company, etc.), that's
+a job for a technical volunteer, not something this guide covers.
+
+---
+
 ## Quick reference: "I want to change..."
 
 | What you want to change              | File(s) to open                                              |
@@ -385,6 +410,7 @@ somewhere it hasn't been sent before, rather than resending an old message.
 | Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
 | Homepage hero photo/caption           | `public/images/church-photo.jpg` (both copies update together); caption is in `index.astro` — search `EDIT: hero photo` |
 | Tab icon / link-preview picture       | Not a text or photo edit — see the note above, and ask your technical volunteer |
+| Why does hopecc.org.uk look different than before? | Not a text or photo edit — see "A note on the website's actual address" above |
 
 ---
 

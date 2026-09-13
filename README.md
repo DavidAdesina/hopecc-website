@@ -316,18 +316,19 @@ tile instead of animated.
 (`https://hopecc.org.uk` — see [`astro.config.mjs`](#astroconfigmjs)
 below), but link-preview scrapers (WhatsApp, iMessage, Facebook, X) fetch
 `og:image` from wherever *that specific tag's URL* points, independent of
-the page it was found on. Before the DNS cutover, `hopecc.org.uk` still
-resolves to the old host, so an `og:image` pointing there would fail to
-load — which is exactly the symptom that prompted this fix: the image
-never showed, even though `og:title`/`og:description` did, since those are
-inline in the page's own HTML and don't need a second fetch.
+the page it was found on. At the time this was built, `hopecc.org.uk`
+still resolved to the old host, so an `og:image` pointing there would
+have failed to load — which was exactly the symptom that prompted this
+fix: the image never showed, even though `og:title`/`og:description` did,
+since those are inline in the page's own HTML and don't need a second
+fetch.
 
 The fix: `og:image` and `twitter:image` are hardcoded to the CloudFront
 domain (`https://d3jmbi4qqbxnbe.cloudfront.net/images/og-home.jpg`)
-instead of being built from `Astro.site`. This keeps working after the
-DNS cutover too, so repointing both tags at `hopecc.org.uk` afterwards is
-optional tidy-up planned for the post-cutover wind-down, not a
-requirement — nothing breaks if it's skipped, since the CloudFront URL
+instead of being built from `Astro.site`. The DNS cutover has since
+happened (see "DNS & domain registration" above), so `hopecc.org.uk` does
+resolve correctly now — repointing both tags there is possible, but it's
+still just optional tidy-up, not a requirement, since the CloudFront URL
 keeps resolving indefinitely either way.
 
 ### A platform quirk worth knowing
@@ -466,10 +467,14 @@ with a custom domain, and **GitHub Actions** deploys automatically on every
 push to `main`. Two small **Lambda** functions handle the contact form and
 Decap CMS's login. Everything is defined in Terraform, in `terraform/`.
 
-**Current status:** all of this is live and tested on CloudFront's own
-domain. `hopecc.org.uk`'s DNS hasn't been pointed at it yet — that's a
-deliberate last step, done only once everything's been proven working
-first. Until then, the live public site is still on its previous host.
+**Current status:** all of this is live at **`hopecc.org.uk`** itself now,
+not just on CloudFront's own domain — DNS was cut over on 13 September
+2026, once everything above had already been proven working first. The
+site's previous host (NetNerd cPanel hosting, running a Sitejet-built
+site) is being left running untouched for a multi-week observation window
+before it's cancelled. See "DNS & domain registration" just below for how
+the cutover itself works and what's worth knowing if this zone is ever
+touched again.
 
 ### Architecture, at a glance
 
@@ -487,6 +492,97 @@ CloudFront (CDN + HTTPS + custom domain)
 git push to main ──▶ GitHub Actions ──▶ npm run build ──▶ aws s3 sync ──▶ CloudFront cache invalidation
                      (authenticates to AWS via OIDC — no stored AWS keys)
 ```
+
+### DNS & domain registration
+
+`hopecc.org.uk` is **registered** with **Fasthosts Internet Ltd**
+(confirmed via Nominet's own RDAP lookup — the registrar is a separate
+thing from wherever a domain's DNS happens to be hosted, and it's easy to
+assume they're the same company). Its **DNS zone**, though, is hosted on
+**Route 53** (hosted zone `Z04766982EAPQFTF6FXLQ`, defined in
+`route53.tf`) — not with the registrar, and not with NetNerd, where it
+lived before this cutover.
+
+**Why Route 53, not NetNerd:** NetNerd's own DNS panel has no ALIAS/ANAME
+record type (confirmed directly by inspecting its "Add Record" dropdown —
+only A/AAAA/CAA/CNAME/HTTPS/SVCB/MX/SRV/TXT are offered), and the zone
+apex (`hopecc.org.uk` with no subdomain) can never be a plain CNAME per
+the DNS spec. Since CloudFront is only reachable by hostname
+(`d3jmbi4qqbxnbe.cloudfront.net`), NetNerd had no way to point the bare
+domain at it at all. Route 53's own ALIAS record type exists specifically
+to solve this for AWS resources, so DNS hosting moved here instead of
+building a workaround.
+
+**Why Route 53, not Cloudflare** (the other realistic option): it keeps
+everything inside the same AWS/Terraform-managed account as the rest of
+this project, and avoids a standing Cloudflare footgun for this exact
+setup — if Cloudflare's proxy (its default "orange cloud" mode) ever got
+switched on in front of CloudFront, instead of staying DNS-only, it would
+silently sit a second CDN in front of the first, breaking things like the
+clean-URL CloudFront Function in ways that are annoying to debug months
+later by someone who doesn't know the history.
+
+**The four nameservers**, for reference if the domain's delegation at
+Fasthosts ever needs checking or restoring:
+
+```
+ns-1476.awsdns-56.org
+ns-1983.awsdns-55.co.uk
+ns-315.awsdns-39.com
+ns-745.awsdns-29.net
+```
+
+**Rollback:** the old NetNerd DNS zone was left fully intact throughout —
+nothing in it was deleted or modified. Rolling back Route 53 means
+changing the nameservers at Fasthosts back to `ns1.netnerd.com` /
+`ns2.netnerd.com`, not restoring any records, since none were ever
+removed from NetNerd's side.
+
+**Two things fixed during the migration, worth understanding before
+touching this zone again:**
+
+- **`mail.hopecc.org.uk` is a direct `A` record to `185.229.21.118`**, not
+  a `CNAME` to the bare apex like it was on NetNerd. On NetNerd, that
+  CNAME only worked because the apex happened to point at the same cPanel
+  box that mail lives on. Pointing the apex at CloudFront instead would
+  have silently broken webmail login and any email client configured with
+  `mail.hopecc.org.uk` as its server, since it would have started
+  resolving to CloudFront too. Keep this one as a direct record rather
+  than a CNAME to the apex, even if the apex changes again in future.
+- **The DKIM record's (`default._domainkey`) `records` value is written
+  *without* an outer pair of quotes**, even though it's a TXT value made
+  of two quoted strings. Terraform's AWS provider automatically wraps
+  every TXT `records[]` element in its own quotes before sending it to
+  Route 53 — adding another pair on top (which looks like the "correct"
+  way to write a multi-string TXT value by DNS convention) produces a
+  doubled `""…"…"""` value that Route 53's API rejects outright. The `\"
+  \"` boundary between the two DKIM chunks is still needed in the middle;
+  there just shouldn't be a quote at the very start or end. See the
+  comment directly above that resource in `route53.tf` for the full
+  story.
+
+**Deliberately not replicated into Route 53** — all specific to the old
+cPanel/Sitejet hosting, with no purpose once DNS stopped pointing there:
+`localhost.hopecc.org.uk`, cPanel's own one-off domain-control-validation
+TXT record, and cPanel AutoSSL's four `_acme-challenge` renewal tokens.
+`ftp.hopecc.org.uk` was also left out by choice — add it back (pointing
+at `185.229.21.118`) if FTP access to the old cPanel account is ever
+needed again before that hosting is finally cancelled.
+
+**One pre-existing record worth knowing about, left as-is:** the SPF
+record's `+a` mechanism now refers to whatever the apex resolves to
+(CloudFront) instead of the real mail-sending server. Harmless —
+`185.229.21.118` is also listed explicitly via `ip4:` in that same
+record, so outbound mail keeps passing SPF regardless — but `+a` is worth
+removing from it as a small tidy-up whenever someone's next in there for
+another reason.
+
+*(Unrelated aside from the same session: Fasthosts' registrant contact
+details for the domain were found half-updated — a Registrant Type of "UK
+Registered Charity" had been selected without the required Charity
+Name/Number ever being filled in and saved. Completed using the charity's
+official Charity Commission name, "THE HOPE COMMUNITY CHURCH HINCKLEY",
+and number 1108872.)*
 
 ### The Terraform
 
@@ -506,8 +602,9 @@ worth moving to an S3 backend if a second person ever needs to run
 | `variables.tf` | Every configurable value — domain name, budget threshold, GitHub repo, etc. |
 | `outputs.tf` | Values printed after `apply`: ACM's DNS validation records, CloudFront's own domain, the contact form's test URL, and the GitHub Actions role ARN |
 | `s3.tf` | The private site bucket, fully public-access-blocked, encrypted at rest, readable only by this CloudFront distribution |
-| `acm.tf` | The TLS certificate for `hopecc.org.uk` + `www`, validated via DNS records added by hand in NetNerd (DNS isn't on Route 53) |
+| `acm.tf` | The TLS certificate for `hopecc.org.uk` + `www` — DNS-validated automatically via records `route53.tf` generates directly from this resource, now that DNS is on Route 53 |
 | `cloudfront.tf` | The CDN distribution itself: both origins, the `/api/*` routing, the clean-URL fix, and the custom 404 page mapping — see below |
+| `route53.tf` | The Route 53 hosted zone and every DNS record in it — see "DNS & domain registration" above |
 | `iam.tf` | The two brothers' read-only + sandbox IAM users, and the "must have MFA" enforcement policy |
 | `sandbox.tf` | A separate, low-stakes S3 bucket the brothers can freely read/write, with a 30-day auto-expiry |
 | `billing.tf` | An AWS Budget ($/month cap — AWS Budgets always runs in USD, regardless of GBP billing — three warning tiers, emailed to three addresses) |
@@ -528,6 +625,7 @@ here for reference:
 | CloudFront distribution | `E26BTS9MBN5LNH` (`d3jmbi4qqbxnbe.cloudfront.net`) |
 | CloudFront OAC | `E2Q0CFO958IOWX` |
 | ACM certificate | `us-east-1`, covers `hopecc.org.uk` + `www.hopecc.org.uk` |
+| Route 53 hosted zone | `Z04766982EAPQFTF6FXLQ` (`hopecc.org.uk`) |
 | HTTP API | `b5emulwcc6` — serves both the contact form and Decap OAuth |
 | Lambda functions | `hopecc-website-contact-form`, `hopecc-website-decap-oauth` (both `nodejs22.x`) |
 | GitHub OIDC deploy role | `hopecc-website-github-actions-deploy` |
@@ -786,7 +884,7 @@ resolved (see below) — one remains outstanding by design:
 | 7c | Homepage hero heading changed to "Christ centred, People focused" (client-requested) | ✅ Done |
 | 7d | Homepage hero rebuilt around a real photo of the building; `HeroAtmosphere.astro` deleted as no longer used (client-requested) | ✅ Done — see "Homepage hero" above |
 | 7e | Favicon + share-link image built from the flame logo; `og:image`/`twitter:image` fixed to a fetchable URL (client noticed the wrong icon/missing preview when sharing the link) | ✅ Done — see "Favicons & share image" above |
-| Last | DNS cutover, launch, wind-down + ownership handover | In progress — see below |
+| Last | DNS cutover, launch, wind-down + ownership handover | DNS cutover ✅ Done (13 Sept 2026) — live at `hopecc.org.uk` via Route 53 + CloudFront, see "DNS & domain registration" above. Wind-down + handover still in progress |
 
 **AWS deployment (this ran as its own set of sessions, tracked separately
 since it's infrastructure work rather than code):**
@@ -797,7 +895,7 @@ since it's infrastructure work rather than code):**
 | 2 | Contact form backend (Lambda, API Gateway, SES) | ✅ Done |
 | 3 | Decap OAuth proxy + `/admin` routing | ✅ Done — real GitHub login confirmed working end-to-end on the live CloudFront domain |
 | 4 | CI/CD, rollback strategy, package-manager confirmation | ✅ Done — also caught and fixed two bugs (clean URLs, missing 404 page) and one commit gap (`config.yml`'s `base_url`) that would otherwise have surfaced during DNS cutover |
-| 5 | DNS cutover, launch, wind-down + ownership handover to Ian | In progress — DNS hasn't been pointed at CloudFront yet; this is the last planned step |
+| 5 | DNS cutover, launch, wind-down + ownership handover to Ian | DNS cutover ✅ Done — DNS hosting moved from NetNerd to Route 53 and nameservers switched at Fasthosts; the site is now live at `hopecc.org.uk` itself. Wind-down + handover to Ian still in progress |
 
 See [Deployment & infrastructure](#deployment--infrastructure) above for
 what all of this actually built.
