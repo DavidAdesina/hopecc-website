@@ -34,17 +34,14 @@
 //      advance automatically. You shouldn't need to touch the <style>
 //      or <script> blocks for normal text/photo updates.
 // ─────────────────────────────────────────────────────────────────────────
-import Layout from '../../layouts/Layout.astro';
-import missionStats from '../../data/mission-stats.json';
-import prayerPoints from '../../data/prayer-points.json';
-import villagePhotosData from '../../data/romania-carousel.json';
+import missionStats from '../data/mission-stats.json';
+import prayerPoints from '../data/prayer-points.json';
+import villagePhotosData from '../data/romania-carousel.json';
 
 const romaniaStats = missionStats.romania;
 const romaniaPrayerPoints = prayerPoints.romania;
 const villagePhotos = villagePhotosData.photos;
 ---
-
-<Layout title="Romania Mission — Mick & Lorraine Smith | Hope Community Church">
   <!-- ════════════════════════════════════════════════
        HERO — village rooftop landscape with overlay
   ════════════════════════════════════════════════ -->
@@ -455,7 +452,7 @@ const villagePhotos = villagePhotosData.photos;
       </section>
     </div><!-- end .container -->
   </main>
-</Layout>
+
 
 <!-- ══════════════════════════════════════════════════
      STYLES

@@ -28,15 +28,12 @@
 //   2. The <style> block near the end — colours, spacing and fonts.
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
-import Layout from '../../layouts/Layout.astro';
-import missionStats from '../../data/mission-stats.json';
-import prayerPoints from '../../data/prayer-points.json';
+import missionStats from '../data/mission-stats.json';
+import prayerPoints from '../data/prayer-points.json';
 
 const indiaStats = missionStats.india;
 const indiaPrayerPoints = prayerPoints.india;
 ---
-
-<Layout title="India Mission — Prabha & Mary | Hope Community Church">
   <!-- ════════════════════════════════════════════════
        HERO — full-width landscape photo of Lonavala hills
   ════════════════════════════════════════════════ -->
@@ -351,7 +348,7 @@ const indiaPrayerPoints = prayerPoints.india;
       </section>
     </div><!-- end .container -->
   </main>
-</Layout>
+
 
 <!-- ══════════════════════════════════════════════════
      STYLES

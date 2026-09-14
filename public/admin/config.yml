@@ -245,3 +245,44 @@ collections:
             widget: list
             min: 1
             field: { label: 'Prayer point', name: 'point', widget: string }
+
+  - name: page_visibility
+    label: 'Show/Hide Pages'
+    description: 'Temporarily switch whole pages on or off — for example, pausing the Mission pages while their info is updated. Turning a page OFF shows visitors a friendly "back soon" message instead of the real content, and automatically removes its link from the menu. Nothing is ever deleted — the real page comes straight back exactly as it was the moment you turn it back ON. IMPORTANT: this list is fixed to the pages already wired up in the site''s code — you cannot add a new page here yourself. If a new page needs an on/off switch, ask your developer to add it first.'
+    files:
+      - name: page_visibility
+        label: 'Page On/Off Switches'
+        file: src/data/page-visibility.json
+        fields:
+          - label: 'Pages'
+            name: 'pages'
+            widget: list
+            summary: '{{label}}'
+            allow_add: false
+            allow_remove: false
+            fields:
+              # Hidden — the site's code matches on this exact value to
+              # decide which page a switch controls. Never shown or
+              # editable, so it can't be accidentally retyped or mismatched
+              # (same reasoning as "Internal ID" on Services/Activities above).
+              - { label: 'Internal ID', name: 'id', widget: hidden }
+              - {
+                  label: 'Page name (just a label for you — safe to reword)',
+                  name: 'label',
+                  widget: string,
+                  required: false,
+                }
+              - {
+                  label: 'Show this page on the live site?',
+                  name: 'enabled',
+                  widget: boolean,
+                  default: true,
+                  hint: 'ON (ticked) = the real page shows normally and its menu link appears as usual. OFF (unticked) = visitors see a friendly "back soon" message instead, the menu link disappears automatically, and nothing about the real page is lost — it is saved exactly as it is and comes straight back when you tick this again.',
+                }
+              - {
+                  label: 'Custom message when hidden (optional)',
+                  name: 'customMessage',
+                  widget: text,
+                  required: false,
+                  hint: 'Leave this blank to use the standard message ("We''re updating this page and it''ll be back soon..."). Only fill this in if you want visitors to see something more specific instead — for example, a reason, or roughly when it will be back.',
+                }

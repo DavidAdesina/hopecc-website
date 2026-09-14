@@ -1,0 +1,100 @@
+---
+// src/components/PageUnavailable.astro — Hope Community Church
+// ─────────────────────────────────────────────────────────────────────────
+// WHAT THIS FILE DOES
+//   Shown instead of a page's real content whenever that page's entry in
+//   src/data/page-visibility.json has "enabled": false. Used inside the
+//   normal Layout (see how src/pages/mission.astro etc. use it) so the
+//   Navbar and Footer still appear as usual — this is meant to look like
+//   a designed part of the site, not a broken or missing page.
+//
+// HOW TO MAKE COMMON CHANGES
+//   • Default message (shown when a page's "Custom message" field is left
+//     blank in the CMS) → edit DEFAULT_UNAVAILABLE_MESSAGE in
+//     src/lib/page-visibility.js, not here — so it only needs changing in
+//     one place.
+//   • This card's look (colours, spacing) → the <style> block below.
+// ─────────────────────────────────────────────────────────────────────────
+import { DEFAULT_UNAVAILABLE_MESSAGE } from '../lib/page-visibility.js';
+
+interface Props {
+  message?: string;
+}
+
+const { message = DEFAULT_UNAVAILABLE_MESSAGE } = Astro.props;
+---
+
+<section class="page-unavailable">
+  <div class="unavailable-card">
+    <span class="unavailable-icon" aria-hidden="true">🙏</span>
+    <h1>This page is taking a short break</h1>
+    <p>{message}</p>
+    <a href="/" class="unavailable-link">Go to the homepage</a>
+    <p class="unavailable-redirect-note" aria-live="polite">
+      Taking you there automatically in a few seconds…
+    </p>
+  </div>
+</section>
+
+<style>
+  .page-unavailable {
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+  }
+  .unavailable-card {
+    max-width: 460px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid rgba(13, 31, 60, 0.08);
+    border-radius: 16px;
+    padding: 48px 36px;
+    box-shadow: 0 12px 32px rgba(13, 31, 60, 0.08);
+  }
+  .unavailable-icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 16px;
+  }
+  .unavailable-card h1 {
+    color: #0d1f3c;
+    font-size: 22px;
+    margin: 0 0 12px;
+  }
+  .unavailable-card p {
+    color: rgba(13, 31, 60, 0.7);
+    line-height: 1.6;
+    margin: 0 0 24px;
+    font-size: 15px;
+  }
+  .unavailable-link {
+    display: inline-block;
+    background: #c9a84c;
+    color: #0d1f3c;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 12px 28px;
+    border-radius: 999px;
+  }
+  .unavailable-link:hover {
+    background: #f0dfa0;
+  }
+  .unavailable-redirect-note {
+    margin: 16px 0 0;
+    font-size: 12px;
+    color: rgba(13, 31, 60, 0.45);
+  }
+</style>
+
+<script>
+  // No-JS visitors simply don't auto-redirect — the manual link above
+  // still works fine for them. No <meta http-equiv="refresh"> here on
+  // purpose: Layout.astro's <head> has no slot to inject one into
+  // correctly, and adding one isn't worth changing a file every page
+  // depends on just for this.
+  setTimeout(() => {
+    window.location.replace('/');
+  }, 6000);
+</script>

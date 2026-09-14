@@ -36,7 +36,6 @@
 //   2. The <style> block at the bottom — colours, spacing and fonts.
 //      You shouldn't need to touch the <style> block for normal updates.
 // ─────────────────────────────────────────────────────────────────────────
-import Layout from '../layouts/Layout.astro';
 // The hero's moving light: night sky, the turning globe with its arcs of
 // light from Hinckley, and the India/Romania wings — all in one component.
 import MissionAtmosphere from '../components/MissionAtmosphere.astro';
@@ -53,8 +52,6 @@ import missionStats from '../data/mission-stats.json';
 const indiaOverviewStats = missionStats.india.filter((s) => s.showOnOverview).slice(0, 3);
 const romaniaOverviewStats = missionStats.romania.filter((s) => s.showOnOverview).slice(0, 3);
 ---
-
-<Layout title="Mission | Hope Community Church">
   <!-- ════════════════════════════════════════════════
        HERO SECTION
        EDIT: hero text — the heading and subtitle below
@@ -267,7 +264,7 @@ const romaniaOverviewStats = missionStats.romania.filter((s) => s.showOnOverview
       </div><!-- end .country-cards-grid -->
     </div>
   </section>
-</Layout>
+
 
 <!-- ══════════════════════════════════════════════════
      STYLES

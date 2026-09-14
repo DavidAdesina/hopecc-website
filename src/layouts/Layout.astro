@@ -7,11 +7,18 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  // EDIT: noindex — set true on a page that's currently showing the
+  // PageUnavailable notice (see src/components/PageUnavailable.astro),
+  // so search engines don't index the placeholder while the real content
+  // is switched off. Defaults to false; every existing page is
+  // unaffected unless it explicitly passes noindex.
+  noindex?: boolean;
 }
 
 const {
   title,
   description = 'Hope Community Church — a warm, welcoming church family in Hinckley, Leicestershire. Christ centred, People focused.',
+  noindex = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -35,6 +42,7 @@ const ogImage = 'https://d3jmbi4qqbxnbe.cloudfront.net/images/og-home.jpg';
     <title>{title} | Hope Community Church</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website" />

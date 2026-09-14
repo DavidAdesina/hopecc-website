@@ -1,130 +1,24 @@
 ---
 // src/pages/mission/romania.astro — Hope Community Church
 // ─────────────────────────────────────────────────────────────────────────
-// TEMPORARILY DISABLED — 14 September 2026, at Julia's request.
-//
-// The real Romania mission story page (Mick & Lorraine Smith, Satu-Nou —
-// hero, photo carousel, story sections, prayer points, contact details)
-// has been MOVED — not deleted, not edited — to
-// src/pages-disabled/mission/romania.astro, so it no longer builds as a
-// live route. None of that content was touched.
-//
-// This file is a small stand-in: a friendly "back soon" notice for anyone
-// who still has an old link, bookmark, or search result pointing at
-// /mission/romania, which sends them on to the homepage. It deliberately
-// does NOT use the shared Layout.astro (no Navbar/Footer) — since it
-// redirects within a few seconds, skipping the site chrome keeps this
-// quick rather than flashing the full site around a message nobody has
-// time to read.
-//
-// TO RESTORE THE REAL PAGE LATER (same steps apply to mission.astro, the
-// overview page, and to india.astro, right alongside this file):
-//   1. Delete this file.
-//   2. Move src/pages-disabled/mission/romania.astro back to
-//      src/pages/mission/romania.astro.
-//   3. In src/components/Navbar.astro, un-comment the "Mission" entry in
-//      the navLinks list.
-//   4. In src/components/Footer.astro, un-comment the Mission line in the
-//      Navigate column.
-//   That's the whole process.
-//
-// The visible "back soon" card below is deliberately worded to match the
-// same card on src/pages/mission.astro and src/pages/mission/india.astro
-// (each file's own dev-comment block above differs, since each describes
-// different real archived content — but if you reword the card visitors
-// actually see, copy the new wording into those two files too, so all
-// three show one consistent message.
+// WHAT THIS FILE DOES
+//   The Romania mission story route. All the real content (Mick &
+//   Lorraine Smith, Satu-Nou) lives in
+//   src/components/MissionRomaniaContent.astro — this file just checks
+//   whether the page is switched on in the CMS (Website Sections →
+//   Mission — Romania page in Decap, backed by
+//   src/data/page-visibility.json) and shows either that real content or
+//   the "back soon" notice. This file itself should never need editing —
+//   it never has to move, and it never holds real content to lose.
 // ─────────────────────────────────────────────────────────────────────────
+import Layout from '../../layouts/Layout.astro';
+import PageUnavailable from '../../components/PageUnavailable.astro';
+import MissionRomaniaContent from '../../components/MissionRomaniaContent.astro';
+import { getPageStatus } from '../../lib/page-visibility.js';
+
+const { enabled, message } = getPageStatus('mission-romania');
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Romania Mission | Hope Community Church</title>
-    <!-- Keep this placeholder out of search results while the real page is offline -->
-    <meta name="robots" content="noindex, nofollow" />
-    <!-- No-JS fallback only — with JS on, the <script> below fires first via replace() -->
-    <meta http-equiv="refresh" content="6;url=/" />
-  </head>
-  <body>
-    <main class="unavailable">
-      <div class="unavailable-card">
-        <span class="unavailable-icon" aria-hidden="true">🙏</span>
-        <h1>This page is taking a short break</h1>
-        <p>
-          We're updating our Mission pages and they'll be back soon. Thank you for your patience —
-          and for your prayers for the work they cover.
-        </p>
-        <a href="/" class="unavailable-link">Go to the homepage</a>
-        <p class="unavailable-redirect-note" aria-live="polite">
-          Taking you there automatically in a few seconds…
-        </p>
-      </div>
-    </main>
-    <style>
-      html,
-      body {
-        margin: 0;
-        height: 100%;
-        font-family: 'Nunito', 'Century Gothic', sans-serif;
-        background: #f7f9fc;
-      }
-      .unavailable {
-        min-height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 64px 24px;
-      }
-      .unavailable-card {
-        max-width: 460px;
-        text-align: center;
-        background: #ffffff;
-        border: 1px solid rgba(13, 31, 60, 0.08);
-        border-radius: 16px;
-        padding: 48px 36px;
-        box-shadow: 0 12px 32px rgba(13, 31, 60, 0.08);
-      }
-      .unavailable-icon {
-        font-size: 40px;
-        display: block;
-        margin-bottom: 16px;
-      }
-      .unavailable-card h1 {
-        color: #0d1f3c;
-        font-size: 22px;
-        margin: 0 0 12px;
-      }
-      .unavailable-card p {
-        color: rgba(13, 31, 60, 0.7);
-        line-height: 1.6;
-        margin: 0 0 24px;
-        font-size: 15px;
-      }
-      .unavailable-link {
-        display: inline-block;
-        background: #c9a84c;
-        color: #0d1f3c;
-        font-weight: 700;
-        text-decoration: none;
-        padding: 12px 28px;
-        border-radius: 999px;
-      }
-      .unavailable-link:hover {
-        background: #f0dfa0;
-      }
-      .unavailable-redirect-note {
-        margin: 16px 0 0;
-        font-size: 12px;
-        color: rgba(13, 31, 60, 0.45);
-      }
-    </style>
-    <script>
-      setTimeout(() => {
-        window.location.replace('/');
-      }, 6000);
-    </script>
-  </body>
-</html>
+<Layout title="Romania Mission — Mick & Lorraine Smith | Hope Community Church" noindex={!enabled}>
+  {enabled ? <MissionRomaniaContent /> : <PageUnavailable message={message} />}
+</Layout>

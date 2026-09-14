@@ -1,0 +1,22 @@
+{
+  "pages": [
+    {
+      "id": "mission-overview",
+      "label": "Mission — Overview page",
+      "enabled": false,
+      "customMessage": "We're updating our Mission pages and they'll be back soon. Thank you for your patience — and for your prayers for the work they cover."
+    },
+    {
+      "id": "mission-india",
+      "label": "Mission — India page",
+      "enabled": false,
+      "customMessage": "We're updating our Mission pages and they'll be back soon. Thank you for your patience — and for your prayers for the work they cover."
+    },
+    {
+      "id": "mission-romania",
+      "label": "Mission — Romania page",
+      "enabled": false,
+      "customMessage": "We're updating our Mission pages and they'll be back soon. Thank you for your patience — and for your prayers for the work they cover."
+    }
+  ]
+}

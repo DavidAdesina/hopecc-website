@@ -49,27 +49,35 @@
 //   To turn any single effect off, search for its "EDIT:" comment below.
 // ─────────────────────────────────────────────────────────────────────────
 
+import { isPageEnabled } from '../lib/page-visibility.js';
+
 // EDIT: menu links — this single list feeds BOTH the desktop and mobile menus
 //
-// TEMPORARILY DISABLED (14 Sept 2026, at Julia's request) — the "Mission"
-// entry (and its India/Romania dropdown) is commented out below rather
-// than deleted, so bringing it back later is a one-line uncomment. The
-// actual Mission pages still exist in the repo untouched, just moved out
-// of src/pages/ (see src/pages-disabled/mission/) so they don't build as
-// live routes while this is off.
+// The "Mission" entry (and its India/Romania dropdown) is now built from
+// src/data/page-visibility.json — the same on/off switches editable in
+// Decap CMS under "Website Sections". Nothing here needs editing when
+// someone toggles a page there; this just reads the current state each
+// time the site builds. See src/lib/page-visibility.js for the rules.
+const missionDropdown = [
+  ...(isPageEnabled('mission-india') ? [{ label: 'India', href: '/mission/india', flag: '🇮🇳' }] : []),
+  ...(isPageEnabled('mission-romania') ? [{ label: 'Romania', href: '/mission/romania', flag: '🇷🇴' }] : []),
+];
+
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: "What's On", href: '/whats-on' },
-  // {
-  //   label: 'Mission',
-  //   href: '/mission',
-  //   // Sub-links shown in the "Mission" dropdown (desktop) and as indented
-  //   // links under "Mission" in the phone menu (mobile).
-  //   dropdown: [
-  //     { label: 'India', href: '/mission/india', flag: '🇮🇳' },
-  //     { label: 'Romania', href: '/mission/romania', flag: '🇷🇴' },
-  //   ],
-  // },
+  // "Mission" only appears at all if the overview page is switched on.
+  // If it is, but both India and Romania are switched off, it shows as a
+  // plain link (no dropdown) rather than a dropdown with nothing in it.
+  ...(isPageEnabled('mission-overview')
+    ? [
+        {
+          label: 'Mission',
+          href: '/mission',
+          ...(missionDropdown.length > 0 ? { dropdown: missionDropdown } : {}),
+        },
+      ]
+    : []),
   { label: 'Room Hire', href: '/room-hire' },
   // cta: true gives this link the gold "button" highlight on desktop
   { label: 'Contact Us', href: '/contact', cta: true },
