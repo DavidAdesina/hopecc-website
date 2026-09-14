@@ -1,811 +1,127 @@
 ---
 // src/pages/mission.astro — Hope Community Church
 // ─────────────────────────────────────────────────────────────────────────
-// WHAT THIS FILE DOES
-//   This produces the "Mission" overview page — the hero banner, the
-//   "What We Believe About Mission" intro, and the two country summary
-//   cards (India and Romania) that link through to their own full pages.
+// TEMPORARILY DISABLED — 14 September 2026, at Julia's request.
 //
-// HOW TO MAKE COMMON CHANGES
-//   • Hero heading & subtitle    → search "EDIT: hero text"
-//   • Intro text ("What We
-//     Believe About Mission")    → search "EDIT: intro text"
-//   • Prayer/Presence/Provision
-//     value cards                → search "EDIT: value cards"
-//   • India or Romania summary
-//     card stats                 → edit src/data/mission-stats.json (shared
-//     with india.astro/romania.astro — one edit keeps all pages in sync).
-//     Editable via Decap CMS at /admin.
-//   • India or Romania summary
-//     card text/link             → search "EDIT: India card" or
-//     "EDIT: Romania card"
-//   • Add a brand-new country
-//     card                       → copy one whole
-//     <div class="country-card"> block and update the flag emoji,
-//     country name, link, text and stats inside it
-//   • The hero's night sky, turning globe and the India/Romania side
-//     panels → that all lives in
-//     src/components/MissionAtmosphere.astro (its on/off switches and
-//     dials are at the top of that file; removing its one line below
-//     returns this page to a plain hero)
+// The real Mission overview page (hero, "What We Believe About Mission"
+// intro, India/Romania summary cards) has been MOVED — not deleted, not
+// edited — to src/pages-disabled/mission.astro, so it no longer builds as
+// a live route. None of that content was touched.
 //
-// This file has two parts, in this order:
-//   1. The HTML below   — the words and layout people see on the page,
-//      broken into labelled sections (HERO SECTION, WHAT IS MISSION?,
-//      MISSION FIELDS)
-//   2. The <style> block at the bottom — colours, spacing and fonts.
-//      You shouldn't need to touch the <style> block for normal updates.
+// This file is a small stand-in: a friendly "back soon" notice for anyone
+// who still has an old link, bookmark, or search result pointing at
+// /mission, which sends them on to the homepage. It deliberately does NOT
+// use the shared Layout.astro (no Navbar/Footer) — since it redirects
+// within a few seconds, skipping the site chrome keeps this quick rather
+// than flashing the full site around a message nobody has time to read.
+//
+// TO RESTORE THE REAL PAGE LATER (same steps for india.astro/romania.astro
+// under mission/):
+//   1. Delete this file.
+//   2. Move src/pages-disabled/mission.astro back to src/pages/mission.astro.
+//   3. In src/components/Navbar.astro, un-comment the "Mission" entry in
+//      the navLinks list.
+//   4. In src/components/Footer.astro, un-comment the Mission line in the
+//      Navigate column.
+//   That's the whole process.
+//
+// The visible "back soon" card below is deliberately worded to match the
+// same card on src/pages/mission/india.astro and
+// src/pages/mission/romania.astro (each file's own dev-comment block above
+// differs, since each describes different real archived content — but if
+// you reword the card visitors actually see, copy the new wording into
+// those two files too, so all three show one consistent message.
 // ─────────────────────────────────────────────────────────────────────────
-import Layout from '../layouts/Layout.astro';
-// The hero's moving light: night sky, the turning globe with its arcs of
-// light from Hinckley, and the India/Romania wings — all in one component.
-import MissionAtmosphere from '../components/MissionAtmosphere.astro';
-import missionStats from '../data/mission-stats.json';
-
-// Same stats data that india.astro/romania.astro show in full — this card
-// only shows the ones flagged showOnOverview (fits three per card).
-// EDIT: SAFETY NET — do not remove the .slice(0, 3). The Decap CMS field for
-// "Show on overview" says "max 3 per country", but nothing in the CMS itself
-// enforces that — someone can tick a 4th box. Without this .slice, a 4th
-// (or 5th, 6th...) stat would still render, squeezing the card's layout.
-// This guarantees the card always shows at most three, no matter how many
-// are ticked.
-const indiaOverviewStats = missionStats.india.filter((s) => s.showOnOverview).slice(0, 3);
-const romaniaOverviewStats = missionStats.romania.filter((s) => s.showOnOverview).slice(0, 3);
 ---
 
-<Layout title="Mission | Hope Community Church">
-  <!-- ════════════════════════════════════════════════
-       HERO SECTION
-       EDIT: hero text — the heading and subtitle below
-  ════════════════════════════════════════════════ -->
-  <section class="mission-hero">
-    <div class="hero-bg-overlay"></div>
-    <!-- The whole cinematic scene (sky, globe, arcs, wings) — one line.
-         Deleting this line returns the page to a plain hero. -->
-    <MissionAtmosphere />
-    <div class="hero-content">
-      <span class="hero-eyebrow">Hope Community Church</span>
-      <h1 class="hero-title">Our Mission</h1>
-      <p class="hero-subtitle">
-        Going to the ends of the earth — bearing witness, building lives, and sharing hope across
-        continents.
-      </p>
-      <div class="hero-scroll-hint" aria-hidden="true">
-        <span></span>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mission | Hope Community Church</title>
+    <!-- Keep this placeholder out of search results while the real page is offline -->
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- No-JS fallback only — with JS on, the <script> below fires first via replace() -->
+    <meta http-equiv="refresh" content="6;url=/" />
+  </head>
+  <body>
+    <main class="unavailable">
+      <div class="unavailable-card">
+        <span class="unavailable-icon" aria-hidden="true">🙏</span>
+        <h1>This page is taking a short break</h1>
+        <p>
+          We're updating our Mission pages and they'll be back soon. Thank you for your patience —
+          and for your prayers for the work they cover.
+        </p>
+        <a href="/" class="unavailable-link">Go to the homepage</a>
+        <p class="unavailable-redirect-note" aria-live="polite">
+          Taking you there automatically in a few seconds…
+        </p>
       </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════════
-       WHAT IS MISSION? — intro strip
-  ════════════════════════════════════════════════ -->
-  <section class="mission-intro-section">
-    <div class="container">
-      <div class="intro-grid">
-        <div class="intro-text-col">
-          <!-- EDIT: intro text — the heading and three paragraphs below -->
-          <h2 class="section-title">What We Believe About Mission</h2>
-          <p>
-            At Hope Community Church, mission sits at the very heart of who we are. We believe that
-            faith is not passive — it moves, it serves, and it crosses borders. Rooted in Hinckley
-            and reaching across the world, we partner with workers and communities who are bringing
-            good news to places that need it most.
-          </p>
-          <p>
-            Our mission involvement spans prayer, practical support, financial giving, and hands-on
-            trips. Every year, members of Hope travel overseas to serve alongside our long-standing
-            partners — returning changed and with a deeper conviction that God is at work far beyond
-            our local walls.
-          </p>
-          <p>
-            Below you will find the two mission fields we are currently most closely connected with.
-            We would love you to read their stories, pray for them, and consider how you might play
-            a part.
-          </p>
-        </div>
-
-        <div class="intro-values-col">
-          <!-- EDIT: value cards — the three pillars of mission (Prayer/Presence/Provision) below -->
-          <div class="value-card">
-            <span class="value-icon">🙏</span>
-            <div>
-              <h3>Prayer</h3>
-              <p>Holding our partners before God week by week in our church family.</p>
-            </div>
-          </div>
-          <div class="value-card">
-            <span class="value-icon">✈️</span>
-            <div>
-              <h3>Presence</h3>
-              <p>Sending teams from Hope to serve, encourage, and work alongside.</p>
-            </div>
-          </div>
-          <div class="value-card">
-            <span class="value-icon">💛</span>
-            <div>
-              <h3>Provision</h3>
-              <p>Giving financially to sustain long-term workers and projects.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════════
-       MISSION FIELDS — country cards
-  ════════════════════════════════════════════════ -->
-  <section class="mission-fields-section">
-    <div class="container">
-      <h2 class="section-title centred">Our Mission Fields</h2>
-      <p class="section-lead centred">Two countries. Two remarkable stories. One shared calling.</p>
-
-      <div class="country-cards-grid">
-        <!-- ── EDIT: India card — text, stats and link below ── -->
-        <div class="country-card" id="india">
-          <div class="card-header india-header">
-            <span class="card-flag">🇮🇳</span>
-            <div>
-              <h3 class="card-country">India</h3>
-              <p class="card-location">Lonavala, Maharashtra</p>
-            </div>
-          </div>
-
-          <div class="card-body">
-            <p>
-              Through YWAM (Youth With A Mission), Prabha and Mary have built a network of house
-              fellowships in and around Lonavala. Their work weaves together church planting,
-              vocational training, and pastoral care for mission workers across India.
-            </p>
-            <p>
-              Recent months have brought real reason to celebrate — an Easter gathering of over <strong
-                >200 people</strong
-              >, fresh baptisms of tribal believers, and Mary's tailoring programme equipping women
-              with skills and dignity.
-            </p>
-
-            <!-- Key stats — numbers come from src/data/mission-stats.json -->
-            <div class="stats-row">
-              {
-                indiaOverviewStats.map((stat) => (
-                  <div class="stat-block">
-                    <span class="mission-stat">{stat.value}</span>
-                    <span class="stat-label">{stat.label}</span>
-                  </div>
-                ))
-              }
-            </div>
-
-            <div class="card-highlights">
-              <h4>Highlights</h4>
-              <ul>
-                <li>Prabha ordained — a milestone after years of faithful service</li>
-                <li>11 tribal believers baptised, with 8 more preparing</li>
-                <li>Mary's tailoring classes: 67 graduates, 3 new classes underway</li>
-                <li>Member Care Seminar equipping staff to support workers across India</li>
-              </ul>
-            </div>
-
-            <div class="card-prayer">
-              <h4>💬 How to Pray</h4>
-              <ul>
-                <li>For Prabha and Mary as they raise monthly support</li>
-                <li>For the monthly central gatherings of house fellowships</li>
-                <li>For protection and fruit as the harvest continues</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card-footer">
-            <a href="/mission/india" class="btn-primary"> Read the Full India Story → </a>
-          </div>
-        </div>
-
-        <!-- ── EDIT: Romania card — text, stats and link below ── -->
-        <div class="country-card" id="romania">
-          <div class="card-header romania-header">
-            <span class="card-flag">🇷🇴</span>
-            <div>
-              <h3 class="card-country">Romania</h3>
-              <p class="card-location">Satu-Nou, Bacău County</p>
-            </div>
-          </div>
-
-          <div class="card-body">
-            <p>
-              Our connection with Romania stretches back more than 30 years, rooted in a friendship
-              with the Andronic family. Today, Simon Andronic pastors the very church his father
-              planted in the rural village of Satu-Nou — and Hope members make regular trips to
-              serve alongside him and his wife Oana.
-            </p>
-            <p>
-              The village is poor but the church is vibrant. Simon and Oana run youth sponsorship
-              programmes, a dental mission clinic, and are developing a house for vulnerable
-              children called
-              <strong>Casa Andrei</strong>.
-            </p>
-
-            <!-- Key stats — numbers come from src/data/mission-stats.json -->
-            <div class="stats-row">
-              {
-                romaniaOverviewStats.map((stat) => (
-                  <div class="stat-block">
-                    <span class="mission-stat">{stat.value}</span>
-                    <span class="stat-label">{stat.label}</span>
-                  </div>
-                ))
-              }
-            </div>
-
-            <div class="card-highlights">
-              <h4>Highlights</h4>
-              <ul>
-                <li>Annual dental mission clinic serving surrounding villages for 3+ years</li>
-                <li>23 children sponsored to attend secondary school in Bacău</li>
-                <li>
-                  Casa Andrei — a safe home for vulnerable village children, under construction
-                </li>
-                <li>Hope team members Mick, Lorraine, Brooke &amp; Micah served in August 2022</li>
-              </ul>
-            </div>
-
-            <div class="card-prayer">
-              <h4>💬 How to Pray</h4>
-              <ul>
-                <li>For Simon and Oana as they lead with great faith in a poor village</li>
-                <li>For Casa Andrei to be completed and open its doors</li>
-                <li>For the children in the school sponsorship programme</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card-footer">
-            <a href="/mission/romania" class="btn-primary"> Read the Full Romania Story → </a>
-          </div>
-        </div>
-      </div><!-- end .country-cards-grid -->
-    </div>
-  </section>
-</Layout>
-
-<!-- ══════════════════════════════════════════════════
-     STYLES
-══════════════════════════════════════════════════ -->
-<style>
-  /* ── Design tokens (matching site brand) ─────────── */
-  :root {
-    --navy: #0d1f3c;
-    --blue: #4a90c4;
-    --pale-blue: #e8f2f9;
-    --gold: #c9a84c;
-    --gold-dark: #b8943d;
-    --cream: #f7f9fc;
-    --text: #1a2a3a;
-    --text-muted: #4a5568;
-    --font: 'Nunito', 'Century Gothic', sans-serif;
-    --radius: 10px;
-    --shadow: 0 4px 24px rgba(13, 31, 60, 0.1);
-    --shadow-lg: 0 12px 40px rgba(13, 31, 60, 0.16);
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  .container {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 28px;
-  }
-
-  /* ── HERO ─────────────────────────────────────────── */
-  .mission-hero {
-    position: relative;
-    /* EDIT: hero height — was 480px; raised a little so the night-sky
-       scene (MissionAtmosphere.astro) has room to breathe. Safe to put
-       back to 480px if a shorter hero is ever preferred. */
-    min-height: 560px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-    /*
-      Background: a deep navy-to-blue gradient that matches brand.
-      Replace with a real background-image if Ian supplies a photo:
-        background-image: url('/images/mission-hero.jpg');
-        background-size: cover;
-        background-position: center;
-    */
-    background: linear-gradient(135deg, #0d1f3c 0%, #183761 40%, #1e4d7b 70%, #4a90c4 100%);
-  }
-
-  /* Subtle geometric texture overlay */
-  .hero-bg-overlay {
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 80%, rgba(201, 168, 76, 0.12) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(74, 144, 196, 0.18) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    padding: 80px 28px 60px;
-    max-width: 720px;
-  }
-
-  .hero-eyebrow {
-    display: inline-block;
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 16px;
-  }
-
-  .hero-title {
-    font-family: var(--font);
-    font-size: clamp(40px, 7vw, 72px);
-    font-weight: 800;
-    color: #ffffff;
-    line-height: 1.05;
-    margin: 0 0 20px;
-    letter-spacing: -0.01em;
-  }
-
-  .hero-subtitle {
-    font-family: var(--font);
-    font-size: clamp(16px, 2.5vw, 20px);
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.78);
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  /* The words land first, gently, then the atmosphere fades up behind
-     them (MissionAtmosphere delays itself to match). Same rhythm as the
-     homepage hero. */
-  .hero-eyebrow,
-  .hero-title,
-  .hero-subtitle,
-  .hero-scroll-hint {
-    opacity: 0;
-    animation: hero-rise 0.9s cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
-  }
-  .hero-title {
-    animation-delay: 0.12s;
-  }
-  .hero-subtitle {
-    animation-delay: 0.26s;
-  }
-  .hero-scroll-hint {
-    animation-delay: 0.55s;
-  }
-  @keyframes hero-rise {
-    from {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-eyebrow,
-    .hero-title,
-    .hero-subtitle,
-    .hero-scroll-hint {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
-    /* the little scroll-hint dot also stays still */
-    .hero-scroll-hint span::after {
-      animation: none;
-    }
-  }
-
-  /* Animated scroll indicator */
-  .hero-scroll-hint {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-  }
-  .hero-scroll-hint span {
-    display: block;
-    width: 20px;
-    height: 32px;
-    border: 2px solid rgba(255, 255, 255, 0.35);
-    border-radius: 10px;
-    position: relative;
-  }
-  .hero-scroll-hint span::after {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 2px;
-    animation: scrollBounce 1.6s ease-in-out infinite;
-  }
-  @keyframes scrollBounce {
-    0%,
-    100% {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    70% {
-      transform: translateX(-50%) translateY(8px);
-      opacity: 0.3;
-    }
-  }
-
-  /* ── INTRO SECTION ────────────────────────────────── */
-  .mission-intro-section {
-    background: var(--cream);
-    padding: 80px 0;
-    border-bottom: 1px solid rgba(13, 31, 60, 0.08);
-  }
-
-  .intro-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: start;
-  }
-
-  .intro-text-col p {
-    font-family: var(--font);
-    font-size: 16px;
-    line-height: 1.75;
-    color: var(--text);
-    margin: 0 0 18px;
-  }
-
-  .intro-text-col p:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Value pillars */
-  .intro-values-col {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .value-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 18px;
-    background: #ffffff;
-    border: 1px solid rgba(74, 144, 196, 0.18);
-    border-left: 4px solid var(--gold);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-    box-shadow: var(--shadow);
-    transition:
-      box-shadow 0.2s,
-      transform 0.2s;
-  }
-
-  .value-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-  }
-
-  .value-icon {
-    font-size: 28px;
-    line-height: 1;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .value-card h3 {
-    font-family: var(--font);
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--navy);
-    margin: 0 0 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .value-card p {
-    font-family: var(--font);
-    font-size: 14px;
-    line-height: 1.55;
-    color: var(--text-muted);
-    margin: 0;
-  }
-
-  /* ── SECTION TITLES ───────────────────────────────── */
-  .section-title {
-    font-family: var(--font);
-    font-size: clamp(24px, 3.5vw, 34px);
-    font-weight: 800;
-    color: var(--navy);
-    margin: 0 0 24px;
-    line-height: 1.2;
-  }
-
-  .section-title.centred {
-    text-align: center;
-  }
-
-  .section-lead {
-    font-family: var(--font);
-    font-size: 17px;
-    color: var(--text-muted);
-    margin: -16px 0 48px;
-    line-height: 1.6;
-  }
-  .section-lead.centred {
-    text-align: center;
-  }
-
-  /* ── MISSION FIELDS SECTION ───────────────────────── */
-  .mission-fields-section {
-    background: #ffffff;
-    padding: 80px 0 100px;
-  }
-
-  .country-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 36px;
-    align-items: start;
-  }
-
-  /* ── Country card ─────────────────────────────────── */
-  .country-card {
-    background: var(--cream);
-    border: 1px solid rgba(13, 31, 60, 0.1);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    transition:
-      box-shadow 0.25s,
-      transform 0.25s;
-  }
-
-  .country-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
-  }
-
-  /* Coloured header band per country */
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 28px 28px 24px;
-    color: #ffffff;
-  }
-
-  .india-header {
-    background: linear-gradient(135deg, #1a5c2e 0%, #2d7a40 100%);
-  }
-
-  .romania-header {
-    background: linear-gradient(135deg, #8b1a1a 0%, #b52828 100%);
-  }
-
-  .card-flag {
-    font-size: 48px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .card-country {
-    font-family: var(--font);
-    font-size: 26px;
-    font-weight: 800;
-    margin: 0 0 4px;
-    letter-spacing: -0.01em;
-  }
-
-  .card-location {
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.8;
-    margin: 0;
-  }
-
-  /* Card body */
-  .card-body {
-    padding: 28px;
-    flex: 1;
-  }
-
-  .card-body > p {
-    font-family: var(--font);
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--text);
-    margin: 0 0 16px;
-  }
-
-  /* Stats strip */
-  .stats-row {
-    display: flex;
-    gap: 0;
-    margin: 24px 0;
-    border: 1px solid rgba(13, 31, 60, 0.1);
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: #ffffff;
-  }
-
-  .stat-block {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px 12px;
-    text-align: center;
-    border-right: 1px solid rgba(13, 31, 60, 0.08);
-  }
-
-  .stat-block:last-child {
-    border-right: none;
-  }
-
-  .mission-stat {
-    font-family: var(--font);
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--navy);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .stat-label {
-    font-family: var(--font);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    line-height: 1.3;
-  }
-
-  /* Highlights & prayer boxes */
-  .card-highlights,
-  .card-prayer {
-    background: #ffffff;
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    margin-bottom: 16px;
-    border: 1px solid rgba(13, 31, 60, 0.08);
-  }
-
-  .card-prayer {
-    background: var(--pale-blue);
-    border-color: rgba(74, 144, 196, 0.25);
-    margin-bottom: 0;
-  }
-
-  .card-highlights h4,
-  .card-prayer h4 {
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--navy);
-    margin: 0 0 12px;
-  }
-
-  .card-highlights ul,
-  .card-prayer ul {
-    margin: 0;
-    padding-left: 18px;
-    list-style: none;
-  }
-
-  .card-highlights li,
-  .card-prayer li {
-    font-family: var(--font);
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text);
-    margin-bottom: 8px;
-    padding-left: 8px;
-    position: relative;
-  }
-
-  .card-highlights li::before {
-    content: '✓';
-    position: absolute;
-    left: -12px;
-    color: var(--gold);
-    font-weight: 800;
-  }
-  .card-prayer li::before {
-    content: '•';
-    position: absolute;
-    left: -12px;
-    color: var(--blue);
-    font-weight: 800;
-  }
-
-  /* Card footer CTA */
-  .card-footer {
-    padding: 24px 28px 28px;
-    background: var(--cream);
-    border-top: 1px solid rgba(13, 31, 60, 0.08);
-  }
-
-  .btn-primary {
-    display: inline-block;
-    font-family: var(--font);
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: #ffffff;
-    background: var(--navy);
-    padding: 12px 24px;
-    border-radius: 6px;
-    transition:
-      background 0.18s,
-      transform 0.18s;
-    width: 100%;
-    text-align: center;
-  }
-
-  .btn-primary:hover {
-    background: var(--blue);
-    transform: translateY(-1px);
-  }
-
-  /* ── RESPONSIVE ───────────────────────────────────── */
-  @media (max-width: 900px) {
-    .intro-grid,
-    .country-cards-grid {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-  }
-
-  @media (max-width: 680px) {
-    .mission-hero {
-      min-height: 360px;
-    }
-    .hero-content {
-      padding: 60px 20px 48px;
-    }
-
-    .stats-row {
-      flex-wrap: wrap;
-    }
-    .stat-block {
-      flex: 0 0 50%;
-      border-bottom: 1px solid rgba(13, 31, 60, 0.08);
-    }
-    .stat-block:nth-child(even) {
-      border-right: none;
-    }
-
-    .mission-intro-section,
-    .mission-fields-section {
-      padding: 56px 0;
-    }
-  }
-</style>
+    </main>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        font-family: 'Nunito', 'Century Gothic', sans-serif;
+        background: #f7f9fc;
+      }
+      .unavailable {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 64px 24px;
+      }
+      .unavailable-card {
+        max-width: 460px;
+        text-align: center;
+        background: #ffffff;
+        border: 1px solid rgba(13, 31, 60, 0.08);
+        border-radius: 16px;
+        padding: 48px 36px;
+        box-shadow: 0 12px 32px rgba(13, 31, 60, 0.08);
+      }
+      .unavailable-icon {
+        font-size: 40px;
+        display: block;
+        margin-bottom: 16px;
+      }
+      .unavailable-card h1 {
+        color: #0d1f3c;
+        font-size: 22px;
+        margin: 0 0 12px;
+      }
+      .unavailable-card p {
+        color: rgba(13, 31, 60, 0.7);
+        line-height: 1.6;
+        margin: 0 0 24px;
+        font-size: 15px;
+      }
+      .unavailable-link {
+        display: inline-block;
+        background: #c9a84c;
+        color: #0d1f3c;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 12px 28px;
+        border-radius: 999px;
+      }
+      .unavailable-link:hover {
+        background: #f0dfa0;
+      }
+      .unavailable-redirect-note {
+        margin: 16px 0 0;
+        font-size: 12px;
+        color: rgba(13, 31, 60, 0.45);
+      }
+    </style>
+    <script>
+      setTimeout(() => {
+        window.location.replace('/');
+      }, 6000);
+    </script>
+  </body>
+</html>
