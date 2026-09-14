@@ -391,6 +391,31 @@ a job for a technical volunteer, not something this guide covers.
 
 ---
 
+## A note on checking the church's email (webmail)
+
+If you ever need to check the church's email address, `info@hopecc.org.uk`,
+in a web browser rather than in an email app on your phone or computer, go
+to:
+
+**https://mail.hopecc.org.uk:2096/**
+
+Log in with:
+
+- **Username:** the full email address — `info@hopecc.org.uk`
+- **Password:** the usual password for that mailbox
+
+Once you're in, it's worth bookmarking that page, or letting your browser
+remember the password, so you don't need to look this up again next time.
+
+**If you used to get in by clicking a button or link on the old website:**
+that's why it stopped working after `hopecc.org.uk` changed over to the new
+site (see the note just above) — that button lived on the old website,
+which isn't there to click on anymore. The mailbox itself was never
+affected and nothing in it was lost; only that one shortcut disappeared
+along with the old site's design.
+
+---
+
 ## Quick reference: "I want to change..."
 
 | What you want to change              | File(s) to open                                              |
@@ -411,6 +436,7 @@ a job for a technical volunteer, not something this guide covers.
 | Homepage hero photo/caption           | `public/images/church-photo.jpg` (both copies update together); caption is in `index.astro` — search `EDIT: hero photo` |
 | Tab icon / link-preview picture       | Not a text or photo edit — see the note above, and ask your technical volunteer |
 | Why does hopecc.org.uk look different than before? | Not a text or photo edit — see "A note on the website's actual address" above |
+| Checking the church's email inbox (webmail)         | Not a text or photo edit — see "A note on checking the church's email (webmail)" above |
 
 ---
 
