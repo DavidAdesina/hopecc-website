@@ -23,6 +23,11 @@ you want, make your change in the form, and press **Publish** — the live
 website updates itself automatically, usually within a minute or two. There
 is no separate "save" step and nothing to pass along to anyone afterwards.
 
+The same `/admin` login also has a separate, seventh screen — **"Show/Hide
+Pages"** — for temporarily switching a whole page on or off, which works a
+bit differently from the six content-editing things above. See "A note on
+switching whole pages on or off" further down.
+
 If you don't have a login for this yet, ask whoever looks after the
 website's technical side to set one up for you — until then, those six
 things can still be edited the old way, using their own small files (see
@@ -205,12 +210,19 @@ Mission page's summary cards (up to three per country), so **updating a
 number here keeps the summary card and the full country page in sync
 automatically** — no more updating two places by hand.
 
+*(The Mission pages are currently switched off site-wide — see "A note on
+switching whole pages on or off" further down. Edits here are saved
+correctly and will show live the moment Mission is switched back on.)*
+
 ### 6. Prayer points
 
 Prayer points for both India and Romania now live in one file,
 **`src/data/prayer-points.json`**, under an `"india"` list and a
 `"romania"` list. Each entry is one line of text — add, remove, or reword
 lines freely.
+
+*(Same note as above — Mission is currently switched off, so this won't
+show live until then, but your edit is saved safely either way.)*
 
 ### 7. Contact details (phone, email, address)
 
@@ -267,6 +279,9 @@ wording, search `EDIT: wing text` in
 **`src/components/MissionAtmosphere.astro`** — there are two spots, one per
 country, right next to each other in the file.
 
+*(Same note as "5." and "6." above — Mission is currently switched off
+site-wide, so this won't be visible live until it's switched back on.)*
+
 ### 13. Homepage hero photo & caption
 
 The large photo on the homepage — the blurred colour wash behind
@@ -285,6 +300,42 @@ tall next to the text beside it.
 The small caption on the framed photo (currently *"Our home on Deveron
 Way"*) is ordinary text in the same spot — search `EDIT: hero photo` in
 **`src/pages/index.astro`** to find and change it, or remove it entirely.
+
+---
+
+## A note on switching whole pages on or off
+
+Some pages on the site can be temporarily switched off — shown to
+visitors as a friendly "this page is taking a short break" message
+instead of their normal content — without anyone needing to touch any
+code, and without losing anything. This is different from the six things
+described at the very top of this guide (those edit content that's
+always visible on the site; this switches whether a whole page is visible
+at all).
+
+**To use it:** go to `hopecc.org.uk/admin`, log in, and open **"Show/Hide
+Pages."** You'll see one entry per page this applies to, with:
+
+- **"Show this page on the live site?"** — a tick-box. Ticked means the
+  page shows normally, exactly as before. Unticked means visitors see the
+  "back soon" message instead, and the page's link disappears from the
+  menu automatically.
+- **"Custom message when hidden"** — optional. Leave it blank for the
+  standard wording, or fill it in if you want visitors to see something
+  more specific.
+
+Switching a page off doesn't delete or change anything about its real
+content — it's saved exactly as it is and comes back the instant the
+tick-box is switched back on. If you've made edits to a page while it's
+switched off (mission stats, prayer points, wing labels — see "5.", "6.",
+and "12." above), those edits are saved correctly and will appear the
+moment it's switched back on; you just won't see them live until then.
+
+**Currently switched off: the Mission section** (the overview page, plus
+the separate India and Romania pages), while its content is being
+reviewed. Only switch it back on once you've checked with whoever asked
+for it to come down that it's actually ready to go back up — it isn't
+something to flip on as a quick test.
 
 ---
 
@@ -433,6 +484,7 @@ along with the old site's design.
 | Room hire checklist                   | `contact.astro`                                                 |
 | Contact page's Bible verse             | `contact.astro` — search `EDIT: verse line`                    |
 | Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
+| Switching Mission (or another page) on or off | Not a text or photo edit — see "A note on switching whole pages on or off" above |
 | Homepage hero photo/caption           | `public/images/church-photo.jpg` (both copies update together); caption is in `index.astro` — search `EDIT: hero photo` |
 | Tab icon / link-preview picture       | Not a text or photo edit — see the note above, and ask your technical volunteer |
 | Why does hopecc.org.uk look different than before? | Not a text or photo edit — see "A note on the website's actual address" above |

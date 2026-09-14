@@ -132,6 +132,9 @@ hopecc-website/
     ├── data/                    CMS-editable content as JSON — see
     │                            "Content editing" section below for what
     │                            each file holds
+    ├── lib/
+    │   └── page-visibility.js  Shared helper for the Mission on/off
+    │                            toggle — see "Mission on/off toggle" below
     ├── components/
     │   ├── Navbar.astro         Site header/navigation, used on every page
     │   ├── Footer.astro         Site footer, used on every page
@@ -140,6 +143,12 @@ hopecc-website/
     │   │                        Details" heading
     │   ├── MissionAtmosphere.astro  Mission page hero's night-sky/globe/wings
     │   │                        scene — see "Cinematic effects" below
+    │   ├── PageUnavailable.astro  Shared "back soon" notice for any page
+    │   │                        currently switched off — see "Mission
+    │   │                        on/off toggle" below
+    │   ├── MissionOverviewContent.astro  Real Mission overview page content
+    │   ├── MissionIndiaContent.astro     Real India mission story content
+    │   ├── MissionRomaniaContent.astro   Real Romania mission story content
     │   └── Welcome.astro        Unused Astro-starter boilerplate — see below
     ├── layouts/
     │   └── Layout.astro         Shared page shell (Navbar + Footer + <head>
@@ -149,10 +158,12 @@ hopecc-website/
     │   ├── whats-on.astro         Services, regular activities, gallery, calendar
     │   ├── watch-listen.astro     Sermons/live stream — currently a "coming soon"
     │   │                          page with a scaffold ready for real content
-    │   ├── mission.astro           Mission overview / landing page
+    │   ├── mission.astro           Thin route: shows MissionOverviewContent
+    │   │                          or the "back soon" notice depending on
+    │   │                          the toggle — see "Mission on/off toggle"
     │   ├── mission/
-    │   │   ├── india.astro          Full India mission story
-    │   │   └── romania.astro        Full Romania mission story
+    │   │   ├── india.astro          Same pattern, India page
+    │   │   └── romania.astro        Same pattern, Romania page
     │   ├── contact.astro           Contact page (also handles room hire mode)
     │   ├── room-hire.astro         Redirects to contact.astro?enquiry=room-hire
     │   ├── safeguarding.astro       Safeguarding policy page
@@ -261,7 +272,7 @@ up or down.
 
 | Where | File(s) | What it is |
 |-------|---------|------------|
-| Mission page hero | `src/components/MissionAtmosphere.astro`, used in `mission.astro` | A twinkling star field and a slowly turning globe, two arcs of light "sending" outward from Hinckley to India and Romania, two 3D "wing" panels (each a real link to that country's page) that lean toward the cursor on hover, drifting petals/snow/dust |
+| Mission page hero | `src/components/MissionAtmosphere.astro`, rendered by `MissionOverviewContent.astro` when Mission is switched on (see "Mission on/off toggle" below) | A twinkling star field and a slowly turning globe, two arcs of light "sending" outward from Hinckley to India and Romania, two 3D "wing" panels (each a real link to that country's page) that lean toward the cursor on hover, drifting petals/snow/dust |
 | Contact page | `src/pages/contact.astro`'s contact-details card | The six contact options ("candlelit windows") kindle on hover, tap, or scroll-into-view, plus a mouse-tracked candlelight glow across the card |
 | Navbar | `src/components/Navbar.astro` | Links glow gold on hover/tap/focus, the Contact Us button pulses like a beacon, mobile menu items light up one-by-one as the menu opens, a mouse-tracked glow across the desktop bar |
 
@@ -274,6 +285,81 @@ in the Pre-launch plan table below, including how those two were
 verified. Removing any one of the three remaining effects is a
 single-line change in each case; every component's own header comment
 says exactly which line to delete.
+
+---
+
+## Mission on/off toggle
+
+The Mission section (overview page + India + Romania) can be switched on
+or off from Decap CMS, under **"Show/Hide Pages,"** with no code change
+or developer involvement needed. Added 14 September 2026, after the
+church asked for Mission to be temporarily disabled while its content was
+under review, and then asked whether that could be made self-service for
+future situations like it.
+
+**Currently: all three (`mission-overview`, `mission-india`,
+`mission-romania`) are switched off.** Always check
+`src/data/page-visibility.json` directly before assuming otherwise — see
+the "shipped defaults" note below for why this matters more than it
+might look like it should.
+
+### How it works
+
+| File | Role |
+|------|------|
+| `src/data/page-visibility.json` | Single source of truth — one entry per toggleable page (`mission-overview`, `mission-india`, `mission-romania`), each with an `enabled` boolean and an optional `customMessage` string. Editable directly, or via Decap. |
+| `src/lib/page-visibility.js` | `getPageStatus(id)` / `isPageEnabled(id)` — the only code that reads the JSON above; everything else imports from here. |
+| `src/components/PageUnavailable.astro` | The "this page is taking a short break" notice shown instead of real content when a page's flag is off. Rendered inside the normal `Layout` (Navbar/Footer stay visible), with its own `noindex` meta tag via a small additive prop added to `Layout.astro` for this purpose. |
+| `src/pages/mission.astro`, `mission/india.astro`, `mission/romania.astro` | Thin, permanent route files — check the flag via `getPageStatus()`, then render either the real content component or `PageUnavailable`. These never need to change or move again. |
+| `src/components/MissionOverviewContent.astro`, `MissionIndiaContent.astro`, `MissionRomaniaContent.astro` | The actual page content (hero, stats, prayer points, everything) — extracted unchanged from the original page files when this was built. |
+| `Navbar.astro` / `Footer.astro` | Compute the Mission nav entry (parent link, India/Romania dropdown items, footer link) from the same three flags at build time — a switched-off page's link disappears automatically. If the overview page is off, the whole "Mission" nav entry disappears regardless of India/Romania's own state. |
+| `public/admin/config.yml` | The Decap collection itself (`page_visibility`) — locked to exactly these three entries (`allow_add`/`allow_remove: false`); a genuinely new toggleable page needs the code-side wiring above too, not just a new CMS entry — see "Adding a new toggleable page" below. |
+
+### Safety design, worth understanding before touching any of this
+
+`getPageStatus()` **fails open** — a missing id, or any data shape the
+code doesn't expect, is treated as "enabled," not "hidden." A page
+silently disappearing is judged a worse failure than a page staying
+visible that someone meant to hide.
+
+The one thing that safety net *can't* catch: if `page-visibility.json`
+itself becomes invalid JSON (not just missing a field — genuinely broken
+syntax), the `import` fails at build time and takes down the **entire**
+site build, not just Mission — confirmed directly by testing it on
+purpose. This has been separately confirmed safe in a different way:
+`.github/workflows/deploy.yml` runs "Build site" strictly before any
+AWS-touching step, with no `continue-on-error` anywhere in the job — so a
+failed build simply doesn't deploy; it doesn't take the live site down or
+touch S3/CloudFront at all. In practice this specific failure is hard to
+reach anyway, since Decap's tick-box/text-field UI structurally can't
+produce invalid JSON — only hand-editing the file outside the CMS could.
+
+**A shipped or edited default value is a judgement call, not something
+testing can verify.** The toggle mechanism has been tested exhaustively
+— every on/off combination, the fail-open behaviour, the malformed-JSON
+build failure — and all of that only proves the *mechanism* works. None
+of it proves a particular combination is the *correct* one to have live
+right now; that's a real-world question about the current situation, not
+a property of the code. This came up directly during development: a
+version of `page-visibility.json` that defaulted all three pages to
+`enabled: true` passed every automated check, and was still wrong to ship
+at that moment, since Mission was (and is) supposed to stay off. Caught
+before it was committed, not by any test. Treat "what should the default
+actually be, right now" as its own question every time this file changes.
+
+### Adding a new toggleable page
+
+1. Extract the page's real content into a new component in
+   `src/components/` (same pattern as `MissionIndiaContent.astro` etc.).
+2. Add a new entry to `src/data/page-visibility.json` with a new `id`.
+3. Replace the page's route file with a thin gate: import
+   `getPageStatus`, `PageUnavailable`, and the new content component;
+   render one or the other based on `enabled`.
+4. If it needs a nav/footer link, make that link conditional on the same
+   flag (see how `Navbar.astro`/`Footer.astro` do it for Mission).
+5. Add a matching entry (`id`/`label`/`enabled`/`customMessage`) to the
+   `page_visibility` collection's list in `public/admin/config.yml` —
+   same field shape as the existing three.
 
 ---
 
@@ -731,6 +817,12 @@ files in `src/data/` (see below) instead of being hardcoded inside the
 `.astro` pages, and `public/admin/config.yml` defines the Decap CMS forms
 for editing them.
 
+Decap also now includes a separate **"Show/Hide Pages"** collection for
+temporarily switching a whole page on or off (currently used for Mission)
+— see [Mission on/off toggle](#mission-onoff-toggle) below. This is a
+different kind of control (page visibility, not page content), so it's
+covered in its own section rather than folded into "Core scope" above.
+
 **Everything else** — hero text, page copy, contact details, form fields,
 the safeguarding PDF link, etc. — is still a direct code edit via the
 `EDIT:` comment convention. See `MAINTENANCE-GUIDE.md` for the
@@ -788,6 +880,7 @@ threat model here ever tightens further.
 | `romania-carousel.json` | `mission/romania.astro` | The sliding village photo carousel |
 | `mission-stats.json` | `mission.astro` (overview cards) + `mission/india.astro` + `mission/romania.astro` | Headline numbers — same drift-prevention benefit as `services.json`. Each stat has a `showOnOverview` flag controlling whether it appears on the summary card |
 | `prayer-points.json` | `mission/india.astro` + `mission/romania.astro` | "How to Pray" lists |
+| `page-visibility.json` | `mission.astro`, `mission/india.astro`, `mission/romania.astro`, `Navbar.astro`, `Footer.astro` (via `src/lib/page-visibility.js`) | On/off state + optional custom message per toggleable page — see [Mission on/off toggle](#mission-onoff-toggle) below |
 
 One small content fix made during this migration: the India "baptisms" stat
 had two different labels in the two places it appeared ("Baptised
@@ -899,6 +992,14 @@ since it's infrastructure work rather than code):**
 
 See [Deployment & infrastructure](#deployment--infrastructure) above for
 what all of this actually built.
+
+**Post-launch site changes** (ordinary site work happening after launch,
+tracked separately since it isn't part of the phased pre-launch plan
+above):
+
+| Date | Task | Status |
+|------|------|--------|
+| 14 Sept 2026 | Mission section temporarily disabled at the church's request (content under review), then rebuilt as a proper CMS-driven on/off toggle so switching it back on is self-service rather than needing a code change | ✅ Done — see [Mission on/off toggle](#mission-onoff-toggle) above. **Currently switched off.** |
 
 ---
 
