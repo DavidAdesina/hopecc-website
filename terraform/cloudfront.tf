@@ -128,9 +128,9 @@ resource "aws_cloudfront_distribution" "site" {
   # block, a mistyped URL would show a raw AWS XML error page instead of an
   # actual "page not found" page.
   #
-  # This assumes the Astro build produces a /404.html. If there isn't a
-  # custom 404 page in the project yet (src/pages/404.astro), that's worth
-  # adding before this goes live — flagging it now so it doesn't get missed.
+  # This assumes the Astro build produces a /404.html. Confirmed present —
+  # src/pages/404.astro exists, so a proper custom 404 page ships in every
+  # build.
   custom_error_response {
     error_code         = 403
     response_code      = 404

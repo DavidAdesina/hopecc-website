@@ -8,11 +8,10 @@
 # a choice, regardless of where the rest of your infrastructure lives.
 #
 # validation_method = "DNS" means AWS proves you own the domain by asking
-# you to create a specific CNAME record. That's more reliable and more
-# automatable than the email-based alternative, but since your DNS is
-# managed manually in NetNerd rather than through Route53, YOU'LL be the one
-# adding that record by hand (Terraform can't do it directly), based on the
-# output this file produces.
+# you to create a specific CNAME record. DNS now lives in Route 53
+# (route53.tf), so those validation records are generated automatically
+# from this certificate's own domain_validation_options -- no manual step
+# in a DNS panel needed anymore.
 resource "aws_acm_certificate" "site" {
   provider                  = aws.us_east_1
   domain_name               = var.domain_name
@@ -34,12 +33,12 @@ resource "aws_acm_certificate" "site" {
 }
 
 # This resource does nothing to AWS itself — it simply waits and repeatedly
-# checks whether AWS can see the DNS records you added in NetNerd, then
-# confirms once the certificate's status flips from PENDING_VALIDATION to
-# ISSUED. Terraform will show "still creating..." while this happens, which
-# is normal — it's polling, not stuck. If it takes more than a few minutes,
-# that's usually just DNS propagation catching up, not a problem with the
-# records themselves.
+# checks whether AWS can see the DNS validation records (now created
+# automatically in route53.tf), then confirms once the certificate's status
+# flips from PENDING_VALIDATION to ISSUED. Terraform will show "still
+# creating..." while this happens, which is normal — it's polling, not
+# stuck. If it takes more than a few minutes, that's usually just DNS
+# propagation catching up, not a problem with the records themselves.
 resource "aws_acm_certificate_validation" "site" {
   provider        = aws.us_east_1
   certificate_arn = aws_acm_certificate.site.arn
