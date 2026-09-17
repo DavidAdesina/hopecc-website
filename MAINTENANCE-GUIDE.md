@@ -467,6 +467,35 @@ along with the old site's design.
 
 ---
 
+## A note on managing email accounts (cPanel), not just checking one
+
+The webmail address just above is for reading email in a browser. If you
+need to do more than that — set up a new email account, change a
+password, or anything else you used to do by going to
+`hopecc.org.uk/cpanel/`, that link has stopped working for the same
+reason everything else under the old address did (see the notes above):
+it only worked because `hopecc.org.uk` used to point at the old hosting
+company, and it now points at the new website instead.
+
+The email accounts themselves haven't moved and haven't changed — go to:
+
+**https://mail.hopecc.org.uk:2083/**
+
+Log in the same way as webmail, above:
+
+- **Username:** the full email address, e.g. `webmaster@hopecc.org.uk`
+- **Password:** the usual password for that account
+
+This is the same server as the webmail note above, just a different door
+into it — port `2083` instead of `2096` — so it's worth bookmarking
+separately from the webmail link, since they do different jobs.
+
+**If that page doesn't load for any reason,** the same page is also
+reachable at `https://185.229.21.118:2083/` (the server's address
+directly, bypassing the domain name entirely).
+
+---
+
 ## Quick reference: "I want to change..."
 
 | What you want to change              | File(s) to open                                              |
@@ -489,6 +518,7 @@ along with the old site's design.
 | Tab icon / link-preview picture       | Not a text or photo edit — see the note above, and ask your technical volunteer |
 | Why does hopecc.org.uk look different than before? | Not a text or photo edit — see "A note on the website's actual address" above |
 | Checking the church's email inbox (webmail)         | Not a text or photo edit — see "A note on checking the church's email (webmail)" above |
+| Setting up/managing an email account, changing a password | Not a text or photo edit — see "A note on managing email accounts (cPanel)" above |
 
 ---
 
