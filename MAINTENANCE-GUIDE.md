@@ -496,6 +496,32 @@ directly, bypassing the domain name entirely).
 
 ---
 
+## A note on a spell of missing emails (September 2026)
+
+For a few days in mid-September 2026, emails sent to the church's
+addresses (`info@hopecc.org.uk`, `finance@hopecc.org.uk`, and others)
+simply weren't arriving — with no error or bounce-back message for
+whoever sent them, so there was no obvious sign anything was wrong until
+someone noticed nothing new was coming in.
+
+Nothing was wrong with the mailboxes themselves, and nothing already in
+them was lost. The problem was one step further back: the hosting
+company's spam-filtering service had a setting pointing at the church's
+website address itself, rather than at the mail server directly — the
+same "old shortcut relying on the website address" problem behind the
+webmail and cPanel notes just above, just one step earlier in the
+journey, where it was harder to spot. The hosting company (NetNerd)
+fixed it on their end once it was reported, and everything came through
+in a rush shortly afterwards.
+
+**If this ever happens again** — emails you know were sent just don't
+arrive, with no bounce-back, and it seems to affect more than one
+mailbox at once — that's the pattern to recognise. It isn't something
+fixable from this guide; let your technical volunteer know straightaway
+so they can report it to NetNerd.
+
+---
+
 ## Quick reference: "I want to change..."
 
 | What you want to change              | File(s) to open                                              |
@@ -519,6 +545,7 @@ directly, bypassing the domain name entirely).
 | Why does hopecc.org.uk look different than before? | Not a text or photo edit — see "A note on the website's actual address" above |
 | Checking the church's email inbox (webmail)         | Not a text or photo edit — see "A note on checking the church's email (webmail)" above |
 | Setting up/managing an email account, changing a password | Not a text or photo edit — see "A note on managing email accounts (cPanel)" above |
+| Why did email stop arriving for a few days in September 2026? | Not a text or photo edit — see "A note on a spell of missing emails (September 2026)" above |
 
 ---
 
