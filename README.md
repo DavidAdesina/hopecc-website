@@ -43,16 +43,24 @@ run `npm outdated` to check.
 **Live, in addition to the above (see [Deployment & infrastructure](#deployment--infrastructure)
 for the full picture):**
 - **AWS hosting** — S3 (private bucket) + CloudFront (CDN, TLS, routing) +
-  ACM (certificate). DNS itself hasn't been cut over to point at this yet —
-  the site is fully live and tested on CloudFront's own domain in the
-  meantime.
+  ACM (certificate), with DNS on **Route 53**. Live at `hopecc.org.uk` since
+  the DNS cutover on 13 September 2026.
 - **AWS Lambda + API Gateway** — one HTTP API, two Lambda functions: the
   contact form (sends via SES) and Decap CMS's GitHub OAuth login proxy.
 - **GitHub Actions** — automatic deployment on every push to `main`
   (build → sync to S3 → invalidate CloudFront), authenticated via OIDC
   with no long-lived AWS keys stored anywhere.
-- **Decap CMS** — real GitHub login confirmed working end-to-end on the
-  live (CloudFront) domain, not just local dev.
+- **Decap CMS** — real GitHub login, confirmed working end-to-end on the
+  live site.
+- **Cloudflare Web Analytics** — a small, cookieless analytics script
+  (`static.cloudflareinsights.com/beacon.min.js`) loaded on every page from
+  `Layout.astro`. It's the only third-party script on the public pages.
+
+**Not on AWS:** the church's **email** (`info@`, `finance@` and the other
+mailboxes, webmail, cPanel and spam filtering) still lives on the old
+**NetNerd** cPanel hosting account. Only the website moved. See
+[Old hosting and email](#old-hosting-and-email-netnerd) before cancelling or
+changing anything with NetNerd.
 
 ---
 
@@ -62,9 +70,11 @@ for the full picture):**
 `engines.node`). Check your version with `node -v`.
 
 ```bash
-# 1. Clone the repo and move into it
+# 1. Clone the repo, move into it, and switch to main (production deploys
+#    from main — see "Branches" below)
 git clone https://github.com/DavidAdesina/hopecc-website.git
 cd hopecc-website
+git switch main
 
 # 2. Install dependencies
 npm install
@@ -84,6 +94,15 @@ Other available scripts:
 
 There is no test suite configured yet. Prettier is configured for formatting
 (see [Tech stack](#tech-stack) above) — there's no linter (e.g. ESLint) yet.
+
+### Branches
+
+**`main` is the only branch that matters** — every push to it deploys to the
+live site. As of October 2026, GitHub's *default* branch setting still points
+at an old `dev` branch (last updated 26 August 2026, and fully merged into
+`main`). That's why the clone step above switches to `main` explicitly. See
+[Follow-ups](#follow-ups-october-2026-review): switching the default branch
+to `main` and deleting `dev` removes this trap for good.
 
 ---
 
@@ -412,7 +431,7 @@ fetch.
 The fix: `og:image` and `twitter:image` are hardcoded to the CloudFront
 domain (`https://d3jmbi4qqbxnbe.cloudfront.net/images/og-home.jpg`)
 instead of being built from `Astro.site`. The DNS cutover has since
-happened (see "DNS & domain registration" above), so `hopecc.org.uk` does
+happened (see "DNS & domain registration" below), so `hopecc.org.uk` does
 resolve correctly now — repointing both tags there is possible, but it's
 still just optional tidy-up, not a requirement, since the CloudFront URL
 keeps resolving indefinitely either way.
@@ -555,12 +574,36 @@ Decap CMS's login. Everything is defined in Terraform, in `terraform/`.
 
 **Current status:** all of this is live at **`hopecc.org.uk`** itself now,
 not just on CloudFront's own domain — DNS was cut over on 13 September
-2026, once everything above had already been proven working first. The
-site's previous host (NetNerd cPanel hosting, running a Sitejet-built
-site) is being left running untouched for a multi-week observation window
-before it's cancelled. See "DNS & domain registration" just below for how
-the cutover itself works and what's worth knowing if this zone is ever
-touched again.
+2026, once everything above had already been proven working first. See
+"DNS & domain registration" just below for how the cutover itself works and
+what's worth knowing if this zone is ever touched again.
+
+### Old hosting and email (NetNerd)
+
+The site's previous host — a **NetNerd cPanel hosting account**, which ran
+the old Sitejet-built site — no longer serves the website. **It still runs
+all of the church's email:** the mailboxes themselves (`info@`, `finance@`
+and the rest), webmail (`mail.hopecc.org.uk:2096`), cPanel
+(`mail.hopecc.org.uk:2083`), and NetNerd's SpamExperts filtering that
+incoming mail passes through. In Route 53, the MX records point at
+SpamExperts (NetNerd's filtering service), which hands mail on to that
+server, and the `mail` A record points at the server itself
+(`185.229.21.118`).
+
+**Cancelling the NetNerd hosting package would stop church email**, with no
+bounce-back to warn anyone (the same silent pattern as the September 2026
+incident in `MAINTENANCE-GUIDE.md`). Before cancelling or downgrading it,
+either:
+
+- switch to an email-only plan with NetNerd, if they offer one, keeping the
+  same server and mailboxes; or
+- move email to another provider first (both Google and Microsoft run
+  discounted or free programmes for registered charities — check current
+  terms), migrate the mailbox contents, update the MX, SPF, DKIM and `mail`
+  records in `route53.tf`, and only then cancel.
+
+The old Sitejet website files on that account are no longer needed and can
+be removed whenever convenient — that part is safe.
 
 ### Architecture, at a glance
 
@@ -764,7 +807,7 @@ the site's own domain (no CORS involved):
   its client **secret** lives only in SSM Parameter Store
   (`/hopecc-website/decap-oauth/github-client-secret`, `SecureString`) and
   is never written to Terraform state or this repo. Confirmed working
-  end-to-end on the live CloudFront domain, not just local dev.
+  end-to-end on the live site, not just local dev.
 
 ### CI/CD
 
@@ -789,6 +832,15 @@ Deliberately simple — no S3 versioning or "keep last N builds" scheme, both
 because it needs zero extra infrastructure and because it's easy to explain
 to a future non-technical maintainer.
 
+**If a deploy fails:** "Build site" runs before any AWS step, so a failed
+build never touches S3 or CloudFront — the live site simply stays on the
+last good version. The catch is *who finds out*: GitHub emails the person
+whose push triggered the run. For a CMS publish, that's the editor who
+pressed Publish, not the developer — and every later publish will keep
+failing until the cause is fixed. Check the repo's Actions tab after any
+report of "my change didn't show up". (A failure alert to the developer is
+on the [Follow-ups](#follow-ups-october-2026-review) list.)
+
 **`allowScripts` gotcha:** npm 12 blocks dependency install scripts unless
 the package.json's `allowScripts` lists the *exact resolved* version from
 `package-lock.json` (not just the package name). If a dependency with a
@@ -796,15 +848,6 @@ native build step (`sharp`, `esbuild`) is ever bumped, double check
 `allowScripts` still matches the lockfile's resolved version — a stale pin
 here fails silently at `npm ci` time in CI, not at `npm install` time
 locally.
-
-### A couple of stale comments, not yet cleaned up
-
-Two comments in the Terraform/config that were accurate when written are
-now out of date (nothing broken — just worth a tidy-up commit sometime):
-`public/admin/config.yml`'s header still says to hold off pushing until
-OAuth is confirmed working (it has been, since Session 4); `cloudfront.tf`'s
-`custom_error_response` comment still says to check whether `404.astro`
-exists yet (it does, added the same session).
 
 ---
 
@@ -819,7 +862,7 @@ for editing them.
 
 Decap also now includes a separate **"Show/Hide Pages"** collection for
 temporarily switching a whole page on or off (currently used for Mission)
-— see [Mission on/off toggle](#mission-onoff-toggle) below. This is a
+— see [Mission on/off toggle](#mission-onoff-toggle) above. This is a
 different kind of control (page visibility, not page content), so it's
 covered in its own section rather than folded into "Core scope" above.
 
@@ -831,7 +874,8 @@ non-technical walkthrough of both.
 ### ✅ Decap CMS login works on the live site
 
 `/admin` is fully wired up: real GitHub login, confirmed working end-to-end
-on the live CloudFront domain (not just local dev). The OAuth proxy that
+on the live site — first on CloudFront's own domain, and at
+`hopecc.org.uk/admin` since the DNS cutover. The OAuth proxy that
 makes this possible — a small Lambda behind API Gateway, since a plain S3 +
 CloudFront site has nothing like Netlify's built-in OAuth support — is
 covered in [Deployment & infrastructure](#deployment--infrastructure)
@@ -874,13 +918,13 @@ threat model here ever tightens further.
 
 | File | Used by | What it holds |
 |------|---------|----------------|
-| `services.json` | `index.astro` (times strip) + `whats-on.astro` (Services section) | Service times — editing this once keeps both pages in sync (previously these were two separate hardcoded lists, a known source of drift) |
+| `services.json` | `index.astro` (times strip) + `whats-on.astro` (Services section) | Service times — editing this once keeps both pages in sync (previously these were two separate hardcoded lists, a known source of drift). **Not** the footer: `Footer.astro` still has its own hardcoded Sunday times (`EDIT: service times`), so a Sunday time change needs that edit too — see [Follow-ups](#follow-ups-october-2026-review) |
 | `activities.json` | `whats-on.astro` | Rocky Kids, Fusion Youth, Dadz, Coffee N Chat cards |
 | `gallery.json` | `whats-on.astro` | "Life at Hope" photo gallery |
 | `romania-carousel.json` | `mission/romania.astro` | The sliding village photo carousel |
 | `mission-stats.json` | `mission.astro` (overview cards) + `mission/india.astro` + `mission/romania.astro` | Headline numbers — same drift-prevention benefit as `services.json`. Each stat has a `showOnOverview` flag controlling whether it appears on the summary card |
 | `prayer-points.json` | `mission/india.astro` + `mission/romania.astro` | "How to Pray" lists |
-| `page-visibility.json` | `mission.astro`, `mission/india.astro`, `mission/romania.astro`, `Navbar.astro`, `Footer.astro` (via `src/lib/page-visibility.js`) | On/off state + optional custom message per toggleable page — see [Mission on/off toggle](#mission-onoff-toggle) below |
+| `page-visibility.json` | `mission.astro`, `mission/india.astro`, `mission/romania.astro`, `Navbar.astro`, `Footer.astro` (via `src/lib/page-visibility.js`) | On/off state + optional custom message per toggleable page — see [Mission on/off toggle](#mission-onoff-toggle) above |
 
 One small content fix made during this migration: the India "baptisms" stat
 had two different labels in the two places it appeared ("Baptised
@@ -952,6 +996,64 @@ resolved (see below) — one remains outstanding by design:
   before and after, plus a whitespace-normalized diff of every generated
   page — all differences were harmless whitespace inside existing tags,
   never new gaps between elements.
+- ~~Stale comments in `config.yml`, `cloudfront.tf` and the Route 53
+  validation notes~~ — tidied up on 15 September 2026 (`0f3c41e`). The last
+  one, the header comment in `public/admin/index.html` (which still said the
+  OAuth proxy was "planned for Phase 3" and pointed at the wrong guide for
+  bumping the Decap version), was corrected in October 2026.
+
+---
+
+## Follow-ups (October 2026 review)
+
+Small things worth doing, roughly in priority order. None of them is
+breaking anything today.
+
+1. **Make `main` the default branch and delete `dev`.** GitHub's default
+   branch is still `dev` (stale since 26 August 2026, fully merged into
+   `main`). New clones, GitHub's web editor and issue templates all start
+   from the default branch, so anyone editing on github.com lands on a
+   branch that never deploys. Settings → General → Default branch → `main`.
+2. **Tell the developer when a deploy fails, and stop deploys racing.** In
+   `deploy.yml`: add a `concurrency` group (so two CMS publishes close
+   together queue instead of syncing over each other), and a final
+   `if: failure()` step that opens a GitHub issue assigned to the developer
+   (see "If a deploy fails" under CI/CD for why this matters).
+3. **Footer service times are a third, separate copy.** `Footer.astro`
+   hardcodes "10:30 am" and "6:00 pm" instead of reading `services.json`, so
+   a Sunday time changed in the CMS won't update the footer. Fix: have the
+   footer read the `sunday-morning` / `sunday-evening` entries' `shortTime`
+   the same way `index.astro` does. Until then, `MAINTENANCE-GUIDE.md` tells
+   editors to update both.
+4. **Basic protection on `main`.** A repository ruleset that blocks force
+   pushes and branch deletion is free on a public repo and doesn't interfere
+   with the CMS publishing straight to `main`. While in Settings, turn on
+   secret scanning and push protection (also free for public repos).
+5. **Rate-limit the API.** The contact form already has a honeypot and
+   length limits, but the HTTP API stage has no throttling, so a script
+   could still flood `info@` with submissions. A `default_route_settings`
+   throttle on `aws_apigatewayv2_stage.default` (e.g. a small burst and a
+   few requests per second) costs nothing.
+6. **Protect the Terraform that can't be easily rebuilt.** State is local on
+   one machine — keep a dated backup, or move it to an S3 backend. Add
+   `lifecycle { prevent_destroy = true }` to the Route 53 zone, the mail /
+   MX / SPF / DKIM records, the ACM certificate, the site bucket and the
+   distribution — a no-change plan that makes an accidental destroy
+   impossible.
+7. **Node.js 22 reaches end of life in April 2027.** Before then, bump the
+   two Lambdas' `runtime = "nodejs22.x"`, `node-version` in `deploy.yml`,
+   and `engines.node` in `package.json` to the next LTS, and test.
+8. **Don't cancel NetNerd until email has a plan** — see
+   [Old hosting and email](#old-hosting-and-email-netnerd).
+9. **Privacy policy read-through.** It predates the AWS contact form and the
+   Cloudflare analytics beacon; worth whoever owns the policy checking it
+   still describes how visitors' data is handled and who processes it.
+10. **Optional tidy-ups:** point `og:image` / `twitter:image` at
+    `hopecc.org.uk` (see "Why `og:image` doesn't point at `hopecc.org.uk`");
+    remove `+a` from the SPF record (see "DNS & domain registration");
+    redirect `www.hopecc.org.uk` to `hopecc.org.uk` — both currently serve
+    the site, and since CMS logins are stored per address, editors should
+    always use `hopecc.org.uk/admin`.
 
 ---
 

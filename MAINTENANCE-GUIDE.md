@@ -28,10 +28,16 @@ Pages"** — for temporarily switching a whole page on or off, which works a
 bit differently from the six content-editing things above. See "A note on
 switching whole pages on or off" further down.
 
-If you don't have a login for this yet, ask whoever looks after the
-website's technical side to set one up for you — until then, those six
+If you don't have a login for this yet: you'll need a free GitHub account
+(github.com), and whoever looks after the website's technical side then
+adds that account to the website so the login works. Until then, those six
 things can still be edited the old way, using their own small files (see
 below), the same simple way as everything else in this guide.
+
+**One exception to "you don't need this guide":** the footer at the bottom
+of every page shows the two Sunday times separately, and the editing screen
+doesn't change it. If a Sunday time changes, see "1. Service times" below
+for the extra step.
 
 ---
 
@@ -96,18 +102,27 @@ words), leave it alone and ask for help.**
 Service times used to live in two separate places that could drift out of
 sync. They've now been combined into **one file**:
 
-- **`src/data/services.json`** — open it, find the service you want (e.g.
+- **`src/data/services.json`** (or the **Service Times** section of the
+  `/admin` editing screen) — find the service you want (e.g.
   `"Sunday Morning Service"`), and edit its `"time"` value (the fuller
   version shown on the What's On page) and `"shortTime"` value (the short
   version shown on the homepage strip). Both values need updating if the
   time changes, but they're now right next to each other in one file
   instead of split across two page files.
+- **Please don't delete** "Sunday Morning Service" or "Sunday Evening
+  Prayer" entirely — the homepage looks for those two specifically. Change
+  their times and wording freely; just keep the entries.
+- **The footer has its own copy of the two Sunday times.** If the Sunday
+  morning or evening time changes, also open
+  **`src/components/Footer.astro`**, search `EDIT: service times`, and
+  change the two times just below it. (Nothing else in the footer needs
+  touching.)
 
 ### 2. Activities (Rocky Kids, Fusion Youth, Dadz, Coffee N Chat, etc.)
 
 In **`src/data/activities.json`**, each activity card has:
 - `title` — the name of the activity
-- `img` — the photo shown (see "Swapping photos" below)
+- `img` — the photo shown (see "Photos (swapping an existing image)" below)
 - `focalPoint` — which part of the photo to keep visible (see "Photos getting
   cropped oddly?" below)
 - `tag` — the short label shown on the photo (e.g. "Children · Yrs 2–6")
@@ -227,17 +242,29 @@ show live until then, but your edit is saved safely either way.)*
 ### 7. Contact details (phone, email, address)
 
 Contact details appear in **several different files**, since different pages
-show different combinations of them:
+show different combinations of them.
 
-- **`src/components/Footer.astro`** — appears on every page, at the bottom.
+**Phone number and email address** (`01455 233798`, `info@hopecc.org.uk`):
+
 - **`src/pages/contact.astro`** — the main Contact page.
 - **`src/pages/safeguarding.astro`** — has its own safeguarding-specific
   contact box.
 - **`src/pages/privacy-policy.astro`** — has a "Data Controller" contact box.
+- **`src/components/MissionRomaniaContent.astro`** — the contact box on the
+  Romania mission page.
 
-If the church's phone number, general email, or address changes, search for
-the old value (e.g. search `01455 233798`) across each of these files one
-at a time so nothing gets missed.
+**Address** (Deveron Way, Hinckley, LE10 0XD):
+
+- **`src/components/Footer.astro`** — at the bottom of every page (search
+  `EDIT: address`).
+- **`src/pages/index.astro`** — the homepage's information strip.
+- **`src/pages/contact.astro`** and **`src/pages/privacy-policy.astro`**.
+
+If any of these change, search for the old value in each of the files
+listed, one at a time, so nothing gets missed. **The phone number is
+written two ways**, so search for both: with spaces (`01455 233798` — what
+people see) and without (`01455233798` — inside `tel:` links, which make it
+tappable on phones). Searching for only one form will miss the other.
 
 ### 8. Safeguarding policy PDF
 
@@ -252,8 +279,10 @@ To replace the safeguarding policy document:
 
 ### 9. Social media links (Facebook, YouTube)
 
-These appear in **`src/components/Footer.astro`** and **`src/pages/contact.astro`**.
-Search for `facebook.com` or `youtube.com` in either file to find and update
+These appear in **`src/components/Footer.astro`**,
+**`src/pages/contact.astro`**, **`src/pages/whats-on.astro`** (a Facebook
+link), and **`src/pages/watch-listen.astro`** (the YouTube channel link).
+Search for `facebook.com` or `youtube.com` in each file to find and update
 the links.
 
 ### 10. Room hire checklist
@@ -419,9 +448,9 @@ somewhere it hasn't been sent before, rather than resending an old message.
 
 ## A note on the website's actual address (hopecc.org.uk)
 
-Until now, going to `hopecc.org.uk` showed the church's older website,
-even though everything described in this guide was already built,
-tested, and ready behind the scenes. That's now changed — `hopecc.org.uk`
+Until 13 September 2026, going to `hopecc.org.uk` showed the church's
+older website, even though everything described in this guide was already
+built, tested, and ready behind the scenes. Since then, `hopecc.org.uk`
 shows the real, current site this guide describes.
 
 This was a one-time technical change and isn't something you'll ever need
@@ -439,6 +468,23 @@ know they were expected:
 If the website's address itself is ever mentioned as needing to change
 again in future (a new domain, a different hosting company, etc.), that's
 a job for a technical volunteer, not something this guide covers.
+
+---
+
+## Important: the church's email still lives with NetNerd
+
+The **website** moved away from NetNerd (the church's old hosting company)
+in September 2026 — but the church's **email did not**. Every mailbox
+(`info@`, `finance@` and the others), webmail, and the email settings
+screen (cPanel) all still run on the NetNerd hosting account.
+
+So **please don't cancel or downgrade the NetNerd account** just because
+"the old website isn't used any more". Doing that would stop church email
+working — and, as the September 2026 note further down explains, missing
+email often gives no warning at all. If the NetNerd bill ever comes up for
+renewal and someone wants to stop paying it, talk to your technical
+volunteer first: email needs to be moved somewhere else before that
+account can go.
 
 ---
 
@@ -526,16 +572,17 @@ so they can report it to NetNerd.
 
 | What you want to change              | File(s) to open                                              |
 |---------------------------------------|----------------------------------------------------------------|
-| Service times                         | `src/data/services.json` — one file, feeds both the homepage and What's On |
+| Service times                         | `src/data/services.json` (or `/admin`) — feeds the homepage and What's On; Sunday times **also** in `Footer.astro` (search `EDIT: service times`) |
 | Activity cards (Rocky Kids, etc.)     | `src/data/activities.json`                                     |
 | Gallery photos                        | `src/data/gallery.json`                                         |
 | Any photo on any page                 | Find the page, swap the file in `public/images/`               |
 | Romania photo carousel                | `src/data/romania-carousel.json` — add/remove a photo entry; dots update themselves |
 | Mission stats/numbers                 | `src/data/mission-stats.json` — one file, feeds both the summary card and the full page |
 | Prayer points                         | `src/data/prayer-points.json`                                   |
-| Phone/email/address                   | `Footer.astro`, `contact.astro`, `safeguarding.astro`, `privacy-policy.astro` |
+| Phone/email                           | `contact.astro`, `safeguarding.astro`, `privacy-policy.astro`, `MissionRomaniaContent.astro` |
+| Address                               | `Footer.astro`, `index.astro`, `contact.astro`, `privacy-policy.astro` |
 | Safeguarding PDF                      | `safeguarding.astro` (and add the new file to `public/documents/`) |
-| Facebook/YouTube links                | `Footer.astro`, `contact.astro`                                 |
+| Facebook/YouTube links                | `Footer.astro`, `contact.astro`, `whats-on.astro`, `watch-listen.astro` |
 | Room hire checklist                   | `contact.astro`                                                 |
 | Contact page's Bible verse             | `contact.astro` — search `EDIT: verse line`                    |
 | Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
@@ -545,6 +592,7 @@ so they can report it to NetNerd.
 | Why does hopecc.org.uk look different than before? | Not a text or photo edit — see "A note on the website's actual address" above |
 | Checking the church's email inbox (webmail)         | Not a text or photo edit — see "A note on checking the church's email (webmail)" above |
 | Setting up/managing an email account, changing a password | Not a text or photo edit — see "A note on managing email accounts (cPanel)" above |
+| Cancelling or renewing the old NetNerd hosting | Not a text or photo edit — read "Important: the church's email still lives with NetNerd" above first |
 | Why did email stop arriving for a few days in September 2026? | Not a text or photo edit — see "A note on a spell of missing emails (September 2026)" above |
 
 ---
