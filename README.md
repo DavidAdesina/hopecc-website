@@ -70,11 +70,9 @@ changing anything with NetNerd.
 `engines.node`). Check your version with `node -v`.
 
 ```bash
-# 1. Clone the repo, move into it, and switch to main (production deploys
-#    from main — see "Branches" below)
+# 1. Clone the repo and move into it
 git clone https://github.com/DavidAdesina/hopecc-website.git
 cd hopecc-website
-git switch main
 
 # 2. Install dependencies
 npm install
@@ -97,12 +95,14 @@ There is no test suite configured yet. Prettier is configured for formatting
 
 ### Branches
 
-**`main` is the only branch that matters** — every push to it deploys to the
-live site. As of October 2026, GitHub's *default* branch setting still points
-at an old `dev` branch (last updated 26 August 2026, and fully merged into
-`main`). That's why the clone step above switches to `main` explicitly. See
-[Follow-ups](#follow-ups-october-2026-review): switching the default branch
-to `main` and deleting `dev` removes this trap for good.
+**`main` is the only long-lived branch, and the default** — every push to it
+deploys to the live site. (An old `dev` branch, fully merged into `main`,
+was deleted on 8 October 2026 when `main` became the default.)
+
+**Run `git pull` before starting any work.** Decap CMS publishes by
+committing straight to `main` on GitHub, so your local copy falls behind
+every time someone edits content in `/admin`. Pulling first avoids having
+to untangle a rejected push later.
 
 ---
 
@@ -1012,6 +1012,9 @@ resolved (see below) — one remains outstanding by design:
   one, the header comment in `public/admin/index.html` (which still said the
   OAuth proxy was "planned for Phase 3" and pointed at the wrong guide for
   bumping the Decap version), was corrected in October 2026.
+- ~~GitHub's default branch was a stale `dev` branch~~ — `main` made the
+  default and `dev` (fully merged) deleted on 8 October 2026, so new clones
+  and GitHub's web editor start from the branch that actually deploys.
 
 ---
 
@@ -1020,51 +1023,46 @@ resolved (see below) — one remains outstanding by design:
 Small things worth doing, roughly in priority order. None of them is
 breaking anything today.
 
-1. **Make `main` the default branch and delete `dev`.** GitHub's default
-   branch is still `dev` (stale since 26 August 2026, fully merged into
-   `main`). New clones, GitHub's web editor and issue templates all start
-   from the default branch, so anyone editing on github.com lands on a
-   branch that never deploys. Settings → General → Default branch → `main`.
-2. **Tell the developer when a deploy fails, and stop deploys racing.** In
+1. **Tell the developer when a deploy fails, and stop deploys racing.** In
    `deploy.yml`: add a `concurrency` group (so two CMS publishes close
    together queue instead of syncing over each other), and a final
    `if: failure()` step that opens a GitHub issue assigned to the developer
    (see "If a deploy fails" under CI/CD for why this matters).
-3. **Footer service times are a third, separate copy.** `Footer.astro`
+2. **Footer service times are a third, separate copy.** `Footer.astro`
    hardcodes "10:30 am" and "6:00 pm" instead of reading `services.json`, so
    a Sunday time changed in the CMS won't update the footer. Fix: have the
    footer read the `sunday-morning` / `sunday-evening` entries' `shortTime`
    the same way `index.astro` does. Until then, `MAINTENANCE-GUIDE.md` tells
    editors to update both.
-4. **Basic protection on `main`.** A repository ruleset that blocks force
+3. **Basic protection on `main`.** A repository ruleset that blocks force
    pushes and branch deletion is free on a public repo and doesn't interfere
    with the CMS publishing straight to `main`. While in Settings, turn on
    secret scanning and push protection (also free for public repos).
-5. **Rate-limit the API.** The contact form already has a honeypot and
+4. **Rate-limit the API.** The contact form already has a honeypot and
    length limits, but the HTTP API stage has no throttling, so a script
    could still flood `info@` with submissions. A `default_route_settings`
    throttle on `aws_apigatewayv2_stage.default` (e.g. a small burst and a
    few requests per second) costs nothing.
-6. **Protect the Terraform that can't be easily rebuilt.** State is local on
+5. **Protect the Terraform that can't be easily rebuilt.** State is local on
    one machine — keep a dated backup, or move it to an S3 backend. Add
    `lifecycle { prevent_destroy = true }` to the Route 53 zone, the mail /
    MX / SPF / DKIM records, the ACM certificate, the site bucket and the
    distribution — a no-change plan that makes an accidental destroy
    impossible.
-7. **Node.js 22 reaches end of life in April 2027.** Before then, bump the
+6. **Node.js 22 reaches end of life in April 2027.** Before then, bump the
    two Lambdas' `runtime = "nodejs22.x"`, `node-version` in `deploy.yml`,
    and `engines.node` in `package.json` to the next LTS, and test.
-8. **Don't cancel NetNerd until email has a plan** — see
+7. **Don't cancel NetNerd until email has a plan** — see
    [Old hosting and email](#old-hosting-and-email-netnerd).
-9. **Privacy policy read-through.** It predates the AWS contact form and the
+8. **Privacy policy read-through.** It predates the AWS contact form and the
    Cloudflare analytics beacon; worth whoever owns the policy checking it
    still describes how visitors' data is handled and who processes it.
-10. **Optional tidy-ups:** point `og:image` / `twitter:image` at
-    `hopecc.org.uk` (see "Why `og:image` doesn't point at `hopecc.org.uk`");
-    remove `+a` from the SPF record (see "DNS & domain registration");
-    redirect `www.hopecc.org.uk` to `hopecc.org.uk` — both currently serve
-    the site, and since CMS logins are stored per address, editors should
-    always use `hopecc.org.uk/admin`.
+9. **Optional tidy-ups:** point `og:image` / `twitter:image` at
+   `hopecc.org.uk` (see "Why `og:image` doesn't point at `hopecc.org.uk`");
+   remove `+a` from the SPF record (see "DNS & domain registration");
+   redirect `www.hopecc.org.uk` to `hopecc.org.uk` — both currently serve
+   the site, and since CMS logins are stored per address, editors should
+   always use `hopecc.org.uk/admin`.
 
 ---
 

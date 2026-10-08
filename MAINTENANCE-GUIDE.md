@@ -23,6 +23,15 @@ you want, make your change in the form, and press **Publish** — the live
 website updates itself automatically, usually within a minute or two. There
 is no separate "save" step and nothing to pass along to anyone afterwards.
 
+Two things worth knowing about logging in:
+
+- **Always use `hopecc.org.uk/admin`** (with or without `www.`). Logging
+  in from any other address is deliberately blocked for security.
+- **The first time you log in** — and occasionally after a security
+  update — GitHub shows a page asking you to approve "Hope Community
+  Church CMS Login". That's expected: click **Authorize**. It only asks for
+  access to public projects, nothing private.
+
 The same `/admin` login also has a separate, seventh screen — **"Show/Hide
 Pages"** — for temporarily switching a whole page on or off, which works a
 bit differently from the six content-editing things above. See "A note on
