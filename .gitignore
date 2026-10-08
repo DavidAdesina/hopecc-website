@@ -27,3 +27,5 @@ terraform/*.tfstate*
 
 terraform/lambda/contact-form/node_modules/
 terraform/build/
+
+terraform/lambda/decap-oauth/node_modules/

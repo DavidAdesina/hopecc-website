@@ -809,6 +809,17 @@ the site's own domain (no CORS involved):
   is never written to Terraform state or this repo. Confirmed working
   end-to-end on the live site, not just local dev.
 
+  **Hardened in October 2026:** the login popup only hands the token to
+  `https://hopecc.org.uk` or `https://www.hopecc.org.uk` (`ALLOWED_ORIGINS`
+  in `terraform/lambda/decap-oauth/index.mjs`) — previously it would reply
+  to any website that opened it; each login carries a one-time OAuth
+  `state`, checked against a short-lived cookie; and tokens are limited to
+  the `public_repo` scope instead of `repo`. **If this repo is ever made
+  private, the CMS will stop saving** until `OAUTH_SCOPE` in that file and
+  `auth_scope` in `public/admin/config.yml` are both changed to `repo`.
+  Editors must use `hopecc.org.uk/admin` (or `www.`) — logging in from the
+  CloudFront address is deliberately refused.
+
 ### CI/CD
 
 `.github/workflows/deploy.yml` runs on every push to `main`:

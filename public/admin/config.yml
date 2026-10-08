@@ -34,6 +34,10 @@ backend:
   branch: main
   base_url: https://b5emulwcc6.execute-api.eu-west-2.amazonaws.com
   auth_endpoint: auth
+  # Must match OAUTH_SCOPE in terraform/lambda/decap-oauth/index.mjs (the
+  # server enforces it either way). public_repo works because this repo is
+  # public -- if it's ever made private, change both to `repo`.
+  auth_scope: public_repo
 
 # Local testing only — Decap ignores this in production if a real
 # `local_backend` server isn't running, so it's safe to leave in.
