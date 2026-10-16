@@ -339,6 +339,39 @@ The small caption on the framed photo (currently *"Our home on Deveron
 Way"*) is ordinary text in the same spot — search `EDIT: hero photo` in
 **`src/pages/index.astro`** to find and change it, or remove it entirely.
 
+### 14. The church logo (top and bottom of every page)
+
+The white **"HOPE Community Church"** logo in the menu bar at the top of
+every page, and again in the footer at the bottom, is **one file** used in
+both places: **`public/images/hope-logo-white.svg`**. It became the
+church's logo in October 2026.
+
+To swap it for a newer version of the logo, replace that one file with a
+new one of exactly the same name — the menu bar and footer both update
+together, on computers and phones, and the size is handled automatically.
+
+Before you do, a few things matter more for a logo than for a photo:
+
+- **It must be white, on a see-through (transparent) background.** The
+  menu bar and footer are dark navy; a logo with its own white or coloured
+  box around it will look like a sticker. A white logo will look blank or
+  invisible when you open the file on your computer — that's normal.
+- **It should be an `.svg` file**, ideally — ask whoever designed it for
+  "the SVG version". An `.svg` stays crisp on every screen. A `.png` can
+  work, but only a large one, and it has to be renamed and linked
+  differently, so pass that to your technical volunteer rather than doing
+  it yourself.
+- **Roughly the same shape as now** (about twice as wide as it is tall).
+  A much wider or taller logo will still show, but may look squashed or
+  stretched until a technical volunteer adjusts two numbers.
+
+Changing the logo does **not** change the little icon in the browser tab
+or the picture that shows when the website's link is shared — those still
+use the gold flame. See "A note on the tab icon..." further down.
+
+If anything about this feels uncertain, it's a two-minute job for your
+technical volunteer — and nothing is lost by asking.
+
 ---
 
 ## A note on switching whole pages on or off
@@ -443,9 +476,17 @@ This isn't something you'll ever need to change yourself — there's no
 "EDIT:" marker for it, because it isn't ordinary text or a simple photo
 swap; it's several specially-sized image files that all need to work
 together correctly across phones, browsers, and messaging apps. If the
-church gets a new logo in future, or wants a different picture to show
-when the link is shared, ask your technical volunteer — they'll know to
-look at the "Favicons & share image" section of `README.md`.
+church wants the tab icon to match the new logo, or a different picture to
+show when the link is shared, ask your technical volunteer — they'll know
+to look at the "Favicons & share image" section of `README.md`.
+
+**Why the tab icon still shows the flame:** in October 2026 the logo in
+the menu bar and footer changed to the new white "HOPE Community Church"
+wordmark (see "14." above), which has no flame. The tab icon and the
+shared-link picture were deliberately left as they were — the flame is
+still part of the church's look, and the full wordmark is far too small to
+read at tab-icon size. Nothing is broken; it's simply waiting on whether
+the church wants a new icon.
 
 One quirk worth knowing, since it can look like something's broken when it
 isn't: WhatsApp and iMessage remember an old preview for any link that's
@@ -597,6 +638,7 @@ so they can report it to NetNerd.
 | Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
 | Switching Mission (or another page) on or off | Not a text or photo edit — see "A note on switching whole pages on or off" above |
 | Homepage hero photo/caption           | `public/images/church-photo.jpg` (both copies update together); caption is in `index.astro` — search `EDIT: hero photo` |
+| The church logo (menu bar and footer) | `public/images/hope-logo-white.svg` — one file for both; see "14. The church logo" above before replacing it |
 | Tab icon / link-preview picture       | Not a text or photo edit — see the note above, and ask your technical volunteer |
 | Why does hopecc.org.uk look different than before? | Not a text or photo edit — see "A note on the website's actual address" above |
 | Checking the church's email inbox (webmail)         | Not a text or photo edit — see "A note on checking the church's email (webmail)" above |

@@ -139,7 +139,8 @@ hopecc-website/
 │   ├── documents/             PDFs (e.g. the safeguarding policy)
 │   ├── images/                 All site photos, logos, and og-home.jpg (the
 │   │                            share-link image — see "Favicons & share
-│   │                            image" below)
+│   │                            image" below). The menu bar/footer logo is
+│   │                            hope-logo-white.svg — see "Site logo" below
 │   ├── favicon.ico / favicon.svg   Tab icon, built from the flame logo
 │   ├── apple-touch-icon.png     180×180 iOS home-screen icon
 │   ├── icon-192.png / icon-512.png  Manifest icons (Android "add to home
@@ -231,9 +232,14 @@ hopecc-website/
   which files they live in. The homepage hero works differently — a real
   photo of the building rather than the candlelight treatment — see
   [Homepage hero](#homepage-hero) below.
+- **The site logo** in the menu bar and footer is a single white SVG,
+  `public/images/hope-logo-white.svg`, sized in each component's own CSS —
+  see [Site logo](#site-logo) below.
 - **The tab icon and link-preview image** are also built from real brand
   assets now (the flame logo and the church photo) rather than framework
   defaults — see [Favicons & share image](#favicons--share-image) below.
+  These still use the flame, even though the menu bar and footer logo no
+  longer does.
 - **Worth knowing:** `EDIT:` comments in those files now cover two
   different audiences — plain content values (numbers, words, a line of
   verse, two wing labels) meant for `MAINTENANCE-GUIDE.md`'s non-technical
@@ -382,6 +388,70 @@ actually be, right now" as its own question every time this file changes.
 
 ---
 
+## Site logo
+
+The logo in the menu bar and the footer is **Julia's white "HOPE Community
+Church" wordmark**, adopted in October 2026 (`baa11c2`). It replaced the
+earlier flame-plus-serif-text logo in both places. Julia's notes on the
+artwork: it must stay **white**, and the "HOPE" lettering is set in the
+**Phosphate** typeface. Two versions were mocked up at the site's real sizes
+before choosing — the wordmark exactly as sent, and the wordmark with the
+gold flame beside it — and the church chose the wordmark on its own, with
+no flame.
+
+**The file:** `public/images/hope-logo-white.svg` — one file, used by both
+`Navbar.astro` and `Footer.astro`.
+
+- **Traced, not embedded.** Julia supplied a 1551×874 white-on-transparent
+  PNG with a lot of empty space above the lettering. It was traced into a
+  single vector path (~10 KB), cropped tight to the artwork (`viewBox="0 0
+  1537 741"`, roughly 2.07 : 1). The letters are shapes, not text, so the
+  site never has to load the Phosphate font, and the logo stays sharp at
+  any size or screen density.
+- **The fill is a fixed `#ffffff`, deliberately not `currentColor`.** An
+  SVG loaded through `<img>` can't inherit CSS colour from the page, so
+  `currentColor` would fall back to black — invisible on the navy bar. If
+  the file is ever regenerated, keep the colour hard-coded.
+
+**Sizes** — set in each component's own `<style>` block, not with Tailwind
+classes (the old `h-16 w-auto` classes were removed):
+
+| Where | Class | Computers | Phones / tablets (≤ 860px) |
+|-------|-------|-----------|----------------------------|
+| Menu bar (68px tall) | `.navbar-logo-img` | 50px tall (104px wide) | 44px tall |
+| Footer | `.footer-logo-img` | 76px tall (158px wide) | 68px tall |
+
+Each `<img>` also carries explicit `width`/`height` attributes matching its
+computer size, so the browser reserves the right space before the file
+arrives and nothing jumps while the page loads. The 860px breakpoint is
+the same one the menu bar already used to switch to the hamburger menu.
+The gold breathing halo behind the navbar logo (`EDIT: logo halo`) was
+kept as it was.
+
+**How it was checked:** a clean `npm ci` + `npm run build`; then the built
+site in headless Chromium across 8 pages (including the 404 page) at five
+widths (1440, 1024, 820, 390 and 320px) — both logos present, loaded, at
+the intended sizes, and no sideways scrolling at any width — plus
+screenshots of the menu bar and footer reviewed by eye. A quick look on a
+real phone and computer after each deploy is still worth doing — automated
+screenshots can't stand in for that.
+
+**To replace it in future:** a new white-on-transparent SVG saved over
+`public/images/hope-logo-white.svg` updates both places at once. If its
+proportions differ noticeably from about 2 : 1, update the `width`/`height`
+attributes on both `<img>` tags to match the new shape (height stays as
+above; width = height × the new ratio). A PNG would work, but it would
+need to be at least 2–3× the displayed size to stay sharp on phones — an
+SVG is better.
+
+**What didn't change:** the browser-tab icon, the home-screen icons and
+the link-preview picture still use the gold flame (see
+[Favicons & share image](#favicons--share-image) below), and so does the
+animated flame on the Contact page (`HeroFlame.astro`). The two old logo
+files were kept — see [Known unused files](#known-unused-files).
+
+---
+
 ## Favicons & share image
 
 Pasting the site's link into WhatsApp, iMessage, or a browser tab used to
@@ -444,14 +514,24 @@ its old preview (or no preview at all) for days after a fix like this
 ships. Testing needs either a URL nobody's pasted before, or a throwaway
 query string appended to force a fresh fetch (e.g. `?v=2`).
 
-### If Ian's new logo replaces the flame
+### If the icons should follow the new logo
+
+The new logo arrived from Julia in October 2026 and replaced the menu bar
+and footer logo (see [Site logo](#site-logo) above) — but the church chose
+the wordmark **without** the flame, so the icon set and share image here
+weren't touched and still show the flame. That's a deliberate "not yet",
+not an oversight: whether the icons should change is the church's call.
 
 The icon set isn't auto-generated from `HeroFlame.astro` at build time —
 it's a separate, hand-built image set made once from the same flame
-artwork. Regenerating it needs a developer or technical volunteer working
-from the new logo's flame shape; there's no `EDIT:` marker here for a
-non-technical editor, since it isn't a simple text or photo swap (see
-`MAINTENANCE-GUIDE.md`'s note on this).
+artwork. Regenerating it needs a developer or technical volunteer; there's
+no `EDIT:` marker here for a non-technical editor, since it isn't a simple
+text or photo swap (see `MAINTENANCE-GUIDE.md`'s note on this). One design
+point if it's ever done: the full "HOPE Community Church" wordmark is
+unreadable at 16–48px, so a tab icon based on the new logo would need a
+simpler mark (for example just the "H" or the ringed "O" from the
+lettering) on the navy tile, rather than the whole wordmark. Remember the
+WhatsApp/iMessage preview caching quirk above when testing.
 
 ---
 
@@ -956,6 +1036,17 @@ chosen for now — see Day 5 notes for the reasoning.
   Astro starter template. It is not imported anywhere (`index.astro` uses
   `Layout.astro` instead). Safe to ignore, or delete it entirely if you want
   to tidy the repo — nothing depends on it.
+- **`public/images/logo-navy.svg`** — the old footer logo, no longer shown
+  anywhere since the October 2026 logo change (see [Site logo](#site-logo)).
+  Nothing references it. Kept for now in case the church wants the old look
+  back; safe to delete once nobody does. (Deleting it means it disappears
+  from the live site on the next deploy, since the deploy syncs with
+  `--delete`.)
+- **`public/images/logo-white.svg`** — the old menu bar logo, also no longer
+  shown on any page. **Not** quite unused, though: it's the original
+  artwork the flame in `HeroFlame.astro` and the whole icon set were traced
+  from, and comments in `HeroFlame.astro` and `Layout.astro` point at it as
+  that source. Keep it unless the flame is retired everywhere.
 
 ---
 
@@ -1063,6 +1154,20 @@ breaking anything today.
    redirect `www.hopecc.org.uk` to `hopecc.org.uk` — both currently serve
    the site, and since CMS logins are stored per address, editors should
    always use `hopecc.org.uk/admin`.
+10. **Prettier has drifted since the formatting pass.** As of 16 October
+    2026, `npx prettier --list-different src` flags 10 files: `Footer.astro`,
+    `Navbar.astro`, `Layout.astro`, `index.astro`, `contact.astro`,
+    `MissionAtmosphere.astro`, the three `Mission…Content.astro` files and
+    `global.css`. All of them were already flagged before the October 2026
+    logo change, which deliberately didn't reformat anything so its diff
+    stayed limited to the logo. `npx prettier --write` re-wraps unrelated
+    markup (in `Footer.astro`, for example, the Mission, Facebook and
+    YouTube links), so do it as its own commit and compare the built HTML
+    before and after, the same way the original formatting pass was
+    checked (see Resolved, above).
+11. **New icons from the new logo — only if the church wants them.** See
+    "If the icons should follow the new logo" under Favicons & share
+    image. Not a problem today; the flame icons are still on-brand.
 
 ---
 
@@ -1111,6 +1216,7 @@ above):
 | Date | Task | Status |
 |------|------|--------|
 | 14 Sept 2026 | Mission section temporarily disabled at the church's request (content under review), then rebuilt as a proper CMS-driven on/off toggle so switching it back on is self-service rather than needing a code change | ✅ Done — see [Mission on/off toggle](#mission-onoff-toggle) above. **Currently switched off.** |
+| 16 Oct 2026 | New logo: Julia's white "HOPE Community Church" wordmark (no flame) in the menu bar and footer, traced to `public/images/hope-logo-white.svg` and sized for computers and phones (`baa11c2`). Stale logo comments in `HeroFlame.astro` / `Layout.astro` corrected, docs updated | ✅ Done — see [Site logo](#site-logo) above. Tab icons and share image deliberately still use the flame |
 
 ---
 

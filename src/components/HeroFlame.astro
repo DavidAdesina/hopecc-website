@@ -2,19 +2,24 @@
 // src/components/HeroFlame.astro — Hope Community Church
 // ─────────────────────────────────────────────────────────────────────────
 // WHAT THIS FILE DOES
-//   This is the gently "living" version of the church's flame logo that
-//   appears on the homepage hero — big and faint on the left on computers,
-//   small and centred above the heading on phones.
+//   This is the gently "living" version of the church's flame logo. It
+//   appears on the Contact page, beside the "Contact Details" heading. (It
+//   used to sit in the homepage hero too, until that was rebuilt around a
+//   photo of the building — see README, "Homepage hero".)
 //
 //   The flame artwork here is traced from the real logo file
 //   (public/images/logo-white.svg), so it IS the church's own flame — just
 //   drawn in three layers so each layer can sway and breathe on its own,
 //   which is what makes it look alive.
 //
-//   This one file is used in BOTH places (desktop and phone), so the flame
-//   only ever needs updating here — change it once, it changes everywhere.
+//   This one file is used on both computers and phones, so the flame only
+//   ever needs updating here — change it once, it changes everywhere.
 //
-// WHEN THE NEW LOGO ARRIVES (from Ian)
+// IF THE FLAME ITSELF EVER CHANGES
+//   (October 2026: the church's main logo in the menu bar and footer is now
+//   Julia's white "HOPE Community Church" wordmark, which has no flame —
+//   public/images/hope-logo-white.svg. That change didn't touch this file;
+//   the flame here, and in the tab icon, is still the original one.)
 //   The flame shape lives in the two <path> lines and one <ellipse> line
 //   marked "EDIT: flame artwork" below. To swap in a new logo's flame:
 //     1. Open the new logo file (it will be a .svg file) in any text editor.
@@ -25,8 +30,8 @@
 //        the <svg> line may need adjusting to match the new logo's numbers.
 //     5. Check the homepage — if the flame looks squashed or off-centre,
 //        ask the technical volunteer to fine-tune steps 3–4.
-//   (Also remember the navbar uses public/images/logo-white.svg directly —
-//   replacing that file updates the menu bar's logo separately.)
+//   (The menu bar and footer logo is a separate file —
+//   public/images/hope-logo-white.svg — see README, "Site logo".)
 //
 // HOW TO MAKE COMMON CHANGES
 //   • Make the flame stronger/fainter → where this component is USED, set
