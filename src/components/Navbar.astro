@@ -89,7 +89,14 @@ const navLinks = [
     <a href="/" class="navbar-logo">
       {/* EDIT: logo halo — delete this span to remove the soft glow behind the logo */}
       <span class="logo-halo" aria-hidden="true"></span>
-      <img src="/images/logo-white.svg" alt="Hope Community Church" class="h-16 w-auto" />
+      {/* EDIT: logo — the white HOPE wordmark. Size is set in .navbar-logo-img below. */}
+      <img
+        src="/images/hope-logo-white.svg"
+        alt="Hope Community Church"
+        width="104"
+        height="50"
+        class="navbar-logo-img"
+      />
     </a>
 
     <!-- Desktop nav — built automatically from the "navLinks" list above -->
@@ -253,6 +260,14 @@ const navLinks = [
     flex-direction: column;
     gap: 1px;
     text-decoration: none;
+  }
+
+  /* EDIT: logo size — 50px tall on computers, 44px on phones (see the
+     860px breakpoint further down). The width follows automatically. */
+  .navbar-logo-img {
+    display: block;
+    height: 50px;
+    width: auto;
   }
 
   /* EDIT: logo halo — a gentle breathing glow behind the logo mark */
@@ -653,6 +668,9 @@ const navLinks = [
 
   /* ─── Responsive breakpoint ───────────────────────── */
   @media (max-width: 860px) {
+    .navbar-logo-img {
+      height: 44px;
+    }
     .navbar-links {
       display: none;
     }
