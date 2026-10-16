@@ -19,6 +19,6 @@ import { getPageStatus } from '../lib/page-visibility.js';
 const { enabled, message } = getPageStatus('mission-overview');
 ---
 
-<Layout title="Mission | Hope Community Church" noindex={!enabled}>
+<Layout title="Mission" noindex={!enabled}>
   {enabled ? <MissionOverviewContent /> : <PageUnavailable message={message} />}
 </Layout>

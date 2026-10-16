@@ -18,6 +18,6 @@ import { getPageStatus } from '../../lib/page-visibility.js';
 const { enabled, message } = getPageStatus('mission-india');
 ---
 
-<Layout title="India Mission — Prabha & Mary | Hope Community Church" noindex={!enabled}>
+<Layout title="India Mission — Prabha & Mary" noindex={!enabled}>
   {enabled ? <MissionIndiaContent /> : <PageUnavailable message={message} />}
 </Layout>

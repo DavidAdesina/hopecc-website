@@ -19,6 +19,6 @@ import { getPageStatus } from '../../lib/page-visibility.js';
 const { enabled, message } = getPageStatus('mission-romania');
 ---
 
-<Layout title="Romania Mission — Mick & Lorraine Smith | Hope Community Church" noindex={!enabled}>
+<Layout title="Romania Mission — Mick & Lorraine Smith" noindex={!enabled}>
   {enabled ? <MissionRomaniaContent /> : <PageUnavailable message={message} />}
 </Layout>
