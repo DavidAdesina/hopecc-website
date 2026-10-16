@@ -24,11 +24,11 @@ const {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 // Share image for link previews (WhatsApp, iMessage, Facebook, X, …).
-// Served from the CloudFront domain — NOT Astro.site — on purpose: until
-// the DNS cutover, hopecc.org.uk still points at the old host, so link
-// scrapers could never fetch an image from there. This URL keeps working
-// after the cutover too; switching it to the real domain then is optional
-// tidy-up (see README, "Favicons & share image").
+// Served from the CloudFront domain — NOT Astro.site — on purpose: when
+// this was built, before the DNS cutover (13 Sept 2026), hopecc.org.uk
+// still pointed at the old host, so link scrapers couldn't fetch an image
+// from there. This URL still works; switching it to the real domain is
+// optional tidy-up (see README, "Favicons & share image").
 const ogImage = 'https://d3jmbi4qqbxnbe.cloudfront.net/images/og-home.jpg';
 ---
 
@@ -143,8 +143,7 @@ const ogImage = 'https://d3jmbi4qqbxnbe.cloudfront.net/images/og-home.jpg';
     color: inherit;
   }
 
-  /* Tailwind @tailwind directives — keep these if you have Tailwind installed */
-  /* @tailwind base; */
-  /* @tailwind components; */
-  /* @tailwind utilities; */
+  /* Tailwind v4 is loaded by the global.css import at the top of this
+     file (global.css is just `@import "tailwindcss";`). The old v3
+     @tailwind directives aren't used. See README, "Styling notes". */
 </style>

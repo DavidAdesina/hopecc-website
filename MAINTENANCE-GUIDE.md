@@ -43,10 +43,11 @@ adds that account to the website so the login works. Until then, those six
 things can still be edited the old way, using their own small files (see
 below), the same simple way as everything else in this guide.
 
-**One exception to "you don't need this guide":** the footer at the bottom
-of every page shows the two Sunday times separately, and the editing screen
-doesn't change it. If a Sunday time changes, see "1. Service times" below
-for the extra step.
+**One exception to "you don't need this guide":** the Sunday times are
+also typed out in a few other places that the editing screen doesn't
+change — the footer at the bottom of every page, and a handful of
+sentences like "Join us this Sunday at 10:30 am". If a Sunday time
+changes, see "1. Service times" below for the full list.
 
 ---
 
@@ -67,6 +68,13 @@ change and send it live. So the process today is:
 The good news: getting it live from there is now quick and automatic on
 their end too — once they add your change, the website updates itself
 within about a minute, with no manual publishing step for them either.
+
+**If you've been given your own access to the website's project on
+GitHub** and edit a file directly on github.com, it works like the editing
+screen instead: pressing **Commit changes** publishes it straight away,
+with nobody checking it first. So read your change through carefully
+before committing — and if you're unsure, pass it on rather than
+committing it yourself.
 
 ---
 
@@ -121,11 +129,23 @@ sync. They've now been combined into **one file**:
 - **Please don't delete** "Sunday Morning Service" or "Sunday Evening
   Prayer" entirely — the homepage looks for those two specifically. Change
   their times and wording freely; just keep the entries.
-- **The footer has its own copy of the two Sunday times.** If the Sunday
-  morning or evening time changes, also open
-  **`src/components/Footer.astro`**, search `EDIT: service times`, and
-  change the two times just below it. (Nothing else in the footer needs
-  touching.)
+- **A few other places type the Sunday times out by hand**, and the
+  editing screen doesn't change them. If a Sunday time changes, also
+  update:
+  - **`src/components/Footer.astro`** — search `EDIT: service times` and
+    change the two times just below it (Sunday morning **and** evening).
+    Nothing else in the footer needs touching.
+  - The Sunday **morning** time is also written into ordinary sentences
+    in three more files. In each one, search for `10:30` and change every
+    match:
+    - **`src/pages/index.astro`** — 2 places (the homepage's description
+      for search engines, and the "Watch & Listen" info card);
+    - **`src/pages/whats-on.astro`** — 1 place (the "New here?" box);
+    - **`src/pages/watch-listen.astro`** — 3 places.
+- **Coffee N Chat is listed twice** on the What's On page — once under
+  Regular Services (this file, or **Service Times** in `/admin`) and once
+  as an activity card (`src/data/activities.json`, or **Activity Cards**
+  in `/admin`). If its day or time changes, update both.
 
 ### 2. Activities (Rocky Kids, Fusion Youth, Dadz, Coffee N Chat, etc.)
 
@@ -138,9 +158,15 @@ In **`src/data/activities.json`**, each activity card has:
 - `schedule` — when it runs
 - `price` — entry cost
 - `description` — the short paragraph about it
+- `colour` and `tagColour` — the card's accent colours, written as colour
+  codes like `#9b2020` (easiest to pick with the colour picker in
+  `/admin`)
 
 To add a brand new activity card, copy one whole block (from `{` to `}`,
 including the commas) and change the details inside.
+
+*Coffee N Chat also appears under Regular Services — see "1. Service
+times" above.*
 
 *Tip: landscape photos work best here — see "Photos getting cropped oddly?"
 just below for the ideal shape and size.*
@@ -159,7 +185,8 @@ Instead, use the **"Photo position"** option next to that photo:
   is the `focalPoint` value.
 - In the `/admin` editing screen, it's a dropdown labelled "Photo position"
   right under the photo — just pick "Keep the top in view", "Keep the
-  bottom in view", etc., save, and check the page again.
+  bottom in view", etc., press **Publish**, and check the page again a
+  minute or two later.
 
 This won't fix every case perfectly (it nudges the crop, it doesn't let
 you zoom or drag like some apps do), but for most photos it's enough. If a
@@ -196,10 +223,12 @@ Almost every photo on the site is referenced by a path like
 4. If you gave it a new filename, search for the old filename (e.g. search
    `Church-Front.jpg`) in the relevant page file and update the path there too.
 
-**Adding a brand new photo to the "Life at Hope" gallery**: find
-**`src/data/gallery.json`** and add a new line in the same format as the
-others — no resizing needed, the gallery adjusts automatically to any photo
-shape.
+**Adding a brand new photo to the "Life at Hope" gallery**: the easiest
+way is the **Life at Hope Gallery** section of `/admin` — add a photo,
+upload it, describe it, and publish. Or, by hand: put the photo in
+`public/images/`, then in **`src/data/gallery.json`** add a new
+`{ "src": ..., "alt": ... }` entry in the same format as the others. No
+resizing needed — the gallery adjusts automatically to any photo shape.
 
 ### 4. The Romania page's sliding photo carousel
 
@@ -213,7 +242,8 @@ remove, or swap a photo:
    filename) or update the filename in the JSON to match a new one — same
    as any other photo (see "Photos" above).
 3. To **add or remove** a photo, copy or delete one whole `{ "src": ...,
-   "alt": ... }` entry, including the closing comma if needed.
+   "alt": ..., "focalPoint": ... }` entry, including the closing comma if
+   needed.
 
 You **don't** need to add or remove anything else. The little gold dots
 below the photos are created automatically to match however many photos are
@@ -275,6 +305,18 @@ written two ways**, so search for both: with spaces (`01455 233798` — what
 people see) and without (`01455233798` — inside `tel:` links, which make it
 tappable on phones). Searching for only one form will miss the other.
 
+A few related things that aren't in that list:
+
+- **The safeguarding email address** (separate from `info@`) is on the
+  Contact page and the Safeguarding page — search `safeguarding@` in
+  **`src/pages/contact.astro`** and **`src/pages/safeguarding.astro`**.
+- **The map and the "Find Us" directions link** on the Contact page are
+  Google Maps links built for the current address. If the church ever moves,
+  those need new links from Google Maps — ask your technical volunteer.
+- **Where contact-form messages go** (`info@hopecc.org.uk`) is set in the
+  website's server settings, not in any page file — changing it is a job
+  for your technical volunteer.
+
 ### 8. Safeguarding policy PDF
 
 To replace the safeguarding policy document:
@@ -316,6 +358,11 @@ Maharashtra* and *Romania / Satu-Nou, Bacău County*). To change any of this
 wording, search `EDIT: wing text` in
 **`src/components/MissionAtmosphere.astro`** — there are two spots, one per
 country, right next to each other in the file.
+
+The wings only appear on wide screens. On phones, tablets and smaller
+laptops, two small "India →" and "Romania →" labels do the same job —
+if a country is ever renamed, search `EDIT: field labels` in the same file
+and change those too.
 
 *(Same note as "5." and "6." above — Mission is currently switched off
 site-wide, so this won't be visible live until it's switched back on.)*
@@ -371,6 +418,18 @@ use the gold flame. See "A note on the tab icon..." further down.
 
 If anything about this feels uncertain, it's a two-minute job for your
 technical volunteer — and nothing is lost by asking.
+
+### 15. The events calendar on the What's On page
+
+The "Full Events Calendar" on the What's On page is a **Google Calendar**
+(the church's `diary@hopecc.org.uk` calendar), shown live on the page.
+**To add, change or remove an event, do it in that Google Calendar** — the
+website picks it up by itself, and there's nothing to edit or publish here.
+
+Only if the calendar itself ever moves to a different Google account does
+the website need changing: search `EDIT: calendar` in
+**`src/pages/whats-on.astro`** — the address appears in three places there,
+and the note explains each one.
 
 ---
 
@@ -622,18 +681,19 @@ so they can report it to NetNerd.
 
 | What you want to change              | File(s) to open                                              |
 |---------------------------------------|----------------------------------------------------------------|
-| Service times                         | `src/data/services.json` (or `/admin`) — feeds the homepage and What's On; Sunday times **also** in `Footer.astro` (search `EDIT: service times`) |
-| Activity cards (Rocky Kids, etc.)     | `src/data/activities.json`                                     |
+| Service times                         | `src/data/services.json` (or `/admin`) — feeds the homepage and What's On; Sunday times **also** typed out in `Footer.astro`, `index.astro`, `whats-on.astro` and `watch-listen.astro` — see "1. Service times" for exactly where |
+| Activity cards (Rocky Kids, etc.)     | `src/data/activities.json` (Coffee N Chat is also in `services.json`) |
 | Gallery photos                        | `src/data/gallery.json`                                         |
 | Any photo on any page                 | Find the page, swap the file in `public/images/`               |
 | Romania photo carousel                | `src/data/romania-carousel.json` — add/remove a photo entry; dots update themselves |
 | Mission stats/numbers                 | `src/data/mission-stats.json` — one file, feeds both the summary card and the full page |
 | Prayer points                         | `src/data/prayer-points.json`                                   |
-| Phone/email                           | `contact.astro`, `safeguarding.astro`, `privacy-policy.astro`, `MissionRomaniaContent.astro` |
+| Phone/email                           | `contact.astro`, `safeguarding.astro`, `privacy-policy.astro`, `MissionRomaniaContent.astro` (safeguarding email: `contact.astro`, `safeguarding.astro`) |
 | Address                               | `Footer.astro`, `index.astro`, `contact.astro`, `privacy-policy.astro` |
 | Safeguarding PDF                      | `safeguarding.astro` (and add the new file to `public/documents/`) |
 | Facebook/YouTube links                | `Footer.astro`, `contact.astro`, `whats-on.astro`, `watch-listen.astro` |
 | Room hire checklist                   | `contact.astro`                                                 |
+| Events on the What's On calendar      | Not a website edit — add them in the `diary@hopecc.org.uk` Google Calendar; see "15." above |
 | Contact page's Bible verse             | `contact.astro` — search `EDIT: verse line`                    |
 | Mission page wing labels (India/Romania) | `MissionAtmosphere.astro` — search `EDIT: wing text`          |
 | Switching Mission (or another page) on or off | Not a text or photo edit — see "A note on switching whole pages on or off" above |

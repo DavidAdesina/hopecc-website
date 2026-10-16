@@ -12,6 +12,9 @@
 //   • Service times strip         → edit src/data/services.json (shared
 //     with whats-on.astro — one edit updates both pages). Editable via
 //     Decap CMS at /admin. Address/parking text stays in this file.
+//     The Sunday morning time ALSO appears as plain text twice in
+//     this file (the page description, and the Watch & Listen info
+//     card) — search "10:30" if it ever changes.
 //   • "Who we are" text           → search "EDIT: welcome text"
 //   • The three info cards        → search "EDIT: info cards"
 //   • Room hire banner text       → search "EDIT: room hire banner"
@@ -19,8 +22,9 @@
 //     photo, its caption, and the blurred colour-wash behind the whole
 //     hero all read from ONE file (public/images/church-photo.jpg) —
 //     swap that single image to change the entire scene at once.
-//     (HeroFlame.astro still exists for the contact page, and is still
-//     the ONE file to update when the new logo arrives from Ian.)
+//     (The animated flame that used to sit in this hero now lives
+//     only on the Contact page — HeroFlame.astro. The menu bar and
+//     footer logo is a separate file, public/images/hope-logo-white.svg.)
 //
 // This file has two parts, in this order:
 //   1. The HTML below   — the words and layout people see on the page,

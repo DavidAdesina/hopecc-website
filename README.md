@@ -33,7 +33,8 @@ developers setting up the project or working on the code itself.
 - **Plain HTML/CSS/JS** — all pages, including `contact.astro`,
   `safeguarding.astro`, and `privacy-policy.astro`, use the shared
   `Layout.astro` (Navbar + Footer), so navigation only has to be maintained
-  in one place.
+  in one place. (The one exception is `room-hire.astro`, which is only an
+  instant redirect to the Contact page — see Project structure.)
 
 As of the last dependency check, the project resolves to **Astro 7.1.6** and
 **Tailwind CSS 4.3.3**. `package.json` uses caret ranges (`^7.1.5`, `^4.3.0`),
@@ -55,6 +56,13 @@ for the full picture):**
 - **Cloudflare Web Analytics** — a small, cookieless analytics script
   (`static.cloudflareinsights.com/beacon.min.js`) loaded on every page from
   `Layout.astro`. It's the only third-party script on the public pages.
+- **Other things loaded from Google** (not scripts on the site's own pages,
+  but they do send visitors' requests to Google): the **Nunito** font from
+  Google Fonts on every page (`Layout.astro`), the **Google Maps** embed on
+  the Contact page, and the **Google Calendar** embed on What's On, which
+  shows the `diary@hopecc.org.uk` calendar — so events are added in that
+  Google Calendar, not in this repo. Worth knowing for the privacy policy
+  (see [Follow-ups](#follow-ups-october-2026-review)).
 
 **Not on AWS:** the church's **email** (`info@`, `finance@` and the other
 mailboxes, webmail, cPanel and spam filtering) still lives on the old
@@ -110,11 +118,12 @@ to untangle a rejected push later.
 
 ```
 hopecc-website/
-├── astro.config.mjs        Astro's main config file — site URL, and the
-│                            Tailwind Vite plugin (see Tailwind / Vite build
-│                            fix below)
-├── tailwind.config.mjs      Tailwind v4 config (see note below — most brand
-│                            tokens actually live in global.css, not here)
+├── astro.config.mjs        Astro's main config file — site URL, the
+│                            /admin dev-server redirect, and the Tailwind
+│                            Vite plugin (see Tailwind / Vite build fix below)
+├── tailwind.config.mjs      Leftover v3-style Tailwind config. Tailwind v4
+│                            doesn't read it, so its colours have no effect
+│                            — see Styling notes below
 ├── .prettierrc.json          Prettier formatting config (Astro plugin)
 ├── .prettierignore           Files Prettier skips (watch-listen.astro, dist/)
 ├── package.json             Dependencies and npm scripts
@@ -148,7 +157,8 @@ hopecc-website/
 │   └── manifest.json             Referenced by Layout.astro's <head>
 │
 └── src/
-    ├── assets/                 Astro-starter placeholder assets (unused)
+    ├── assets/                 Astro-starter placeholder images — only
+    │                            imported by the unused Welcome.astro
     ├── data/                    CMS-editable content as JSON — see
     │                            "Content editing" section below for what
     │                            each file holds
@@ -205,6 +215,13 @@ hopecc-website/
   `global.css` only contains `@import "tailwindcss";` — no custom theme tokens
   have been added there yet, because most pages use their own hand-written CSS
   instead (see below).
+- **`tailwind.config.mjs` does nothing at the moment.** Tailwind v4 only
+  reads a JavaScript config file if `global.css` points at it with an
+  `@config` line, and it doesn't — so the colours listed in that file
+  (`navy`, `baby-blue`, etc.) never reach the build. Nothing depends on
+  them, since no page uses Tailwind colour classes. Either delete the file
+  or move its values into an `@theme` block if Tailwind classes are ever
+  adopted.
 - `global.css` must be imported in `Layout.astro`'s frontmatter for Tailwind
   to apply anywhere at all.
 - **Most pages use plain CSS in `<style>` blocks with a shared set of CSS
@@ -214,7 +231,10 @@ hopecc-website/
   inserted Tailwind classes were sometimes missed by the compiler, and direct
   CSS proved more reliable for quick layout fixes. If you refactor a page to
   use Tailwind properly, make sure the brand colours are moved into the
-  `@theme` block first so they stay consistent site-wide.
+  `@theme` block first so they stay consistent site-wide. (`Layout.astro`
+  also defines a site-wide set in its global `:root`, including
+  `--gold-light` and pale blue under the name `--blue-pale`, and many
+  components simply hard-code the hex values.)
 - **Brand tokens**, for reference:
 
   | Token       | Value      |
@@ -223,6 +243,7 @@ hopecc-website/
   | Baby blue   | `#4a90c4`  |
   | Pale blue   | `#e8f2f9`  |
   | Gold        | `#c9a84c`  |
+  | Gold light  | `#f0dfa0`  |
   | Cream       | `#f7f9fc`  |
   | Font        | Nunito, weight 800 for headings |
 
@@ -307,9 +328,10 @@ Mission page treatment already existed by the time this section was
 written. The Contact page and navbar were added afterward, at the
 client's request, during the final pre-DNS review pass — see `7a`/`7b`
 in the Pre-launch plan table below, including how those two were
-verified. Removing any one of the three remaining effects is a
-single-line change in each case; every component's own header comment
-says exactly which line to delete.
+verified. Each component's own header comment says how to switch its
+effects off: for the Mission hero it's a single line (the
+`<MissionAtmosphere />` tag in `MissionOverviewContent.astro`); the
+Contact page and the navbar have a separate `EDIT:` note for each effect.
 
 ---
 
@@ -404,7 +426,7 @@ no flame.
 
 - **Traced, not embedded.** Julia supplied a 1551×874 white-on-transparent
   PNG with a lot of empty space above the lettering. It was traced into a
-  single vector path (~10 KB), cropped tight to the artwork (`viewBox="0 0
+  single vector path (~11 KB), cropped tight to the artwork (`viewBox="0 0
   1537 741"`, roughly 2.07 : 1). The letters are shapes, not text, so the
   site never has to load the Phosphate font, and the logo stays sharp at
   any size or screen density.
@@ -809,7 +831,7 @@ worth moving to an S3 backend if a second person ever needs to run
 | `versions.tf` | Pins the Terraform CLI and AWS/archive provider versions |
 | `providers.tf` | The AWS provider (`eu-west-2`) plus an aliased `us-east-1` one, required only because CloudFront certificates must be requested there |
 | `variables.tf` | Every configurable value — domain name, budget threshold, GitHub repo, etc. |
-| `outputs.tf` | Values printed after `apply`: ACM's DNS validation records, CloudFront's own domain, the contact form's test URL, and the GitHub Actions role ARN |
+| `outputs.tf` | Values printed after `apply`: ACM's DNS validation records, CloudFront's own domain, the IAM sign-in URL, the contact form's direct test URL, the Decap OAuth `base_url`, the GitHub Actions role ARN, and the Route 53 nameservers |
 | `s3.tf` | The private site bucket, fully public-access-blocked, encrypted at rest, readable only by this CloudFront distribution |
 | `acm.tf` | The TLS certificate for `hopecc.org.uk` + `www` — DNS-validated automatically via records `route53.tf` generates directly from this resource, now that DNS is on Route 53 |
 | `cloudfront.tf` | The CDN distribution itself: both origins, the `/api/*` routing, the clean-URL fix, and the custom 404 page mapping — see below |
@@ -857,7 +879,10 @@ this on every request, with one important distinction:
   screen fetches `config.yml` using a path *relative to the browser's
   address bar*, so silently serving `/admin`'s content without updating
   the address bar broke that fetch. Redirecting fixes the address bar
-  first, so the relative fetch resolves correctly afterwards.
+  first, so the relative fetch resolves correctly afterwards. The redirect
+  keeps any query string — `/contact?enquiry=room-hire` becomes
+  `/contact/?enquiry=room-hire`, not plain `/contact/` (losing it once broke
+  the Room Hire link).
 
 ### The custom 404 page
 
@@ -983,19 +1008,28 @@ touching the live config.
 `public/admin/index.html` loads Decap CMS from unpkg. It used to reference
 `decap-cms@^3.0.0`, which let unpkg serve whatever the newest matching
 release was on every page load, with no check that the file hadn't
-changed. It's now pinned to an exact version with a Subresource Integrity
-(SRI) hash, so the browser won't run the script if the bytes it receives
-don't match what was verified. Since this script handles GitHub-auth
-credentials with push access to `main` (the OAuth proxy has been live
-since Session 4), this was worth locking down before that shipped rather
-than after.
+changed. It's now pinned to an exact version — currently
+**`decap-cms@3.15.1`** — with a Subresource Integrity (SRI) hash, so the
+browser won't run the script if the bytes it receives don't match what was
+verified. (The hash was re-checked against the npm package on 16 October
+2026 and matches.) Since this script handles GitHub-auth credentials with
+push access to `main`, this was worth locking down before the OAuth login
+went live in the AWS sessions rather than after.
 
 This means the script **no longer auto-updates**. To bump the Decap
-version in future: `npm install decap-cms@<new-version>` from the npm
-registry, compute the sha384 hash of the resulting
-`node_modules/decap-cms/dist/decap-cms.js`, and update both the version
-number and the `integrity` attribute in `public/admin/index.html`
-together — never hand-edit or guess the hash.
+version in future, work in a scratch folder **outside** the repo (running
+`npm install decap-cms` inside it would add Decap to `package.json`):
+
+```bash
+npm pack decap-cms@<new-version>
+tar xzf decap-cms-<new-version>.tgz package/dist/decap-cms.js
+echo "sha384-$(openssl dgst -sha384 -binary package/dist/decap-cms.js | openssl base64 -A)"
+```
+
+Then update both the version number and the `integrity` attribute in
+`public/admin/index.html` together — never hand-edit or guess the hash —
+and test logging in and publishing at `hopecc.org.uk/admin` after the
+deploy.
 
 One caveat worth knowing: `dist/decap-cms.js` is webpack code-split and
 dynamically loads further chunk files from unpkg at runtime as different
@@ -1009,12 +1043,12 @@ threat model here ever tightens further.
 
 | File | Used by | What it holds |
 |------|---------|----------------|
-| `services.json` | `index.astro` (times strip) + `whats-on.astro` (Services section) | Service times — editing this once keeps both pages in sync (previously these were two separate hardcoded lists, a known source of drift). **Not** the footer: `Footer.astro` still has its own hardcoded Sunday times (`EDIT: service times`), so a Sunday time change needs that edit too — see [Follow-ups](#follow-ups-october-2026-review) |
-| `activities.json` | `whats-on.astro` | Rocky Kids, Fusion Youth, Dadz, Coffee N Chat cards |
+| `services.json` | `index.astro` (times strip) + `whats-on.astro` (Services section) | Service times — editing this once keeps both of those in sync (previously these were two separate hardcoded lists, a known source of drift). **Not everything, though:** `Footer.astro` has its own hardcoded Sunday times (`EDIT: service times`), and "10:30" is also written out as plain text in `index.astro`, `whats-on.astro` and `watch-listen.astro` — see [Follow-ups](#follow-ups-october-2026-review) |
+| `activities.json` | `whats-on.astro` | Rocky Kids, Fusion Youth, Dadz, Coffee N Chat cards. (Coffee N Chat is **also** in `services.json` — two separate copies on the same page) |
 | `gallery.json` | `whats-on.astro` | "Life at Hope" photo gallery |
-| `romania-carousel.json` | `mission/romania.astro` | The sliding village photo carousel |
-| `mission-stats.json` | `mission.astro` (overview cards) + `mission/india.astro` + `mission/romania.astro` | Headline numbers — same drift-prevention benefit as `services.json`. Each stat has a `showOnOverview` flag controlling whether it appears on the summary card |
-| `prayer-points.json` | `mission/india.astro` + `mission/romania.astro` | "How to Pray" lists |
+| `romania-carousel.json` | `MissionRomaniaContent.astro` (the `/mission/romania` page) | The sliding village photo carousel |
+| `mission-stats.json` | `MissionOverviewContent.astro` (overview cards) + `MissionIndiaContent.astro` + `MissionRomaniaContent.astro` | Headline numbers — same drift-prevention benefit as `services.json`. Each stat has a `showOnOverview` flag controlling whether it appears on the summary card |
+| `prayer-points.json` | `MissionIndiaContent.astro` + `MissionRomaniaContent.astro` | "How to Pray" lists |
 | `page-visibility.json` | `mission.astro`, `mission/india.astro`, `mission/romania.astro`, `Navbar.astro`, `Footer.astro` (via `src/lib/page-visibility.js`) | On/off state + optional custom message per toggleable page — see [Mission on/off toggle](#mission-onoff-toggle) above |
 
 One small content fix made during this migration: the India "baptisms" stat
@@ -1035,7 +1069,9 @@ chosen for now — see Day 5 notes for the reasoning.
 - **`src/components/Welcome.astro`** — leftover boilerplate from the original
   Astro starter template. It is not imported anywhere (`index.astro` uses
   `Layout.astro` instead). Safe to ignore, or delete it entirely if you want
-  to tidy the repo — nothing depends on it.
+  to tidy the repo — nothing depends on it. If you do, delete
+  `src/assets/astro.svg` and `src/assets/background.svg` with it: they're
+  only imported by `Welcome.astro`.
 - **`public/images/logo-navy.svg`** — the old footer logo, no longer shown
   anywhere since the October 2026 logo change (see [Site logo](#site-logo)).
   Nothing references it. Kept for now in case the church wants the old look
@@ -1106,6 +1142,27 @@ resolved (see below) — one remains outstanding by design:
 - ~~GitHub's default branch was a stale `dev` branch~~ — `main` made the
   default and `dev` (fully merged) deleted on 8 October 2026, so new clones
   and GitHub's web editor start from the branch that actually deploys.
+- ~~Five page titles said "Hope Community Church" twice~~ — What's On,
+  Watch & Listen and the three Mission pages passed a title that already
+  ended in "| Hope Community Church", and `Layout.astro` adds that suffix
+  itself, so browser tabs, search results and link previews showed it
+  twice. Fixed in October 2026; the built HTML was compared before and
+  after, and only the `<title>`, `og:title` and `twitter:title` tags of
+  those five pages changed.
+- ~~Stale code comments~~ — a 16 October 2026 audit checked these docs and
+  the code comments against the code. Fixed: comments that still said the
+  homepage has the flame or that a new logo was "arriving from Ian"; CMS
+  collection references to a "Website Sections" screen (it's "Show/Hide
+  Pages"); the Mission content components still headed with their old page
+  paths; a broken `EDIT: support` pointer in `MissionIndiaContent.astro`;
+  the safeguarding page naming a background photo it doesn't use;
+  pre-launch wording in `config.yml`; and Terraform comments/output
+  descriptions that still described the DNS cutover as future work or said
+  `www` redirects to the apex (it doesn't — see Follow-ups). Comment-only:
+  the built pages differ only in the text of three HTML comments (plus the
+  comments in the published `admin/config.yml`, whose settings parse
+  identically), and a parse of the Terraform shows only comments and three
+  `output` descriptions changed, which Terraform doesn't keep in state.
 
 ---
 
@@ -1119,12 +1176,19 @@ breaking anything today.
    together queue instead of syncing over each other), and a final
    `if: failure()` step that opens a GitHub issue assigned to the developer
    (see "If a deploy fails" under CI/CD for why this matters).
-2. **Footer service times are a third, separate copy.** `Footer.astro`
-   hardcodes "10:30 am" and "6:00 pm" instead of reading `services.json`, so
-   a Sunday time changed in the CMS won't update the footer. Fix: have the
-   footer read the `sunday-morning` / `sunday-evening` entries' `shortTime`
-   the same way `index.astro` does. Until then, `MAINTENANCE-GUIDE.md` tells
-   editors to update both.
+2. **Sunday times are still hardcoded outside `services.json`.** A Sunday
+   time changed in the CMS won't update any of these:
+   - `Footer.astro` — both times ("10:30 am", "6:00 pm"), under
+     `EDIT: service times`;
+   - "10:30" written into sentences in `index.astro` (the page's meta
+     description, and the Watch & Listen info card), `whats-on.astro` (the
+     "New here?" box) and `watch-listen.astro` (three places).
+
+   Fix: have the footer read the `sunday-morning` / `sunday-evening`
+   entries' `shortTime` the same way `index.astro` does, and either do the
+   same in those sentences or reword them so they don't state the time.
+   Until then, `MAINTENANCE-GUIDE.md` ("1. Service times") lists every
+   place to change by hand.
 3. **Basic protection on `main`.** A repository ruleset that blocks force
    pushes and branch deletion is free on a public repo and doesn't interfere
    with the CMS publishing straight to `main`. While in Settings, turn on
@@ -1148,6 +1212,13 @@ breaking anything today.
 8. **Privacy policy read-through.** It predates the AWS contact form and the
    Cloudflare analytics beacon; worth whoever owns the policy checking it
    still describes how visitors' data is handled and who processes it.
+   Specific points a 16 October 2026 read found: it says the site may use
+   "analytics cookies", but Cloudflare Web Analytics is cookieless; and it
+   doesn't name the services that handle visitors' data — AWS (hosting,
+   and the contact form, which sends through SES), Cloudflare (analytics),
+   Google (the Nunito font on every page, the Maps embed on Contact, the
+   Calendar embed on What's On) and NetNerd (where emails to the church
+   are stored). The wording is the church's call, not a code change.
 9. **Optional tidy-ups:** point `og:image` / `twitter:image` at
    `hopecc.org.uk` (see "Why `og:image` doesn't point at `hopecc.org.uk`");
    remove `+a` from the SPF record (see "DNS & domain registration");
@@ -1168,6 +1239,20 @@ breaking anything today.
 11. **New icons from the new logo — only if the church wants them.** See
     "If the icons should follow the new logo" under Favicons & share
     image. Not a problem today; the flame icons are still on-brand.
+12. **No `robots.txt` or sitemap.** Neither exists (checked 16 October
+    2026). Worth adding alongside setting up Google Search Console: a
+    `public/robots.txt` that points at the sitemap, and a sitemap generated
+    at build time (Astro's official `@astrojs/sitemap` integration does
+    this, using the `site` value already in `astro.config.mjs`).
+13. **Decap CMS is a few releases behind.** The pinned version is 3.15.1;
+    npm's latest on 16 October 2026 was 3.17.1. Not urgent — bump it when
+    convenient using the procedure under "`/admin` script pinning", then
+    test logging in and publishing.
+14. **The homepage mentions a live stream that doesn't exist yet.** The
+    Watch & Listen info card in `index.astro` says "join our live stream
+    every Sunday morning at 10:30 am", but the Watch & Listen page itself
+    says live streaming is coming soon. Worth asking the church which
+    wording they want until the stream exists.
 
 ---
 
@@ -1217,6 +1302,7 @@ above):
 |------|------|--------|
 | 14 Sept 2026 | Mission section temporarily disabled at the church's request (content under review), then rebuilt as a proper CMS-driven on/off toggle so switching it back on is self-service rather than needing a code change | ✅ Done — see [Mission on/off toggle](#mission-onoff-toggle) above. **Currently switched off.** |
 | 16 Oct 2026 | New logo: Julia's white "HOPE Community Church" wordmark (no flame) in the menu bar and footer, traced to `public/images/hope-logo-white.svg` and sized for computers and phones (`baa11c2`). Stale logo comments in `HeroFlame.astro` / `Layout.astro` corrected, docs updated | ✅ Done — see [Site logo](#site-logo) above. Tab icons and share image deliberately still use the flame |
+| 16 Oct 2026 | Docs audit: `README.md`, `MAINTENANCE-GUIDE.md` and code comments checked line by line against the code; corrections made, and five doubled page titles fixed | ✅ Done — see Resolved and Follow-ups 2, 8 and 12–14 above |
 
 ---
 

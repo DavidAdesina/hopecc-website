@@ -1,7 +1,7 @@
 # Requests a TLS certificate from AWS Certificate Manager, covering both
 # hopecc.org.uk (the primary/canonical domain) and www.hopecc.org.uk (which
-# currently redirects to the apex — but still needs a valid cert on that
-# hostname before the redirect can happen over HTTPS).
+# serves the same site — there's no www → apex redirect yet, see README
+# Follow-ups — and would still need this cert even if one is added).
 #
 # `provider = aws.us_east_1` sends this request specifically to the aliased
 # us-east-1 provider from providers.tf — a hard CloudFront requirement, not

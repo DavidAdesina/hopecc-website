@@ -24,7 +24,8 @@
 //   • Make a link the highlighted "button" style (like Contact Us) →
 //                             add   cta: true   after its href
 //
-// This file has three parts, in this order:
+// This file has four parts, in this order (plus an optional second
+// <script> block — see THE GLOW below):
 //   1. The list below     — the menu links (edit this for content changes)
 //   2. The HTML/markup    — turns the list into the desktop + mobile menus
 //   3. The <style> block  — colours, spacing, the dropdown animation
@@ -55,7 +56,7 @@ import { isPageEnabled } from '../lib/page-visibility.js';
 //
 // The "Mission" entry (and its India/Romania dropdown) is now built from
 // src/data/page-visibility.json — the same on/off switches editable in
-// Decap CMS under "Website Sections". Nothing here needs editing when
+// Decap CMS under "Show/Hide Pages". Nothing here needs editing when
 // someone toggles a page there; this just reads the current state each
 // time the site builds. See src/lib/page-visibility.js for the rules.
 const missionDropdown = [

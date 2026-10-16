@@ -1,5 +1,9 @@
 # --- DNS hosting migration: NetNerd -> Route 53 ---
 #
+# STATUS: done. The nameservers were switched at Fasthosts on 13 Sept 2026,
+# so this zone is now LIVE -- every record below is what the world sees.
+# The notes that follow describe how the move was planned and staged.
+#
 # NetNerd's Zone Editor only offers A / AAAA / CAA / CNAME / HTTPS / SVCB /
 # MX / SRV / TXT record types (confirmed by inspecting its own "Add Record"
 # dropdown on 2026-09-13) -- no ALIAS or ANAME. Since the zone APEX

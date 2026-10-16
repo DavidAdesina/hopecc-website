@@ -1,5 +1,7 @@
 ---
-// src/pages/mission/india.astro — Hope Community Church
+// src/components/MissionIndiaContent.astro — Hope Community Church
+// (Shown by src/pages/mission/india.astro whenever that page is switched
+// on — see README, "Mission on/off toggle".)
 // ─────────────────────────────────────────────────────────────────────────
 // WHAT THIS FILE DOES
 //   This produces the full India mission story page (Prabha & Mary,
@@ -10,15 +12,16 @@
 //   • Any text on the page       → find the matching "EDIT: ..." comment
 //     next to it and edit the words inside the HTML tags nearby
 //   • Stats (numbers)             → edit src/data/mission-stats.json,
-//     "india" section (three of these numbers also appear on mission.astro's
-//     overview card — this file keeps both in sync). Editable via Decap
+//     "india" section (three of these numbers also appear on the Mission
+//     overview page's card — the shared file keeps both in sync). Editable via Decap
 //     CMS at /admin.
 //   • Photos                      → change the src="/images/..." path to
 //     a different image's filename. All images live in the
 //     public/images/ folder.
 //   • Prabha & Mary's contact
 //     details                     → search "EDIT: contact"
-//   • PayPal / support details    → search "EDIT: support"
+//   • PayPal / support details    → search "EDIT: PayPal" and
+//                                    "EDIT: mailing address"
 //   • Prayer points                → edit src/data/prayer-points.json,
 //     "india" section. Editable via Decap CMS at /admin.
 //

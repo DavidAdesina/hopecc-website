@@ -1,10 +1,11 @@
 # Outputs are Terraform's way of printing computed values back to you after
 # apply, rather than making you dig for them in the AWS console. This one
-# prints the exact CNAME record(s) AWS needs to see in NetNerd's DNS zone to
-# prove you own hopecc.org.uk and www.hopecc.org.uk — one record per domain,
-# so expect to see two entries here.
+# prints the CNAME record(s) AWS uses to prove you own hopecc.org.uk and
+# www.hopecc.org.uk — one record per domain, so expect two entries here.
+# Since the move to Route 53, route53.tf creates these records
+# automatically; this output is now just for reference.
 output "acm_validation_records" {
-  description = "DNS records to add in NetNerd to validate the ACM certificate"
+  description = "ACM certificate DNS validation records (created automatically by route53.tf)"
   value = [
     for dvo in aws_acm_certificate.site.domain_validation_options : {
       name  = dvo.resource_record_name
@@ -15,12 +16,11 @@ output "acm_validation_records" {
 }
 
 # CloudFront's own default domain (something like d111111abcdef8.cloudfront.net).
-# This is what lets you verify the site actually works BEFORE cutting the
-# live hopecc.org.uk DNS over to it — per the safety-net plan, we test
-# against this URL first, and only point the real domain at CloudFront once
-# it's confirmed working.
+# Used to verify the site BEFORE the live hopecc.org.uk DNS was cut over to
+# it (13 Sept 2026). Still handy for checking CloudFront directly. Note:
+# the CMS login deliberately refuses this address — use hopecc.org.uk/admin.
 output "cloudfront_domain_name" {
-  description = "CloudFront's default domain — use this to verify the site before DNS cutover"
+  description = "CloudFront's default domain (the site is also served here, alongside hopecc.org.uk)"
   value       = aws_cloudfront_distribution.site.domain_name
 }
 
@@ -48,12 +48,12 @@ output "github_actions_deploy_role_arn" {
   value       = aws_iam_role.github_actions_deploy.arn
 }
 
-# The four nameservers Route 53 assigns this zone. THIS is what needs to
-# replace ns1.netnerd.com / ns2.netnerd.com at the domain's registrar
-# (Fasthosts Internet Ltd -- confirmed via Nominet's RDAP lookup, not
-# NetNerd itself) once it's actually time for the DNS cutover. Not used
-# until then -- creating the zone doesn't touch live traffic on its own.
+# The four nameservers Route 53 assigns this zone. These replaced
+# ns1.netnerd.com / ns2.netnerd.com at the domain's registrar (Fasthosts
+# Internet Ltd -- confirmed via Nominet's RDAP lookup, not NetNerd itself)
+# at the DNS cutover on 13 Sept 2026, and are what Fasthosts should still
+# show. To roll back DNS, set ns1/ns2.netnerd.com there instead.
 output "route53_nameservers" {
-  description = "Nameservers to set at Fasthosts (the registrar) for the actual DNS cutover"
+  description = "Route 53 nameservers -- set at Fasthosts (the registrar) since 13 Sept 2026"
   value       = aws_route53_zone.site.name_servers
 }

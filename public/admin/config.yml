@@ -2,9 +2,11 @@
 # ─────────────────────────────────────────────────────────────────────────
 # SCOPE (agreed Day 5): "Core" — only the frequently-changing content is
 # editable here: service times, activity cards, gallery/carousel photos,
-# mission stats, and prayer points. Everything else (hero text, contact
-# details, page copy, form fields, etc.) stays a direct code edit via the
-# EDIT: comment convention — see MAINTENANCE-GUIDE.md.
+# mission stats, and prayer points — plus, since Sept 2026, the
+# "Show/Hide Pages" switches (page_visibility, at the bottom). Everything
+# else (hero text, contact details, page copy, form fields, etc.) stays a
+# direct code edit via the EDIT: comment convention — see
+# MAINTENANCE-GUIDE.md.
 #
 # HOW THIS MAPS TO THE SITE:
 # Each collection below edits one file in src/data/*.json. Those files are
@@ -13,19 +15,19 @@
 # the same thing — Decap just gives non-technical users a form instead of
 # raw JSON.
 #
-# OAUTH STATUS (see README.md "Decap CMS" section for the full picture):
+# OAUTH STATUS (see README.md "Decap CMS login works on the live site"):
 # `backend.base_url` points at the Lambda + API Gateway OAuth proxy
 # (Session 3). Confirmed working end-to-end since Session 4 — real GitHub
 # login at /admin has been live and tested on the deployed site.
 #
 # TESTING DECAP LOCALLY (works today, no OAuth needed):
-#   1. npm install decap-server --save-dev
+#   1. npm install (decap-server is already in package.json)
 #   2. In one terminal: npx decap-server
 #   3. In another: npm run dev
 #   4. Visit http://localhost:4321/admin — Decap detects the local proxy
 #      server and reads/writes directly to your local git working copy
-#      instead of going through GitHub OAuth. Good way to sanity-check the
-#      field layout below before Phase 3 lands.
+#      instead of going through GitHub OAuth. Good way to sanity-check a
+#      field layout change before it goes live.
 # ─────────────────────────────────────────────────────────────────────────
 
 backend:
@@ -43,7 +45,9 @@ backend:
 # `local_backend` server isn't running, so it's safe to leave in.
 local_backend: true
 
-# NOT ENABLED — worth a decision before launch:
+# NOT ENABLED — considered again in October 2026 and left off: editors
+# publish straight to `main`, and turning this on means someone has to
+# review and merge every single edit. Revisit if that changes.
 # `publish_mode: editorial_workflow` would make every CMS save a draft that
 # you (or Ian) review and merge before it goes live, instead of publishing
 # straight to `main`. That's the strongest protection against a CMS mistake

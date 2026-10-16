@@ -41,7 +41,7 @@
 //   • Wing wording (names, places,
 //     "Read their story")             → search "EDIT: wing text"
 //   • Remove the WHOLE effect         → delete the <MissionAtmosphere />
-//     line in mission.astro (one line — the page goes back to a plain
+//     line in MissionOverviewContent.astro (one line — the page goes back to a plain
 //     hero; the wings' links disappear too, but the two big country
 //     cards further down the page link to the same places)
 //
@@ -178,8 +178,8 @@
 
 <style>
   /* Every decorative layer: stretched over the whole hero, unclickable,
-     behind the words (mission.astro gives .hero-content a higher stacking
-     order). The wings are the one exception — they're real links. */
+     behind the words (MissionOverviewContent.astro gives .hero-content a
+     higher stacking order). The wings are the one exception — they're real links. */
   .mfx {
     position: absolute;
     inset: 0;
@@ -187,7 +187,8 @@
   }
 
   /* The atmosphere fades up AFTER the words have landed (see the hero
-     text's entrance in mission.astro) so the page opens on the message. */
+     text's entrance in MissionOverviewContent.astro) so the page opens on
+     the message. */
   .mfx-fade {
     opacity: 0;
     animation: mfx-in 1.6s ease-out 0.7s forwards;
